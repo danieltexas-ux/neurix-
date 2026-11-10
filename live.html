@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Live - Go Live</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;overflow:hidden}
+.top{position:fixed;top:0;left:0;right:0;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;z-index:20}
+.live-badge{background:#ff3040;padding:6px 12px;border-radius:20px;font-weight:800;font-size:13px;display:flex;gap:6px;align-items:center}
+.viewers{background:rgba(0,0,0,.6);padding:6px 12px;border-radius:20px;font-size:13px;backdrop-filter:blur(10px)}
+.live-area{height:100vh;background:linear-gradient(180deg,#1a1a2e,#000);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;position:relative}
+.live-area video{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.live-area .overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent 40%)}
+.center{position:relative;z-index:2}
+.center .avatar{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:60px;margin:auto;border:4px solid #fff}
+.comments{position:absolute;left:12px;right:80px;bottom:110px;display:flex;flex-direction:column;gap:8px;z-index:10;max-height:300px;overflow:hidden}
+.comment{background:rgba(0,0,0,.6);padding:8px 12px;border-radius:18px;font-size:13px;backdrop-filter:blur(10px);animation:slideIn .3s}
+.comment b{color:#a855f7}
+@keyframes slideIn{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+.gift-float{position:absolute;right:14px;bottom:180px;font-size:32px;z-index:10;animation:floatUp 2s forwards}
+@keyframes floatUp{from{transform:translateY(0);opacity:1}to{transform:translateY(-80px);opacity:0}}
+.right-actions{position:absolute;right:12px;bottom:110px;display:flex;flex-direction:column;gap:12px;z-index:10}
+.right-actions button{width:48px;height:48px;border-radius:50%;border:none;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);color:#fff;font-size:22px;cursor:pointer}
+.bottom{position:absolute;bottom:0;left:0;right:0;padding:10px;display:flex;gap:8px;z-index:20}
+.bottom input{flex:1;padding:12px;border-radius:20px;border:none;background:rgba(255,255,255,.2);color:#fff;outline:none;backdrop-filter:blur(10px)}
+.bottom input::placeholder{color:#ddd}
+.bottom button{padding:12px 14px;border-radius:50%;border:none;background:#fff;color:#000;cursor:pointer}
+.go-live-btn{background:linear-gradient(135deg,#ff3040,#a855f7);border:none;color:#fff;padding:14px 28px;border-radius:30px;font-weight:800;font-size:16px;cursor:pointer;margin-top:16px}
+.shop-popup{position:absolute;left:12px;bottom:380px;background:#fff;color:#000;border-radius:14px;padding:10px;display:flex;gap:10px;align-items:center;z-index:10;cursor:pointer;max-width:250px}
+.shop-popup img{width:44px;height:44px;border-radius:10px;object-fit:cover}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()" style="background:rgba(0,0,0,.6);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer">←</button>
+  <div style="display:flex;gap:8px;align-items:center">
+    <div class="live-badge" id="liveBadge" style="display:none"><span style="width:8px;height:8px;background:#fff;border-radius:50%;display:inline-block"></span> LIVE</div>
+    <div class="viewers" id="viewerCount">👁️ 0 watching</div>
+  </div>
+  <button onclick="location.href='shop.html'" style="background:rgba(0,0,0,.6);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer">🛍️</button>
+</div>
+
+<div class="live-area" id="liveArea">
+  <video id="cam" autoplay playsinline muted style="display:none"></video>
+  <div class="overlay"></div>
+
+  <div class="center" id="startScreen">
+    <div class="avatar">🧠</div>
+    <h2 style="margin:12px 0 4px">Go Live on NEURIX</h2>
+    <p style="color:#aaa;font-size:14px;margin:0">Talk to your fans • Sell • Get gifts</p>
+    <input id="liveTitle" placeholder="Live title... e.g. Selling iPhones in Eldoret 🔥" style="margin-top:14px;width:100%;max-width:300px;padding:12px;border-radius:20px;border:none;background:#262626;color:#fff;outline:none">
+    <br>
+    <button class="go-live-btn" onclick="goLive()">📺 GO LIVE NOW</button>
+    <br>
+    <button onclick="watchLive()" style="margin-top:10px;background:#262626;border:none;color:#fff;padding:10px 20px;border-radius:20px;cursor:pointer">👀 Watch Others Live</button>
+    <p style="color:#888;font-size:12px;margin-top:14px">Tip: Allow camera to show your face</p>
+  </div>
+
+  <div class="shop-popup" id="shopPopup" style="display:none" onclick="location.href='shop.html'">
+    <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=200">
+    <div style="flex:1"><b style="font-size:13px">iPhone 13 - KES 58,000</b><br><small style="color:#22c55e">Tap to Buy • In Shop</small></div>
+    <span>🛒</span>
+  </div>
+
+  <div class="comments" id="comments"></div>
+
+  <div class="right-actions" id="rightActions" style="display:none">
+    <button onclick="sendGift('❤️')">❤️</button>
+    <button onclick="sendGift('🔥')">🔥</button>
+    <button onclick="sendGift('🎁')">🎁</button>
+    <button onclick="sendGift('💎')">💎</button>
+    <button onclick="shareLive()">↗️</button>
+  </div>
+
+  <div class="bottom" id="bottomBar" style="display:none">
+    <input id="commentInput" placeholder="Say something...">
+    <button onclick="sendComment()">➤</button>
+    <button onclick="endLive()" style="background:#ff3040;color:#fff">✕</button>
+  </div>
+</div>
+
+<script>
+let isLive = false;
+let viewers = 0;
+let viewerTimer = null;
+let commentTimer = null;
+let gifts = 0;
+let coins = 0;
+
+let fakeUsers = [
+  {name:"Sarah", emoji:"👩"}, {name:"Kevin", emoji:"👨"}, {name:"Mama", emoji:"👩‍🦳"},
+  {name:"Brian", emoji:"🧑"}, {name:"Faith", emoji:"👧"}, {name:"David", emoji:"👦"}
+];
+let fakeComments = [
+  "Bro this is fire 🔥", "NEURIX to the world 🌍", "Send link!", "You built this??",
+  "Eldoret stand up! 🇰🇪", "Waaa 🔥🔥", "How much is iPhone?", "I want that hoodie!",
+  "Follow back bro!", "This app is crazy!", "Live from Eldoret!", "Gift incoming 🎁"
+];
+
+async function goLive(){
+  let title = document.getElementById('liveTitle').value || 'Live on NEURIX 🔥';
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('liveBadge').style.display = 'flex';
+  document.getElementById('rightActions').style.display = 'flex';
+  document.getElementById('bottomBar').style.display = 'flex';
+  document.getElementById('shopPopup').style.display = 'flex';
+  isLive = true;
+  viewers = 12;
+  updateViewers();
+  addComment("System", "🎉 You are LIVE! Title: " + title);
+
+  // Try camera
+  try{
+    let stream = await navigator.mediaDevices.getUserMedia({video:true, audio:false});
+    let v = document.getElementById('cam');
+    v.style.display = 'block';
+    v.srcObject = stream;
+  }catch(e){
+    // No camera - keep gradient background, still works
+    console.log("Camera not allowed, using avatar mode");
+  }
+
+  // Viewers grow
+  viewerTimer = setInterval(()=>{
+    viewers += Math.floor(Math.random()*5);
+    updateViewers();
+  }, 3000);
+
+  // Auto fake comments
+  commentTimer = setInterval(()=>{
+    let u = fakeUsers[Math.floor(Math.random()*fakeUsers.length)];
+    let c = fakeComments[Math.floor(Math.random()*fakeComments.length)];
+    addComment(u.name, c);
+    if(Math.random() > 0.7) sendGift('❤️', true);
+  }, 4000);
+}
+
+function watchLive(){
+  document.getElementById('startScreen').innerHTML = `
+    <div style="display:flex;gap:10px;overflow-x:auto;justify-content:center">
+      <div onclick="joinLive('Sarah')" style="background:#111;padding:14px;border-radius:16px;cursor:pointer;min-width:120px"><div style="font-size:40px">👩</div><b>Sarah</b><br><small style="color:#ff3040">● LIVE • 1.2K</small><br><small>Singing 🎤</small></div>
+      <div onclick="joinLive('Kevin')" style="background:#111;padding:14px;border-radius:16px;cursor:pointer;min-width:120px"><div style="font-size:40px">👨</div><b>Kevin</b><br><small style="color:#ff3040">● LIVE • 890</small><br><small>Selling phones 📱</small></div>
+    </div>
+    <p style="color:#aaa;font-size:13px">Tap a live to join</p>
+    <button onclick="location.reload()" style="background:#262626;border:none;color:#fff;padding:10px 20px;border-radius:20px;cursor:pointer">Back</button>
+  `;
+}
+
+function joinLive(name){
+  alert('Joined ' + name + '\'s live! Say hi in comments 👋');
+  goLive();
+  document.getElementById('liveBadge').innerText = '● LIVE • ' + name;
+}
+
+function updateViewers(){
+  document.getElementById('viewerCount').innerText = '👁️ ' + viewers.toLocaleString() + ' watching • 💎 ' + coins;
+}
+
+function addComment(name, text){
+  let div = document.createElement('div');
+  div.className = 'comment';
+  div.innerHTML = `<b>${name}</b> ${text}`;
+  document.getElementById('comments').appendChild(div);
+  // Keep only last 6
+  let all = document.getElementById('comments').children;
+  if(all.length > 6) all[0].remove();
+}
+
+function sendComment(){
+  let inp = document.getElementById('commentInput');
+  let v = inp.value.trim(); if(!v) return;
+  addComment('You', v);
+  inp.value = '';
+  setTimeout(()=>{
+    let u = fakeUsers[Math.floor(Math.random()*fakeUsers.length)];
+    addComment(u.name, '🔥 ' + v.slice(0,20));
+  }, 1200);
+}
+
+function sendGift(emoji, auto=false){
+  gifts++; coins += 10;
+  updateViewers();
+  let f = document.createElement('div');
+  f.className = 'gift-float';
+  f.innerText = emoji;
+  document.getElementById('liveArea').appendChild(f);
+  setTimeout(()=>f.remove(), 2000);
+  if(!auto) addComment('You', 'Sent ' + emoji + ' gift! 🎁 +10 coins');
+}
+
+function shareLive(){
+  alert('Live link copied! https://neurix.app/live/bro 🔥 Share it!');
+}
+
+function endLive(){
+  if(!confirm('End live? Viewers: ' + viewers + ' • Gifts: ' + gifts + ' • Coins: ' + coins)) return;
+  clearInterval(viewerTimer);
+  clearInterval(commentTimer);
+  alert('Live ended! 🎉\n\nStats:\n👁️ ' + viewers + ' viewers\n🎁 ' + gifts + ' gifts\n💎 ' + coins + ' coins earned\n\nGreat live bro!');
+  location.reload();
+}
+
+document.getElementById('commentInput')?.addEventListener('keydown', e => { if(e.key==='Enter') sendComment(); });
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

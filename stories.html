@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stories - NEURIX</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:80px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.add-row{padding:12px 14px;display:flex;gap:10px}
+.add-btn{flex:1;background:linear-gradient(135deg,#a855f7,#3b82f6);border:none;color:#fff;padding:12px;border-radius:14px;font-weight:800;cursor:pointer}
+.add-btn2{flex:1;background:#262626;border:1px solid #333;color:#fff;padding:12px;border-radius:14px;font-weight:800;cursor:pointer}
+.row{display:flex;gap:12px;overflow-x:auto;padding:6px 14px 14px;scrollbar-width:none}
+.story{width:120px;height:190px;border-radius:16px;background:#111;flex-shrink:0;position:relative;cursor:pointer;overflow:hidden;border:2px solid #a855f7}
+.story img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.story .overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8),transparent 50%)}
+.story .info{position:absolute;bottom:0;left:0;right:0;padding:10px;z-index:2}
+.story .info b{font-size:14px}
+.story .info small{color:#ddd;font-size:11px;display:block}
+.story .avatar{position:absolute;top:8px;left:8px;width:36px;height:36px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;font-size:20px;z-index:2;border:2px solid #fff}
+.you{border-style:dashed;border-color:#fff}
+.highlights{padding:0 14px 14px}
+.highlights h3{margin:6px 0 10px;font-size:15px}
+.hl-row{display:flex;gap:12px;overflow-x:auto}
+.hl{text-align:center;min-width:62px;cursor:pointer}
+.hl div{width:58px;height:58px;border-radius:50%;background:#111;border:2px solid #a855f7;display:flex;align-items:center;justify-content:center;font-size:26px;margin:auto}
+.hl small{font-size:11px;color:#aaa}
+/* Viewer */
+.viewer{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:100}
+.progress{height:4px;background:#333;margin:8px 10px;border-radius:10px;overflow:hidden}
+.progress div{height:100%;width:0%;background:#fff;transition:width .1s linear}
+.viewer-top{padding:10px;display:flex;gap:10px;align-items:center}
+.viewer-top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.viewer-img{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.viewer-img img{width:100%;max-height:100%;object-fit:cover}
+.viewer-actions{display:flex;gap:8px;padding:12px}
+.viewer-actions input{flex:1;padding:12px;border-radius:20px;border:none;background:#262626;color:#fff;outline:none}
+.viewer-actions button{padding:12px;border-radius:50%;border:none;background:#262626;color:#fff;cursor:pointer}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b>Stories</b>
+  <span onclick="location.href='ai.html'" style="cursor:pointer">✦</span>
+</div>
+
+<div class="add-row">
+  <button class="add-btn" onclick="document.getElementById('file').click()">➕ Add Story</button>
+  <button class="add-btn2" onclick="document.getElementById('cameraFile').click()">📷 Camera</button>
+</div>
+
+<input type="file" id="file" accept="image/*" hidden onchange="addStory(event)">
+<input type="file" id="cameraFile" accept="image/*" capture="environment" hidden onchange="addStory(event)">
+
+<div class="row" id="stories"></div>
+
+<div class="highlights">
+  <h3>Highlights</h3>
+  <div class="hl-row">
+    <div class="hl" onclick="location.href='reels.html'"><div>▶️</div><small>Reels</small></div>
+    <div class="hl" onclick="location.href='index.html'"><div>🧠</div><small>NEURIX</small></div>
+    <div class="hl" onclick="location.href='profile.html'"><div>🔥</div><small>My Day</small></div>
+    <div class="hl" onclick="alert('New highlight created!')"><div>➕</div><small>New</small></div>
+  </div>
+  <p style="color:#888;font-size:12px;text-align:center;margin-top:14px">Stories disappear in 24h like Instagram • Tap a story to view</p>
+</div>
+
+<!-- VIEWER -->
+<div class="viewer" id="viewer">
+  <div class="progress"><div id="bar"></div></div>
+  <div class="viewer-top">
+    <div style="width:36px;height:36px;border-radius:50%;background:#262626;display:flex;align-items:center;justify-content:center" id="viewAvatar">👩</div>
+    <div style="flex:1"><b id="viewName">Sarah</b><br><small style="color:#aaa">2h ago • NEURIX</small></div>
+    <button onclick="closeViewer()">✕</button>
+  </div>
+  <div class="viewer-img"><img id="viewImg"></div>
+  <div class="viewer-actions">
+    <input id="replyInput" placeholder="Reply to story...">
+    <button onclick="replyStory()">❤️</button>
+    <button onclick="replyStory()">➤</button>
+  </div>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='explore.html'"><span>🔍</span>Explore</div>
+  <div onclick="location.href='upload.html'"><span>➕</span>Post</div>
+  <div onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let stories = JSON.parse(localStorage.getItem('neurix_stories') || 'null') || [
+  {name:"You", emoji:"🧠", img:"", time:"Your Story"},
+  {name:"Sarah", emoji:"👩", img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500", time:"2h ago"},
+  {name:"Kevin", emoji:"👨", img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500", time:"4h ago"},
+  {name:"NEURIX", emoji:"✦", img:"https://images.unsplash.com/photo-1677442136019-21780ecad995?w=500", time:"6h ago"}
+];
+
+let currentIndex = 0;
+let timer = null;
+
+function render(){
+  document.getElementById('stories').innerHTML = stories.map((s,i)=>`
+    <div class="story ${s.name==='You' ? 'you' : ''}" onclick="viewStory(${i})">
+      ${s.img ? `<img src="${s.img}">` : `<div style="position:absolute;inset:0;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:60px">${s.emoji}</div>`}
+      <div class="overlay"></div>
+      <div class="avatar">${s.emoji}</div>
+      <div class="info"><b>${s.name}</b><small>${s.time}</small></div>
+    </div>
+  `).join('');
+  localStorage.setItem('neurix_stories', JSON.stringify(stories));
+}
+render();
+
+function addStory(e){
+  let f = e.target.files[0]; if(!f) return;
+  let r = new FileReader();
+  r.onload = function(){
+    stories.unshift({name:"You", emoji:"🧠", img:r.result, time:"Just now"});
+    render();
+    alert('Story posted! 🔥');
+  };
+  r.readAsDataURL(f);
+}
+
+function viewStory(i){
+  let s = stories[i];
+  if(!s.img){ alert('No photo in this story yet. Add one!'); return; }
+  currentIndex = i;
+  document.getElementById('viewAvatar').innerText = s.emoji;
+  document.getElementById('viewName').innerText = s.name;
+  document.getElementById('viewImg').src = s.img;
+  document.getElementById('viewer').style.display = 'flex';
+  startProgress();
+}
+
+function startProgress(){
+  let bar = document.getElementById('bar');
+  let w = 0;
+  clearInterval(timer);
+  timer = setInterval(()=>{
+    w += 2; bar.style.width = w + '%';
+    if(w >= 100){
+      clearInterval(timer);
+      nextStory();
+    }
+  }, 60);
+}
+
+function nextStory(){
+  if(currentIndex + 1 < stories.length && stories[currentIndex+1].img){
+    viewStory(currentIndex+1);
+  } else {
+    closeViewer();
+  }
+}
+
+function closeViewer(){
+  clearInterval(timer);
+  document.getElementById('viewer').style.display = 'none';
+}
+
+function replyStory(){
+  let v = document.getElementById('replyInput').value.trim();
+  if(v){
+    alert('Reply sent to ' + stories[currentIndex].name + ': ' + v + ' ❤️');
+    document.getElementById('replyInput').value = '';
+  } else {
+    alert('❤️ Liked ' + stories[currentIndex].name + '\'s story!');
+  }
+}
+
+// Tap left/right to go prev/next
+document.getElementById('viewImg').addEventListener('click', (e)=>{
+  if(e.clientX < window.innerWidth/2){
+    if(currentIndex > 0) viewStory(currentIndex-1);
+  } else {
+    nextStory();
+  }
+});
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

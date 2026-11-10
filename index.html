@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7c3aed">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="icon-512.png">
+<link rel="icon" href="icon-512.png">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;padding-bottom:78px}
+.top{position:sticky;top:0;background:#000;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;z-index:20;border-bottom:1px solid #1a1a1a}
+.top b{font-size:26px;font-family:Georgia,serif;font-weight:900;letter-spacing:-.5px;background:linear-gradient(135deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer}
+.top-icons{display:flex;gap:18px;align-items:center}
+.top-icons span{font-size:24px;cursor:pointer;position:relative}
+.badge-dot{position:absolute;top:-4px;right:-6px;background:#ff3040;color:#fff;font-size:10px;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800}
+.install-banner{display:none;margin:10px 14px;background:linear-gradient(135deg,#7c3aed,#3b82f6);padding:12px;border-radius:14px;align-items:center;gap:10px}
+.install-banner.show{display:flex}
+.install-banner img{width:44px;height:44px;border-radius:12px}
+.install-banner div{flex:1}
+.install-banner b{display:block;font-size:14px}
+.install-banner small{color:#e0e0e0;font-size:12px}
+.install-banner button{background:#fff;color:#000;border:none;padding:8px 14px;border-radius:20px;font-weight:800;cursor:pointer}
+.stories{display:flex;gap:14px;overflow-x:auto;padding:12px 14px 10px;scrollbar-width:none}
+.stories::-webkit-scrollbar{display:none}
+.story{width:72px;text-align:center;flex-shrink:0;cursor:pointer}
+.story-ring{width:66px;height:66px;border-radius:50%;padding:3px;background:conic-gradient(#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5,#feda75);margin:auto;position:relative}
+.story-ring.seen{background:#2a2a2a}
+.story-ring.you{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.story-inner{width:100%;height:100%;border-radius:50%;background:#000;padding:2px}
+.story-inner div{width:100%;height:100%;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden}
+.story-inner img{width:100%;height:100%;object-fit:cover}
+.story small{font-size:11px;color:#ddd;display:block;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.story .plus{position:absolute;bottom:0;right:0;background:#0095f6;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid #000}
+.pills{display:flex;gap:8px;overflow-x:auto;padding:0 14px 12px;scrollbar-width:none}
+.pills::-webkit-scrollbar{display:none}
+.pill{flex-shrink:0;background:#111;border:1px solid #222;padding:8px 12px;border-radius:20px;font-size:13px;cursor:pointer;white-space:nowrap}
+.pill.active{background:#fff;color:#000;font-weight:700}
+.composer{margin:0 14px 12px;background:#111;border-radius:14px;padding:10px;display:flex;gap:10px;align-items:center;border:1px solid #1a1a1a}
+.composer .av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.composer input{flex:1;background:none;border:none;color:#fff;outline:none;font-size:14px}
+.composer button{background:none;border:none;color:#0095f6;font-weight:700;cursor:pointer}
+.post{border-bottom:1px solid #1a1a1a;padding-bottom:12px}
+.post-head{padding:10px 14px;display:flex;gap:10px;align-items:center}
+.post-head .av{width:36px;height:36px;border-radius:50%;background:conic-gradient(#feda75,#fa7e1e,#d62976,#962fbf);padding:2px;flex-shrink:0;cursor:pointer}
+.post-head .av-inner{width:100%;height:100%;border-radius:50%;background:#000;padding:1px}
+.post-head .av-inner div{width:100%;height:100%;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden}
+.post-head .av-inner img{width:100%;height:100%;object-fit:cover}
+.post-head div{flex:1;min-width:0}
+.post-head b{font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.post-head small{color:#a8a8a8;font-size:11px}
+.post-head .follow{color:#0095f6;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}
+.post-head .dots{font-size:20px;cursor:pointer;color:#a8a8a8}
+.post-media{position:relative;width:100%;aspect-ratio:4/5;background:#111;overflow:hidden;cursor:pointer}
+.post-media img,.post-media video{width:100%;height:100%;object-fit:cover;display:block}
+.post-media .big-heart{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:90px;pointer-events:none;animation:pop .4s ease;z-index:5}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.post-media .reel-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);padding:5px 8px;border-radius:8px;font-size:12px;z-index:2}
+.post-media .mute{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:3}
+.post-media .views{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.6);padding:4px 8px;border-radius:20px;font-size:11px;z-index:2}
+.post-actions{display:flex;gap:14px;padding:10px 14px 0;align-items:center}
+.post-actions button{background:none;border:none;color:#fff;font-size:26px;cursor:pointer;padding:0;line-height:1}
+.post-actions button.liked{color:#ff3040;animation:pop .3s ease}
+.post-actions .save{margin-left:auto}
+.post-likes{padding:6px 14px 0;font-size:14px;font-weight:600}
+.post-caption{padding:4px 14px 0;font-size:14px;line-height:1.4}
+.post-caption b{margin-right:6px}
+.post-comments{padding:4px 14px 0;font-size:13px;color:#a8a8a8;cursor:pointer}
+.post-time{padding:4px 14px 0;font-size:11px;color:#a8a8a8;text-transform:uppercase}
+.suggest{padding:14px}
+.suggest h3{font-size:15px;margin:0 0 10px}
+.suggest-card{display:flex;gap:10px;align-items:center;padding:8px 0}
+.suggest-card .av{width:42px;height:42px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden}
+.suggest-card .av img{width:100%;height:100%;object-fit:cover}
+.suggest-card div{flex:1}
+.suggest-card b{font-size:13px;display:block}
+.suggest-card small{color:#a8a8a8;font-size:12px}
+.suggest-card button{background:#0095f6;border:none;color:#fff;padding:6px 12px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px 0 14px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;cursor:pointer;font-size:26px}
+.nav div small{display:block;font-size:10px;margin-top:2px;color:#aaa}
+.nav .center{width:44px;height:44px;background:#fff;color:#000;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900}
+.viewer{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:100}
+.viewer img{width:100%;flex:1;object-fit:cover}
+.viewer-top{position:absolute;top:0;left:0;right:0;padding:14px;display:flex;gap:10px;align-items:center;background:linear-gradient(rgba(0,0,0,.7),transparent)}
+.viewer-bar{position:absolute;top:8px;left:10px;right:10px;height:3px;background:rgba(255,255,255,.3);border-radius:10px;overflow:hidden;z-index:2}
+.viewer-bar div{height:100%;background:#fff;width:0%}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;flex-direction:column;justify-content:flex-end;z-index:90}
+.modal-sheet{background:#1a1a1a;border-radius:20px 20px 0 0;padding:16px;max-height:70vh;overflow-y:auto}
+.modal-sheet input{width:100%;padding:12px;border-radius:20px;border:1px solid #333;background:#111;color:#fff;outline:none;margin-top:10px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <b onclick="location.reload()">NEURIX</b>
+  <div class="top-icons">
+    <span onclick="location.href='notifications.html'">❤️<span class="badge-dot">3</span></span>
+    <span onclick="location.href='chat.html'">💬<span class="badge-dot">5</span></span>
+  </div>
+</div>
+
+<div class="install-banner" id="installBanner">
+  <img src="icon-512.png" alt="NEURIX">
+  <div><b>Install NEURIX App</b><small>Get it on your home screen - works offline</small></div>
+  <button id="installBtn">Install</button>
+  <span onclick="document.getElementById('installBanner').style.display='none'" style="cursor:pointer">✕</span>
+</div>
+
+<div class="stories" id="stories"></div>
+
+<div class="pills" id="pills">
+  <div class="pill active" onclick="filterFeed('All',this)">✦ For You</div>
+  <div class="pill" onclick="filterFeed('Video',this)">🎥 Videos</div>
+  <div class="pill" onclick="filterFeed('Photo',this)">📸 Photos</div>
+  <div class="pill" onclick="location.href='reels.html'">▶️ Reels</div>
+  <div class="pill" onclick="location.href='shop-pro.html'">🛍️ Shop</div>
+  <div class="pill" onclick="location.href='ride.html'">🛵 Ride</div>
+  <div class="pill" onclick="location.href='match.html'">💘 Match</div>
+  <div class="pill" onclick="location.href='games.html'">🎮 Games</div>
+  <div class="pill" onclick="location.href='wallet.html'">💰 Wallet</div>
+</div>
+
+<div class="composer">
+  <div class="av" id="myAv">🧠</div>
+  <input id="postInput" placeholder="Share a photo or video...">
+  <button onclick="createPost()">Post</button>
+</div>
+
+<div style="padding:0 14px"><h3 style="font-size:15px;margin:6px 0">🔥 Recent Posts • Today in Eldoret</h3></div>
+<div id="feed"></div>
+
+<div class="suggest">
+  <h3>Suggested for you • Eldoret</h3>
+  <div id="suggestList"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#666;font-size:13px">You're all caught up 🎉<br>You've seen every new post</div>
+
+<div class="nav">
+  <div class="active" onclick="location.href='index.html'">🏠<small>Home</small></div>
+  <div onclick="location.href='explore.html'">🔍<small>Explore</small></div>
+  <div><div class="center" onclick="location.href='upload.html'">+</div><small>Post</small></div>
+  <div onclick="location.href='reels.html'">▶️<small>Reels</small></div>
+  <div onclick="location.href='profile.html'">👤<small>You</small></div>
+</div>
+
+<div class="viewer" id="viewer">
+  <div class="viewer-bar"><div id="storyProgress"></div></div>
+  <div class="viewer-top">
+    <div style="width:36px;height:36px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;font-size:20px" id="viewerAv">👩</div>
+    <b id="viewerName">Sarah</b><small style="color:#aaa">2h ago</small>
+    <span onclick="closeViewer()" style="margin-left:auto;font-size:26px;cursor:pointer">✕</span>
+  </div>
+  <img id="viewerImg" src="">
+  <div style="padding:12px;display:flex;gap:8px"><input id="replyInput" placeholder="Reply to story..." style="flex:1;padding:12px;border-radius:20px;border:1px solid #333;background:#111;color:#fff;outline:none"><button onclick="replyStory()" style="background:none;border:none;font-size:24px;cursor:pointer">❤️</button><button onclick="replyStory()" style="background:none;border:none;font-size:24px;cursor:pointer">💬</button></div>
+</div>
+
+<div class="modal" id="commentModal">
+  <div class="modal-sheet">
+    <div style="display:flex;justify-content:space-between"><b>💬 Comments</b><span onclick="closeComments()" style="cursor:pointer;font-size:20px">✕</span></div>
+    <div id="commentList" style="margin-top:12px"></div>
+    <input id="commentInput" placeholder="Add a comment...">
+    <button onclick="postComment()" style="width:100%;margin-top:8px;padding:12px;border:none;border-radius:12px;background:#0095f6;color:#fff;font-weight:800;cursor:pointer">Post Comment</button>
+  </div>
+</div>
+
+<script>
+let stories = [
+  {name:"You", emoji:"🧠", img:"", you:true, seen:false},
+  {name:"sarah.ke", emoji:"👩", img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800", seen:false},
+  {name:"kevin_hustle", emoji:"👨", img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800", seen:false},
+  {name:"faith.designs", emoji:"👩", img:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800", seen:false},
+  {name:"neurix", emoji:"🧠", img:"https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800", seen:false},
+  {name:"mama_njoroge", emoji:"👩", img:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800", seen:true},
+  {name:"mike_chef", emoji:"🧑", img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800", seen:true},
+];
+let defaultPosts = [
+  {id:1, user:"sarah.ke", emoji:"👩", time:"2 min ago", type:"photo", img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900", likes:234, liked:false, saved:false, caption:"Eldoret vibes today! 🌅 Who wants to go to Zion Mall?", comments:["kevin_hustle: 🔥🔥 Where is this?", "faith.designs: So pretty ❤️"], following:false, views:0},
+  {id:2, user:"kevin_hustle", emoji:"👨", time:"8 min ago", type:"video", video:"https://cdn.coverr.co/videos/coverr-riding-a-motorcycle-through-the-city-1584/1080p.mp4", poster:"https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=900", likes:456, liked:false, saved:false, caption:"Just made 5K today with NEURIX Ride 🛵 Watch my ride in Eldoret!", comments:["sarah.ke: Teach me!!"], following:false, views:12400},
+  {id:3, user:"neurix", emoji:"🧠", time:"15 min ago", type:"photo", img:"https://images.unsplash.com/photo-1677442136019-21780ecad995?w=900", likes:1200, liked:false, saved:false, caption:"BREAKING: NEURIX now has 20+ features! Ride, Shop, Match, Stays, Skills, Podcasts, Games, Wallet - All in ONE app! 🔥 #NEURIX", comments:["bro_eldoret: Best app in Kenya 🇰🇪"], following:true, views:0},
+  {id:4, user:"faith.designs", emoji:"👩", time:"22 min ago", type:"video", video:"https://cdn.coverr.co/videos/coverr-a-woman-painting-1588/1080p.mp4", poster:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900", likes:312, liked:false, saved:false, caption:"New logo design for Eldoret shop 🎨 Watch me design in 30 secs!", comments:["grace_fit: Talented!"], following:false, views:8900},
+  {id:5, user:"mama_njoroge", emoji:"👩", time:"34 min ago", type:"photo", img:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=900", likes:189, liked:false, saved:false, caption:"Fresh Smokie + Chips KES 250 today only! Order in NEURIX Shop 🍔", comments:[], following:false, views:0},
+  {id:6, user:"mike_chef", emoji:"🧑", time:"1h ago", type:"video", video:"https://cdn.coverr.co/videos/coverr-cooking-a-delicious-meal-1580/1080p.mp4", poster:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=900", likes:567, liked:false, saved:false, caption:"Cooking pilau like Mama Njoroge 🍚 Full recipe in comments!", comments:["sarah.ke: Yummy 😋"], following:false, views:15200},
+];
+let posts = JSON.parse(localStorage.getItem('neurix_feed_v2') || 'null') || defaultPosts;
+let suggests = [
+  {name:"grace_fit", emoji:"👩", img:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200", reason:"Followed by sarah.ke"},
+  {name:"david_shots", emoji:"👨", img:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200", reason:"New to NEURIX"},
+  {name:"ethic_gengetone", emoji:"🎵", img:"", reason:"Suggested for you"},
+];
+let currentFilter = 'All';
+let currentCommentPost = null;
+let storyTimer = null;
+let deferredPrompt = null;
+
+function renderStories(){
+  document.getElementById('stories').innerHTML = stories.map((s,i)=>`
+    <div class="story" onclick="openStory(${i})">
+      <div class="story-ring ${s.seen?'seen':''} ${s.you?'you':''}"><div class="story-inner"><div>${s.img?`<img src="${s.img}">`:s.emoji}</div></div>${s.you?'<span class="plus">+</span>':''}</div>
+      <small>${s.you?'Your story':s.name}</small>
+    </div>`).join('');
+}
+function renderFeed(){
+  let list = posts.filter(p => currentFilter==='All' || (currentFilter==='Video' && p.type==='video') || (currentFilter==='Photo' && p.type==='photo'));
+  document.getElementById('feed').innerHTML = list.map(p=>`
+    <div class="post">
+      <div class="post-head">
+        <div class="av" onclick="location.href='profile.html'"><div class="av-inner"><div>${p.emoji}</div></div></div>
+        <div><b>${p.user}</b><small>${p.time} • Eldoret ${p.type==='video'?'• 🎥 Video':''}</small></div>
+        ${!p.following?`<span class="follow" onclick="followUser(${p.id})">Follow</span>`:''}
+        <span class="dots" onclick="postMenu('${p.user}')">⋯</span>
+      </div>
+      <div class="post-media" ondblclick="doubleLike(${p.id})">
+        ${p.type==='video' ? `<video src="${p.video}" poster="${p.poster}" loop playsinline preload="metadata" onclick="toggleVideo(this)" id="vid${p.id}"></video><span class="reel-badge">▶️ Reel</span><span class="mute" onclick="event.stopPropagation(); toggleMute(${p.id},this)">🔇</span><span class="views">👁️ ${formatViews(p.views)} views</span>` : `<img src="${p.img}">`}
+        <div class="big-heart" id="bigHeart${p.id}">❤️</div>
+      </div>
+      <div class="post-actions">
+        <button class="${p.liked?'liked':''}" onclick="toggleLike(${p.id})">${p.liked?'❤️':'🤍'}</button>
+        <button onclick="openComments(${p.id})">💬</button>
+        <button onclick="sharePost('${p.user}')">↗️</button>
+        <button class="save" onclick="toggleSave(${p.id})">${p.saved?'🔖':'📑'}</button>
+      </div>
+      <div class="post-likes">${p.likes.toLocaleString()} likes ${p.type==='video'?`• ${formatViews(p.views)} views`:''}</div>
+      <div class="post-caption"><b>${p.user}</b> ${p.caption}</div>
+      <div class="post-comments" onclick="openComments(${p.id})">View all ${p.comments.length} comments</div>
+      <div style="padding:4px 14px 0"><input placeholder="Add a comment..." onclick="openComments(${p.id})" style="background:none;border:none;color:#fff;outline:none;width:100%;font-size:13px"></div>
+      <div class="post-time">${p.time} ago</div>
+    </div>`).join('');
+  document.getElementById('suggestList').innerHTML = suggests.map(s=>`
+    <div class="suggest-card"><div class="av">${s.img?`<img src="${s.img}">`:s.emoji}</div><div><b>${s.name}</b><small>${s.reason}</small></div><button onclick="followSuggest(this)">Follow</button></div>`).join('');
+  let prof = JSON.parse(localStorage.getItem('neurix_profile')||'{"avatar":"🧠"}');
+  document.getElementById('myAv').innerText = prof.avatar;
+  localStorage.setItem('neurix_feed_v2', JSON.stringify(posts));
+  setTimeout(()=>{ document.querySelectorAll('video').forEach(v=>{ v.muted=true; v.play().catch(()=>{}); }); },300);
+}
+function formatViews(v){ if(!v) return '0'; if(v>=1000) return (v/1000).toFixed(1)+'K'; return v; }
+function toggleVideo(el){ if(el.paused){ el.play(); } else { el.pause(); } }
+function toggleMute(id, btn){
+  let v = document.getElementById('vid'+id);
+  if(!v) return;
+  v.muted = !v.muted;
+  btn.innerText = v.muted ? '🔇' : '🔊';
+}
+renderStories(); renderFeed();
+function filterFeed(f, el){
+  currentFilter = f;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  if(el) el.classList.add('active');
+  renderFeed();
+}
+function toggleLike(id){
+  let p = posts.find(x=>x.id===id);
+  p.liked = !p.liked; p.likes += p.liked?1:-1;
+  renderFeed();
+}
+function doubleLike(id){
+  let p = posts.find(x=>x.id===id);
+  if(!p.liked){ p.liked=true; p.likes++; }
+  let h = document.getElementById('bigHeart'+id);
+  if(h){ h.style.display='flex'; setTimeout(()=>h.style.display='none',600); }
+  renderFeed();
+}
+function toggleSave(id){
+  let p = posts.find(x=>x.id===id);
+  p.saved = !p.saved;
+  alert(p.saved?'Saved! 🔖 Find in Profile > Saved':'Unsaved');
+  renderFeed();
+}
+function followUser(id){
+  let p = posts.find(x=>x.id===id);
+  p.following = true; renderFeed();
+  alert('Following ' + p.user + ' ✅');
+}
+function followSuggest(btn){ btn.innerText='Following'; btn.style.background='#262626'; }
+function postMenu(user){
+  let a = prompt('Post: 1=Save, 2=Copy Link, 3=Not Interested');
+  if(a==='2') alert('Link copied! neurix.app/post/' + user);
+  if(a==='3'){ posts = posts.filter(p=>p.user!==user); renderFeed(); }
+}
+function openComments(id){
+  currentCommentPost = id;
+  let p = posts.find(x=>x.id===id);
+  document.getElementById('commentList').innerHTML = p.comments.map(c=>`<div style="padding:8px 0;border-bottom:1px solid #222;font-size:13px">${c}</div>`).join('') || '<p style="color:#888;font-size:13px">No comments yet. Be first!</p>';
+  document.getElementById('commentModal').style.display='flex';
+}
+function closeComments(){ document.getElementById('commentModal').style.display='none'; }
+function postComment(){
+  let inp = document.getElementById('commentInput');
+  let v = inp.value.trim(); if(!v) return;
+  let p = posts.find(x=>x.id===currentCommentPost);
+  p.comments.push('You: ' + v); inp.value=''; openComments(currentCommentPost); renderFeed();
+}
+function sharePost(user){ alert('Link copied! 🔗 Share ' + user + ' post to WhatsApp, TikTok, Story!'); }
+function createPost(){
+  let inp = document.getElementById('postInput');
+  let v = inp.value.trim(); if(!v) return alert('Type something first!');
+  posts.unshift({id:Date.now(), user:"bro_eldoret", emoji:"🧠", time:"Just now", type:"photo", img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900", likes:0, liked:false, saved:false, caption:v, comments:[], following:true, views:0});
+  inp.value=''; renderFeed();
+  alert('Posted! 🔥 Your post is live at TOP!');
+}
+document.getElementById('postInput').addEventListener('keydown', e=>{ if(e.key==='Enter') createPost(); });
+let currentStory = 0;
+function openStory(i){
+  if(stories[i].you) return alert('📸 Add to Your Story! Take a photo of Eldoret!');
+  currentStory = i; showStory();
+}
+function showStory(){
+  let s = stories[currentStory];
+  document.getElementById('viewer').style.display='flex';
+  document.getElementById('viewerAv').innerText = s.emoji;
+  document.getElementById('viewerName').innerText = s.name;
+  document.getElementById('viewerImg').src = s.img;
+  let bar = document.getElementById('storyProgress');
+  bar.style.width='0%';
+  let w=0;
+  if(storyTimer) clearInterval(storyTimer);
+  storyTimer = setInterval(()=>{ w+=2; bar.style.width=w+'%'; if(w>=100){ clearInterval(storyTimer); nextStory(); } },80);
+}
+function nextStory(){
+  stories[currentStory].seen = true;
+  if(currentStory < stories.length-1){ currentStory++; showStory(); }
+  else { closeViewer(); }
+  renderStories();
+}
+function closeViewer(){ if(storyTimer) clearInterval(storyTimer); document.getElementById('viewer').style.display='none'; renderStories(); }
+function replyStory(){ alert('Reply sent to ' + stories[currentStory].name + ' 💬❤️'); nextStory(); }
+document.getElementById('viewerImg').addEventListener('click', ()=>{ nextStory(); });
+
+// PWA INSTALL
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBanner').classList.add('show');
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (!deferredPrompt) return alert('To install: Tap 3 dots in Chrome > Install app / Add to Home Screen');
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if (outcome === 'accepted') {
+    document.getElementById('installBanner').style.display = 'none';
+    alert('NEURIX Installed! 🎉 Check your home screen');
+  }
+  deferredPrompt = null;
+});
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBanner').style.display = 'none';
+  alert('NEURIX Installed Successfully! 🔥');
+});
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js")
+      .then(() => console.log("NEURIX SW Registered ✅"))
+      .catch((err) => console.log("SW Failed", err));
+  });
+}
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

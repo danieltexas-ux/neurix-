@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Wallet - Your Money</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:85px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.balance-card{margin:12px 14px;background:linear-gradient(135deg,#a855f7,#3b82f6,#06b6d4);border-radius:20px;padding:18px;position:relative;overflow:hidden}
+.balance-card small{opacity:.9;font-size:13px}
+.balance-card h1{margin:6px 0;font-size:38px}
+.balance-card .row{display:flex;gap:8px;margin-top:12px}
+.balance-card .row button{flex:1;padding:11px;border:none;border-radius:12px;font-weight:800;cursor:pointer}
+.btn-send{background:#fff;color:#000}
+.btn-topup{background:#000;color:#fff}
+.coin-row{margin:0 14px 12px;background:#1a1a2e;border:1px solid #333;border-radius:14px;padding:12px;display:flex;justify-content:space-between;align-items:center}
+.coin-row button{background:#f59e0b;border:none;color:#000;padding:8px 12px;border-radius:20px;font-weight:800;cursor:pointer}
+.quick{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:0 14px}
+.quick div{background:#111;border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer}
+.quick span{font-size:24px;display:block}
+.quick small{font-size:11px;color:#aaa}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:12px 14px 6px;scrollbar-width:none}
+.tabs button{background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.tabs button.active{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.tx-card{background:#111;border-radius:14px;margin:0 14px 8px;padding:12px;display:flex;gap:12px;align-items:center}
+.tx-card div{flex:1}
+.tx-card b{font-size:14px;display:block}
+.tx-card small{color:#aaa;font-size:12px}
+.amount{font-weight:800;font-size:15px}
+.amount.in{color:#22c55e}
+.amount.out{color:#ff3040}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:60;padding:20px;text-align:center}
+.modal input{width:100%;max-width:320px;padding:12px;margin:8px 0;border:none;border-radius:12px;background:#262626;color:#fff;outline:none;font-size:15px;text-align:center}
+.modal button{padding:12px 22px;border:none;border-radius:12px;font-weight:800;cursor:pointer;margin:6px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">💰 NEURIX Wallet</b>
+  <span onclick="location.href='profile.html'" style="cursor:pointer">👤</span>
+</div>
+
+<div class="balance-card">
+  <small>👋 Hello, Bro • Total Balance</small>
+  <h1>KES <span id="balance">12,450</span></h1>
+  <small>Account: 0712***678 • NEURIX Wallet • Verified ✅</small>
+  <div class="row">
+    <button class="btn-send" onclick="openModal('send')">📤 Send Money</button>
+    <button class="btn-topup" onclick="openModal('topup')">➕ Top Up</button>
+  </div>
+</div>
+
+<div class="coin-row">
+  <div><b>🪙 <span id="coins">1200</span> Game Coins</b><br><small>1000 coins = KES 100 • Convert to cash</small></div>
+  <button onclick="convertCoins()">Convert → KES 100</button>
+</div>
+
+<div class="quick">
+  <div onclick="openModal('send')"><span>📤</span><small>Send</small></div>
+  <div onclick="openModal('request')"><span>📥</span><small>Request</small></div>
+  <div onclick="location.href='ride.html'"><span>🛵</span><small>Ride</small></div>
+  <div onclick="location.href='shop-pro.html'"><span>🛍️</span><small>Shop</small></div>
+  <div onclick="location.href='stays.html'"><span>🏠</span><small>Stays</small></div>
+  <div onclick="location.href='skills.html'"><span>🛠️</span><small>Skills</small></div>
+  <div onclick="openModal('airtime')"><span>📱</span><small>Airtime</small></div>
+  <div onclick="location.href='games.html'"><span>🎮</span><small>Games</small></div>
+</div>
+
+<div class="tabs">
+  <button class="active" onclick="filterTx('All',this)">All</button>
+  <button onclick="filterTx('In',this)">📥 Money In</button>
+  <button onclick="filterTx('Out',this)">📤 Money Out</button>
+</div>
+
+<div style="padding:0 14px;display:flex;justify-content:space-between"><h3 style="margin:0;font-size:15px">📜 Transactions (<span id="txCount">0</span>)</h3><button onclick="exportHistory()" style="background:#262626;border:none;color:#fff;padding:6px 10px;border-radius:20px;cursor:pointer">Export</button></div>
+
+<div id="txList" style="margin-top:10px"></div>
+
+<!-- MODAL -->
+<div class="modal" id="actionModal">
+  <div style="font-size:50px" id="modalEmoji">📤</div>
+  <h2 id="modalTitle">Send Money</h2>
+  <p id="modalDesc" style="color:#aaa;font-size:13px">Send to any NEURIX user or M-Pesa number</p>
+  <input id="modalPhone" placeholder="Phone / Name - e.g. 0712345678 or Kevin">
+  <input id="modalAmount" type="number" placeholder="Amount KES - e.g. 500">
+  <input id="modalNote" placeholder="Note (optional) - e.g. For lunch">
+  <div>
+    <button onclick="confirmAction()" style="background:#22c55e;color:#fff">Confirm →</button>
+    <button onclick="closeModal()" style="background:#262626;color:#fff">Cancel</button>
+  </div>
+  <p style="font-size:11px;color:#888;margin-top:10px">Secured by NEURIX • PIN: 1234 for demo</p>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='shop.html'"><span>🛍️</span>Shop</div>
+  <div onclick="location.href='ride.html'"><span>🛵</span>Ride</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let balance = parseInt(localStorage.getItem('neurix_balance') || '12450');
+let coins = parseInt(localStorage.getItem('neurix_coins') || '1200');
+let txs = JSON.parse(localStorage.getItem('neurix_wallet_txs') || '[{"id":1,"type":"In","title":"Payment from Skills - Logo Design","amount":1000,"date":"Today, 10:00 AM","icon":"🛠️"},{"id":2,"type":"Out","title":"Ride - Eldoret Town to Zion Mall","amount":150,"date":"Today, 9:30 AM","icon":"🛵"},{"id":3,"type":"In","title":"Top Up via M-Pesa","amount":5000,"date":"Yesterday","icon":"💚"},{"id":4,"type":"Out","title":"Shop - Smokie + Chips","amount":250,"date":"Yesterday","icon":"🛍️"},{"id":5,"type":"In","title":"Games - Quiz Win","amount":100,"date":"Yesterday","icon":"🎮"}]');
+let currentFilter = 'All';
+let currentAction = 'send';
+
+function render(){
+  document.getElementById('balance').innerText = balance.toLocaleString();
+  document.getElementById('coins').innerText = coins.toLocaleString();
+  let filtered = txs.filter(t => currentFilter==='All' || t.type===currentFilter);
+  document.getElementById('txCount').innerText = filtered.length;
+  document.getElementById('txList').innerHTML = filtered.map(t => `
+    <div class="tx-card"><div style="font-size:24px">${t.icon}</div><div><b>${t.title}</b><small>${t.date}</small></div><span class="amount ${t.type==='In'?'in':'out'}">${t.type==='In'?'+':'-'} KES ${t.amount.toLocaleString()}</span></div>
+  `).join('') || '<p style="padding:0 14px;color:#888">No transactions yet</p>';
+  localStorage.setItem('neurix_balance', balance.toString());
+  localStorage.setItem('neurix_coins', coins.toString());
+  localStorage.setItem('neurix_wallet_txs', JSON.stringify(txs));
+}
+render();
+
+function filterTx(f, btn){
+  currentFilter = f;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  render();
+}
+
+function openModal(action){
+  currentAction = action;
+  let titles = {send:['📤','Send Money','Send to any NEURIX user or M-Pesa number'], topup:['➕','Top Up Wallet','Add money from M-Pesa to your NEURIX Wallet'], request:['📥','Request Money','Ask someone to send you money'], airtime:['📱','Buy Airtime','Buy Safaricom / Airtel airtime instantly']};
+  let t = titles[action];
+  document.getElementById('modalEmoji').innerText = t[0];
+  document.getElementById('modalTitle').innerText = t[1];
+  document.getElementById('modalDesc').innerText = t[2];
+  document.getElementById('modalPhone').placeholder = action==='topup' ? 'Your M-Pesa number - e.g. 0712345678' : action==='airtime' ? 'Phone to top up - e.g. 0712345678' : 'Phone / Name - e.g. 0712345678 or Kevin';
+  document.getElementById('actionModal').style.display = 'flex';
+}
+function closeModal(){ document.getElementById('actionModal').style.display = 'none'; }
+
+function confirmAction(){
+  let phone = document.getElementById('modalPhone').value.trim();
+  let amt = parseInt(document.getElementById('modalAmount').value);
+  let note = document.getElementById('modalNote').value.trim() || '';
+  if(!phone) return alert('Enter phone or name!');
+  if(!amt || amt<=0) return alert('Enter amount!');
+  let pin = prompt('Enter NEURIX PIN to confirm (demo PIN: 1234)');
+  if(pin!=='1234') return alert('❌ Wrong PIN! Try 1234');
+  if(currentAction==='send'){
+    if(amt > balance) return alert('❌ Insufficient balance! Top up first.');
+    balance -= amt;
+    txs.unshift({id: Date.now(), type:"Out", title:"Sent to " + phone + (note ? ' - ' + note : ''), amount: amt, date:"Just now", icon:"📤"});
+    alert('✅ Sent KES ' + amt.toLocaleString() + ' to ' + phone + '!\nFee: FREE • Balance: KES ' + balance.toLocaleString());
+  } else if(currentAction==='topup'){
+    balance += amt;
+    txs.unshift({id: Date.now(), type:"In", title:"Top Up via M-Pesa " + phone, amount: amt, date:"Just now", icon:"💚"});
+    alert('✅ Top Up! KES ' + amt.toLocaleString() + ' added.\nCheck M-Pesa prompt on ' + phone + '.\nNew Balance: KES ' + balance.toLocaleString());
+  } else if(currentAction==='request'){
+    alert('📥 Request sent to ' + phone + ' for KES ' + amt.toLocaleString() + '!\nThey will get a notification to pay you.');
+    txs.unshift({id: Date.now(), type:"In", title:"Request sent to " + phone, amount: amt, date:"Just now", icon:"📥"});
+  } else if(currentAction==='airtime'){
+    if(amt > balance) return alert('❌ Insufficient balance!');
+    balance -= amt;
+    txs.unshift({id: Date.now(), type:"Out", title:"Airtime for " + phone, amount: amt, date:"Just now", icon:"📱"});
+    alert('✅ Airtime KES ' + amt + ' sent to ' + phone + '!\nSafaricom: You will get SMS.');
+  }
+  document.getElementById('modalPhone').value = '';
+  document.getElementById('modalAmount').value = '';
+  document.getElementById('modalNote').value = '';
+  closeModal(); render();
+}
+
+function convertCoins(){
+  if(coins < 1000) return alert('Need 1000 coins to convert! You have ' + coins + '. Play Games to earn more 🎮');
+  coins -= 1000;
+  balance += 100;
+  txs.unshift({id: Date.now(), type:"In", title:"Converted 1000 Game Coins → Cash", amount:100, date:"Just now", icon:"🪙"});
+  render();
+  alert('🎉 Converted 1000 coins → KES 100!\nNew Balance: KES ' + balance.toLocaleString() + ' • Coins left: ' + coins);
+}
+
+function exportHistory(){
+  let text = txs.map(t=> `${t.date} - ${t.title} - ${t.type} KES ${t.amount}`).join('\n');
+  alert('📜 Wallet Statement:\n\nBalance: KES ' + balance.toLocaleString() + '\n\n' + text);
+}
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Match - Find Your Person</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:85px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;scrollbar-width:none}
+.tabs button{background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.tabs button.active{background:linear-gradient(135deg,#ff3040,#a855f7)}
+.filters{margin:0 14px 10px;background:#111;padding:10px;border-radius:14px;display:flex;gap:8px;flex-wrap:wrap}
+.filters select{background:#262626;color:#fff;border:none;padding:8px;border-radius:10px;outline:none}
+.card-wrap{margin:0 14px;position:relative;height:480px}
+.card{position:absolute;inset:0;background:#111;border-radius:22px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.card img{width:100%;height:100%;object-fit:cover}
+.card-gradient{position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(transparent, rgba(0,0,0,.95));padding:14px;display:flex;flex-direction:column;justify-content:flex-end}
+.card-gradient b{font-size:24px}
+.card-gradient small{color:#ddd;font-size:13px;line-height:1.4}
+.pill{display:inline-block;background:rgba(255,255,255,.2);padding:5px 10px;border-radius:20px;font-size:12px;margin:3px 3px 0 0}
+.badge{position:absolute;top:12px;left:12px;background:#ff3040;color:#fff;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:800}
+.badge.online{background:#22c55e}
+.undo{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.6);border:none;color:#fff;padding:8px 10px;border-radius:20px;cursor:pointer}
+.actions{display:flex;justify-content:center;gap:14px;padding:14px 0 6px}
+.actions button{width:64px;height:64px;border-radius:50%;border:none;font-size:28px;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.4)}
+.btn-pass{background:#262626;color:#fff}
+.btn-like{background:#22c55e;color:#fff}
+.btn-super{background:#a855f7;color:#fff}
+.btn-boost{background:#f59e0b;color:#fff}
+.action-labels{display:flex;justify-content:center;gap:14px;font-size:11px;color:#aaa}
+.action-labels span{width:64px;text-align:center}
+.status{text-align:center;color:#aaa;font-size:13px;min-height:18px}
+.matches{padding:0 14px}
+.match-row{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding:6px 0}
+.match-item{width:64px;text-align:center;flex-shrink:0;cursor:pointer}
+.match-item div{width:58px;height:58px;border-radius:50%;background:#111;border:2px solid #ff3040;display:flex;align-items:center;justify-content:center;font-size:26px;margin:auto}
+.match-item small{font-size:11px;display:block;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.popup{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:60;text-align:center;padding:20px}
+.popup h1{font-size:42px;margin:10px 0;background:linear-gradient(135deg,#ff3040,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.popup button{padding:12px 22px;border:none;border-radius:20px;font-weight:800;cursor:pointer;margin:6px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">💘 NEURIX Match</b>
+  <span onclick="location.href='chat.html'" style="cursor:pointer">💬</span>
+</div>
+
+<div class="tabs">
+  <button class="active" onclick="setMode('dating',this)">💘 Dating</button>
+  <button onclick="setMode('friends',this)">🤝 Friends</button>
+  <button onclick="setMode('crush',this)">👀 Secret Crush</button>
+</div>
+
+<div class="filters">
+  <select id="ageFilter" onchange="render()"><option value="All">Age: All</option><option value="18-22">18-22</option><option value="23-27">23-27</option><option value="28+">28+</option></select>
+  <select id="locFilter" onchange="render()"><option value="All">Location: All Eldoret</option><option value="Eldoret Town">Eldoret Town</option><option value="Zion Mall">Zion Mall</option><option value="Moi University">Moi University</option></select>
+  <select id="interestFilter" onchange="render()"><option value="All">Interest: All</option><option value="Music">Music</option><option value="Football">Football</option><option value="Gaming">Gaming</option><option value="Food">Food</option></select>
+  <button onclick="resetStack()" style="background:linear-gradient(135deg,#a855f7,#3b82f6);border:none;color:#fff;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:700">🔄 Reset</button>
+</div>
+
+<div class="card-wrap" id="cardWrap"></div>
+
+<div class="status" id="statusText">Swipe or tap buttons below • 12 people near you in Eldoret</div>
+
+<div class="actions">
+  <button class="btn-pass" onclick="swipe('pass')">✕</button>
+  <button class="btn-super" onclick="swipe('super')">⭐</button>
+  <button class="btn-like" onclick="swipe('like')">❤️</button>
+  <button class="btn-boost" onclick="boost()">⚡</button>
+</div>
+<div class="action-labels"><span>Pass</span><span>Super Like</span><span>Like</span><span>Boost</span></div>
+
+<div class="matches">
+  <h3 style="font-size:15px;margin:14px 0 4px">💬 Your Matches (<span id="matchCount">0</span>)</h3>
+  <div class="match-row" id="matchesRow"><small style="color:#888">No matches yet. Like someone to match!</small></div>
+  <div style="background:#1a1a2e;border:1px solid #333;border-radius:12px;padding:10px;margin:10px 0;font-size:13px">
+    <b>👀 Secret Crush:</b> Pick a crush. If they also pick you, we reveal it! <button onclick="secretCrush()" style="background:#ff3040;border:none;color:#fff;padding:6px 12px;border-radius:20px;cursor:pointer;font-weight:800;margin-left:6px">Add Crush →</button>
+  </div>
+</div>
+
+<div class="popup" id="matchPopup">
+  <div style="font-size:70px">💘</div>
+  <h1>IT'S A MATCH!</h1>
+  <p id="matchText" style="font-size:16px">You & Sarah liked each other!</p>
+  <div style="display:flex;gap:12px"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:36px">🧠</div><div style="width:80px;height:80px;border-radius:50%;background:#111;border:2px solid #ff3040;display:flex;align-items:center;justify-content:center;font-size:36px" id="matchEmoji">👩</div></div>
+  <div style="margin-top:16px"><button onclick="chatMatch()" style="background:#22c55e;color:#fff">💬 Send Message</button><button onclick="closePopup()" style="background:#262626;color:#fff">Keep Swiping →</button></div>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='chat.html'"><span>💬</span>Chat</div>
+  <div onclick="location.href='duet.html'"><span>🎭</span>Duet</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let people = [
+  {id:1, name:"Sarah", age:21, emoji:"👩", img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800", location:"Eldoret Town", bio:"Love music & vibes 🎵 Gengetone queen. Coffee first?", interests:["Music","Food"], online:true, distance:"1.2 km"},
+  {id:2, name:"Kevin", age:23, emoji:"👨", img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800", location:"Zion Mall", bio:"Hustler | Gamer | Football ⚽ Looking for real vibes", interests:["Gaming","Football"], online:true, distance:"2.5 km"},
+  {id:3, name:"Faith", age:20, emoji:"👩", img:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800", location:"Moi University", bio:"Designer ✨ Eldoret • Art & chill • Let's create", interests:["Music","Food"], online:false, distance:"3.1 km"},
+  {id:4, name:"Mike", age:25, emoji:"🧑", img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800", location:"Eldoret Town", bio:"Boda rider by day, chef by night 🍔", interests:["Food","Football"], online:true, distance:"0.8 km"},
+  {id:5, name:"Grace", age:22, emoji:"👩", img:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800", location:"Elgon View", bio:"Gym girl 💪 • Foodie • Good vibes only", interests:["Food","Music"], online:true, distance:"4.2 km"},
+  {id:6, name:"David", age:24, emoji:"👨", img:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800", location:"West Indies", bio:"Photographer 📷 Eldoret • Let's shoot", interests:["Music","Gaming"], online:false, distance:"5.0 km"},
+];
+let stack = [...people];
+let matches = JSON.parse(localStorage.getItem('neurix_matches') || '[]');
+let lastPassed = null;
+let mode = 'dating';
+let currentMatchPerson = null;
+
+function render(){
+  let ageF = document.getElementById('ageFilter').value;
+  let locF = document.getElementById('locFilter').value;
+  let intF = document.getElementById('interestFilter').value;
+  let filtered = stack.filter(p => {
+    if(locF!=='All' && p.location!==locF) return false;
+    if(intF!=='All' && !p.interests.includes(intF)) return false;
+    if(ageF==='18-22' && !(p.age>=18 && p.age<=22)) return false;
+    if(ageF==='23-27' && !(p.age>=23 && p.age<=27)) return false;
+    if(ageF==='28+' && !(p.age>=28)) return false;
+    return true;
+  });
+  let wrap = document.getElementById('cardWrap');
+  if(filtered.length===0){
+    wrap.innerHTML = `<div class="card" style="display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px"><div style="font-size:60px">🎉</div><b>No more people!</b><p style="color:#aaa">You saw everyone in Eldoret.<br>Come back tomorrow or reset.</p><button onclick="resetStack()" style="padding:10px 18px;border:none;border-radius:20px;background:linear-gradient(135deg,#ff3040,#a855f7);color:#fff;font-weight:800;cursor:pointer">🔄 See Again</button></div>`;
+    return;
+  }
+  let p = filtered[0];
+  wrap.innerHTML = `
+    <div class="card">
+      <img src="${p.img}">
+      <span class="badge ${p.online?'online':''}">${p.online?'🟢 Online':'⚪ Offline'} • ${p.distance}</span>
+      <button class="undo" onclick="undo()">↩️ Undo</button>
+      <div class="card-gradient">
+        <b>${p.name}, ${p.age} ${p.emoji}</b>
+        <small>📍 ${p.location} • ${p.distance} away</small>
+        <small style="margin-top:6px">${p.bio}</small>
+        <div>${p.interests.map(i=>`<span class="pill">${i}</span>`).join('')} <span class="pill">Eldoret</span></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('statusText').innerText = mode==='dating' ? `💘 Dating • ${filtered.length} people left` : mode==='friends' ? `🤝 Friends Mode • ${filtered.length} people left` : `👀 Secret Crush Mode`;
+  renderMatches();
+}
+
+function renderMatches(){
+  document.getElementById('matchCount').innerText = matches.length;
+  document.getElementById('matchesRow').innerHTML = matches.length ? matches.map(m=>{
+    let p = people.find(x=>x.id===m) || {name:"User", emoji:"👤"};
+    return `<div class="match-item" onclick="chatWith('${p.name}')"><div>${p.emoji}</div><small>${p.name}</small></div>`;
+  }).join('') : '<small style="color:#888">No matches yet. Like someone to match!</small>';
+}
+render();
+
+function setMode(m, btn){
+  mode = m;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(m==='crush') alert('👀 Secret Crush Mode: Like someone secretly. If they like you back, we reveal!');
+  else if(m==='friends') alert('🤝 Friends Mode: Find friends in Eldoret, not dating!');
+  render();
+}
+
+function swipe(type){
+  let ageF = document.getElementById('ageFilter').value;
+  let locF = document.getElementById('locFilter').value;
+  let intF = document.getElementById('interestFilter').value;
+  let filtered = stack.filter(p => {
+    if(locF!=='All' && p.location!==locF) return false;
+    if(intF!=='All' && !p.interests.includes(intF)) return false;
+    if(ageF==='18-22' && !(p.age>=18 && p.age<=22)) return false;
+    if(ageF==='23-27' && !(p.age>=23 && p.age<=27)) return false;
+    if(ageF==='28+' && !(p.age>=28)) return false;
+    return true;
+  });
+  if(filtered.length===0) return;
+  let p = filtered[0];
+  lastPassed = p;
+  stack = stack.filter(x=>x.id!==p.id);
+  if(type==='like'){
+    document.getElementById('statusText').innerText = '❤️ You liked ' + p.name;
+    if(Math.random() > 0.4 && !matches.includes(p.id)){
+      matches.push(p.id);
+      localStorage.setItem('neurix_matches', JSON.stringify(matches));
+      currentMatchPerson = p;
+      showMatch(p);
+      return;
+    }
+  } else if(type==='super'){
+    document.getElementById('statusText').innerText = '⭐ Super Like sent to ' + p.name + '! They will see you first!';
+    if(!matches.includes(p.id)){
+      matches.push(p.id);
+      localStorage.setItem('neurix_matches', JSON.stringify(matches));
+      currentMatchPerson = p;
+      showMatch(p);
+      return;
+    }
+  } else {
+    document.getElementById('statusText').innerText = '✕ Passed ' + p.name;
+  }
+  render();
+}
+
+function showMatch(p){
+  document.getElementById('matchText').innerText = 'You & ' + p.name + ' liked each other!';
+  document.getElementById('matchEmoji').innerText = p.emoji;
+  document.getElementById('matchPopup').style.display = 'flex';
+}
+function closePopup(){
+  document.getElementById('matchPopup').style.display = 'none';
+  render();
+}
+function chatMatch(){
+  document.getElementById('matchPopup').style.display = 'none';
+  alert('Opening chat with ' + (currentMatchPerson ? currentMatchPerson.name : 'Match') + ' 💬 Say hi!');
+  location.href = 'chat.html';
+}
+function chatWith(name){ alert('Opening chat with ' + name + ' 💬'); location.href = 'chat.html'; }
+function undo(){
+  if(!lastPassed) return alert('Nothing to undo!');
+  stack.unshift(lastPassed);
+  lastPassed = null;
+  document.getElementById('statusText').innerText = '↩️ Undo! Back to previous person';
+  render();
+}
+function resetStack(){
+  stack = [...people];
+  document.getElementById('statusText').innerText = '🔄 Stack reset! Fresh people!';
+  render();
+}
+function boost(){
+  alert('⚡ Boost Activated! You are now #1 in Eldoret for 30 mins! 10x more likes!');
+  document.getElementById('statusText').innerText = '⚡ BOOST ON - You are top profile in Eldoret!';
+}
+function secretCrush(){
+  let name = prompt('Who is your secret crush? (Name from Match)') || '';
+  if(!name) return;
+  alert('👀 Secret Crush saved: ' + name + '\nIf ' + name + ' also picks you, we will reveal it to both! Shhh... 🤫');
+}
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

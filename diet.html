@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Duet - React Side By Side</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:85px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;scrollbar-width:none}
+.tabs button{background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.tabs button.active{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.duet-stage{margin:0 14px;background:#111;border-radius:18px;overflow:hidden;position:relative}
+.duet-grid{display:flex;gap:4px;padding:4px}
+.duet-grid.vertical{flex-direction:column}
+.duet-side{flex:1;height:320px;border-radius:12px;position:relative;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.duet-side img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.duet-side .overlay{position:relative;z-index:2;text-align:center;background:rgba(0,0,0,.5);padding:8px 12px;border-radius:20px}
+.duet-side .label{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.7);padding:5px 10px;border-radius:20px;font-size:12px;z-index:3}
+.rec-dot{position:absolute;top:10px;right:10px;background:#ff3040;color:#fff;padding:5px 10px;border-radius:20px;font-size:12px;display:none;z-index:3}
+.rec-dot.on{display:block;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.timer{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);padding:6px 14px;border-radius:20px;font-weight:800;z-index:3}
+.controls{padding:12px 14px;display:flex;gap:8px;flex-wrap:wrap}
+.controls button{flex:1;min-width:100px;padding:12px;border:none;border-radius:12px;font-weight:800;cursor:pointer}
+.record{background:#ff3040;color:#fff}
+.record.stop{background:#262626}
+.post{background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff}
+.ghost{background:#262626;color:#fff}
+.layout-row{display:flex;gap:8px;padding:0 14px}
+.layout-row button{flex:1;padding:9px;border:none;border-radius:20px;background:#262626;color:#fff;cursor:pointer}
+.layout-row button.active{background:#fff;color:#000}
+.effects{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;scrollbar-width:none}
+.effect{width:64px;height:64px;border-radius:14px;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;cursor:pointer;border:2px solid transparent}
+.effect small{font-size:10px;margin-top:2px}
+.effect.active{border-color:#a855f7}
+.trending{padding:0 14px}
+.video-card{background:#111;border-radius:16px;margin-bottom:10px;padding:10px;display:flex;gap:10px;align-items:center;cursor:pointer;border:1px solid transparent}
+.video-card.active{border-color:#a855f7;background:#1a1a2e}
+.video-card img{width:70px;height:70px;border-radius:12px;object-fit:cover}
+.video-card div{flex:1}
+.video-card b{font-size:14px;display:block}
+.video-card small{color:#aaa;font-size:12px}
+.video-card button{background:linear-gradient(135deg,#a855f7,#3b82f6);border:none;color:#fff;padding:8px 12px;border-radius:20px;font-weight:800;cursor:pointer}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">🎭 NEURIX Duet</b>
+  <span onclick="location.href='reels.html'" style="cursor:pointer">▶️</span>
+</div>
+
+<div class="tabs">
+  <button class="active" onclick="setTab('duet',this)">🎭 Duet</button>
+  <button onclick="setTab('stitch',this)">✂️ Stitch</button>
+  <button onclick="setTab('react',this)">😂 React</button>
+</div>
+
+<div class="duet-stage">
+  <div class="duet-grid" id="duetGrid">
+    <div class="duet-side" id="leftSide">
+      <img id="leftImg" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600">
+      <div class="label">👩 Sarah - Original</div>
+      <div class="overlay" id="leftOverlay"><span style="font-size:30px">🎬</span><br><small>Original Video</small></div>
+      <div class="rec-dot" id="leftRec">● REC</div>
+    </div>
+    <div class="duet-side" id="rightSide">
+      <img id="rightImg" style="display:none">
+      <div class="label">🧠 You</div>
+      <div class="overlay" id="rightOverlay"><span style="font-size:30px">🤳</span><br><small>Tap Record<br>to add you</small></div>
+      <div class="rec-dot" id="rightRec">● REC</div>
+    </div>
+  </div>
+  <div class="timer" id="timer">00:00 / 00:15</div>
+</div>
+
+<div class="layout-row">
+  <button class="active" onclick="setLayout('side',this)">⬅️➡️ Side by Side</button>
+  <button onclick="setLayout('vertical',this)">⬆️⬇️ Top / Bottom</button>
+  <button onclick="setLayout('green',this)">🟢 Green Screen</button>
+</div>
+
+<div class="controls">
+  <button class="ghost" onclick="flipCamera()">🔄 Flip</button>
+  <button class="record" id="recordBtn" onclick="toggleRecord()">🔴 Record Duet</button>
+  <button class="ghost" onclick="addCaption()">✍️ Caption</button>
+</div>
+
+<div style="padding:0 14px"><h3 style="margin:8px 0;font-size:15px">✨ Duet Effects</h3></div>
+<div class="effects" id="effectsRow">
+  <div class="effect active" onclick="applyEffect('none',this,'none')"><span>🖼️</span><small>Normal</small></div>
+  <div class="effect" onclick="applyEffect('beauty',this,'brightness(1.2) saturate(1.4)')"><span>✨</span><small>Beauty</small></div>
+  <div class="effect" onclick="applyEffect('bw',this,'grayscale(1)')"><span>⬛</span><small>B&W</small></div>
+  <div class="effect" onclick="applyEffect('vintage',this,'sepia(.6)')"><span>📷</span><small>Vintage</small></div>
+  <div class="effect" onclick="applyEffect('neon',this,'saturate(2) contrast(1.3)')"><span>🌈</span><small>Neon</small></div>
+  <div class="effect" onclick="applyEffect('blur',this,'blur(1px) brightness(1.1)')"><span>💨</span><small>Blur</small></div>
+</div>
+
+<div class="controls">
+  <button class="ghost" onclick="previewDuet()">👀 Preview</button>
+  <button class="post" onclick="postDuet()">📤 Post Duet →</button>
+</div>
+
+<div class="trending">
+  <h3 style="font-size:15px">🔥 Trending To Duet - Tap To Use</h3>
+  <div id="trendingList"></div>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='explore.html'"><span>🔍</span>Explore</div>
+  <div onclick="location.href='upload.html'"><span>➕</span>Post</div>
+  <div onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let trending = [
+  {id:1, user:"Sarah", title:"Dancing in Eldoret 💃 - Duet me!", img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600", views:"12K duets"},
+  {id:2, user:"Kevin", title:"Freestyle 🔥 - Try to beat me!", img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600", views:"8.2K duets"},
+  {id:3, user:"NEURIX Official", title:"AI Challenge 🤖 - React to this!", img:"https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600", views:"25K duets"},
+  {id:4, user:"Mama Njoroge", title:"Cooking Challenge 🍔 - Duet recipe", img:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600", views:"5.1K duets"},
+];
+let currentMode = 'duet';
+let isRecording = false;
+let recordTimer = null;
+let seconds = 0;
+let currentCaption = '';
+let currentEffect = 'none';
+let currentLayout = 'side';
+
+function renderTrending(){
+  document.getElementById('trendingList').innerHTML = trending.map(t => `
+    <div class="video-card" onclick="selectVideo(${t.id})">
+      <img src="${t.img}">
+      <div><b>${t.title}</b><small>${t.user} • ${t.views}</small></div>
+      <button>Use →</button>
+    </div>
+  `).join('');
+}
+renderTrending();
+
+function selectVideo(id){
+  let v = trending.find(x=>x.id===id);
+  document.getElementById('leftImg').src = v.img;
+  document.getElementById('leftOverlay').innerHTML = `<span style="font-size:30px">🎬</span><br><small>${v.user} - Original</small>`;
+  document.querySelectorAll('.video-card').forEach(c=>c.classList.remove('active'));
+  // highlight
+  alert('Loaded: ' + v.title + '\nNow tap Record Duet to add YOU on the right!');
+}
+
+function setTab(mode, btn){
+  currentMode = mode;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(mode==='stitch'){
+    document.getElementById('leftOverlay').innerHTML = '<span style="font-size:30px">✂️</span><br><small>First 5 sec plays,<br>then YOU</small>';
+    alert('Stitch Mode: First 5 sec = original, then your video takes over!');
+  } else if(mode==='react'){
+    document.getElementById('leftOverlay').innerHTML = '<span style="font-size:30px">😂</span><br><small>React Mode</small>';
+    alert('React Mode: Your face is small circle over video!');
+  } else {
+    document.getElementById('leftOverlay').innerHTML = '<span style="font-size:30px">🎬</span><br><small>Original Video</small>';
+  }
+}
+
+function setLayout(layout, btn){
+  currentLayout = layout;
+  document.querySelectorAll('.layout-row button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  let grid = document.getElementById('duetGrid');
+  if(layout==='vertical') grid.classList.add('vertical');
+  else grid.classList.remove('vertical');
+  if(layout==='green'){
+    document.getElementById('rightSide').style.background = '#00ff00';
+    alert('Green Screen: Your background will be replaced with original video!');
+  } else {
+    document.getElementById('rightSide').style.background = '#000';
+  }
+}
+
+function applyEffect(name, el, css){
+  currentEffect = name;
+  document.querySelectorAll('.effect').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('rightSide').style.filter = css;
+  document.getElementById('leftSide').style.filter = css;
+}
+
+function flipCamera(){
+  alert('Camera flipped! 🤳 Front ↔ Back');
+  let r = document.getElementById('rightOverlay');
+  r.innerHTML = '<span style="font-size:30px">📷</span><br><small>Back Camera</small>';
+}
+
+function toggleRecord(){
+  let btn = document.getElementById('recordBtn');
+  if(!isRecording){
+    isRecording = true;
+    seconds = 0;
+    btn.innerText = '⏹️ Stop Recording';
+    btn.classList.add('stop');
+    document.getElementById('leftRec').classList.add('on');
+    document.getElementById('rightRec').classList.add('on');
+    document.getElementById('rightOverlay').innerHTML = '<span style="font-size:40px">🧑</span><br><small>You are recording!</small>';
+    document.getElementById('rightImg').style.display = 'block';
+    document.getElementById('rightImg').src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600';
+    recordTimer = setInterval(()=>{
+      seconds++;
+      document.getElementById('timer').innerText = '00:' + String(seconds).padStart(2,'0') + ' / 00:15';
+      if(seconds>=15) toggleRecord();
+    }, 1000);
+  } else {
+    isRecording = false;
+    clearInterval(recordTimer);
+    btn.innerText = '🔴 Record Again';
+    btn.classList.remove('stop');
+    document.getElementById('leftRec').classList.remove('on');
+    document.getElementById('rightRec').classList.remove('on');
+    alert('Duet recorded! ' + seconds + ' sec 🎉 Tap Preview then Post!');
+  }
+}
+
+function addCaption(){
+  let c = prompt('Duet caption? (e.g. Duet with Sarah 🔥)') || 'Duet with Sarah 🔥 #NEURIXDuet';
+  currentCaption = c;
+  alert('Caption saved: ' + c);
+}
+
+function previewDuet(){
+  if(seconds===0) return alert('Record a duet first! Tap Record Duet.');
+  alert('👀 Preview Playing...\n\nLeft: Original + Right: You\nMode: ' + currentMode + ' • Effect: ' + currentEffect + ' • Layout: ' + currentLayout + '\n\nLooks 🔥 bro!');
+}
+
+function postDuet(){
+  if(seconds===0) return alert('Record first bro! Tap 🔴 Record Duet');
+  let caption = currentCaption || 'Duet with Sarah 🔥 #NEURIXDuet #Duet';
+  let post = {
+    id: Date.now(),
+    user: 'You',
+    text: caption + ' 🎭 Duet Mode: ' + currentMode + ' • Effect: ' + currentEffect,
+    img: document.getElementById('leftImg').src,
+    likes: 0,
+    time: 'Just now',
+    type: 'duet'
+  };
+  let posts = JSON.parse(localStorage.getItem('neurix_posts') || '[]');
+  posts.unshift(post);
+  localStorage.setItem('neurix_posts', JSON.stringify(posts));
+  // Also save to reels
+  let reels = JSON.parse(localStorage.getItem('neurix_reels') || '[]');
+  reels.unshift(post);
+  localStorage.setItem('neurix_reels', JSON.stringify(reels));
+  if(confirm('Duet Posted! 🔥 View it in Feed?')) location.href = 'index.html';
+  else location.href = 'reels.html';
+}
+</script>
+</body>
+</html>
+```
+
+</body>
+
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload - NEURIX</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:90px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.top b{font-size:16px}
+.box{padding:14px}
+.upload-area{border:2px dashed #a855f7;border-radius:20px;padding:28px;text-align:center;cursor:pointer;background:#111}
+.upload-area:active{border-color:#3b82f6}
+.preview{width:100%;border-radius:16px;margin-top:12px;display:none;max-height:420px;object-fit:cover}
+.filters{display:flex;gap:8px;overflow-x:auto;margin-top:12px;padding-bottom:4px}
+.filters button{background:#262626;color:#fff;border:1px solid #333;padding:8px 14px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.filters button.active{background:#fff;color:#000;font-weight:800}
+textarea{width:100%;background:#262626;border:none;color:#fff;padding:12px;border-radius:12px;margin-top:12px;outline:none;resize:none}
+select,input[type=text]{width:100%;padding:12px;background:#262626;color:#fff;border:none;border-radius:12px;margin-top:10px;outline:none}
+.ai-box{background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(59,130,246,.2));border:1px solid #a855f7;padding:12px;border-radius:14px;margin-top:12px}
+.ai-box button{background:#fff;color:#000;border:none;padding:8px 12px;border-radius:20px;font-weight:800;margin:4px 4px 0 0;cursor:pointer}
+.row{display:flex;gap:10px;margin-top:10px}
+.row button{flex:1;padding:12px;border-radius:12px;border:1px solid #333;background:#1a1a1a;color:#fff;cursor:pointer}
+.row button.active{background:linear-gradient(135deg,#a855f7,#3b82f6);border:none;font-weight:800}
+.publish{width:100%;padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,#a855f7,#3b82f6,#06b6d4);color:#fff;font-weight:900;font-size:16px;margin-top:14px;cursor:pointer}
+.progress{height:8px;background:#262626;border-radius:10px;margin-top:12px;overflow:hidden;display:none}
+.progress div{height:100%;width:0%;background:linear-gradient(90deg,#a855f7,#3b82f6);transition:.3s}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b>New Post</b>
+  <span onclick="location.href='ai.html'" style="cursor:pointer">✦ AI</span>
+</div>
+
+<div class="box">
+  <div class="upload-area" onclick="document.getElementById('file').click()">
+    <div style="font-size:52px">📸</div>
+    <b>Tap to pick Photo / Video</b>
+    <p style="color:#aaa;font-size:13px;margin:4px 0 0">From gallery • Up to 60s Reel • Photo / Video</p>
+    <p style="color:#a855f7;font-size:12px;margin:6px 0 0">Or tap Camera below</p>
+  </div>
+
+  <input type="file" id="file" accept="image/*,video/*" hidden onchange="previewFile(event)">
+  <input type="file" id="cameraFile" accept="image/*" capture="environment" hidden onchange="previewFile(event)">
+
+  <img id="imgPrev" class="preview">
+  <video id="vidPrev" class="preview" controls></video>
+
+  <div class="filters" id="filters">
+    <button class="active" onclick="setFilter('none',this)">Original</button>
+    <button onclick="setFilter('grayscale(1)',this)">Black & White</button>
+    <button onclick="setFilter('sepia(0.8)',this)">Vintage</button>
+    <button onclick="setFilter('contrast(1.3) saturate(1.4)',this)">Vibrant</button>
+    <button onclick="setFilter('brightness(1.2) saturate(1.2)',this)">Bright</button>
+    <button onclick="setFilter('blur(0.5px) brightness(1.1)',this)">Soft</button>
+  </div>
+
+  <div class="row">
+    <button onclick="document.getElementById('file').click()">🖼️ Gallery</button>
+    <button onclick="document.getElementById('cameraFile').click()">📷 Camera</button>
+    <button onclick="removeFile()">🗑️ Remove</button>
+  </div>
+
+  <textarea id="caption" rows="3" placeholder="Write a caption... What's on your mind bro?"></textarea>
+
+  <div class="ai-box">
+    <b>✦ Neurix AI - Caption Generator</b>
+    <p id="aiCap" style="font-size:14px;color:#ddd;margin:8px 0">Tap a button to generate a fire caption</p>
+    <button onclick="genCaption('funny')">😂 Funny</button>
+    <button onclick="genCaption('motivational')">🔥 Motivational</button>
+    <button onclick="genCaption('business')">💰 Business</button>
+    <button onclick="genCaption('love')">❤️ Vibes</button>
+    <button onclick="genCaption('kenya')">🇰🇪 Kenya</button>
+  </div>
+
+  <input type="text" id="tags" placeholder="Tag people - e.g. @sarah, @kevin">
+  <input type="text" id="location" placeholder="📍 Add Location - e.g. Eldoret, Kenya">
+
+  <div class="row" style="margin-top:14px">
+    <button id="btnPost" class="active" onclick="setType('post',this)">📸 Post to Feed</button>
+    <button id="btnReel" onclick="setType('reel',this)">▶️ Post as Reel</button>
+  </div>
+
+  <select id="privacy">
+    <option value="public">🌍 Public - Everyone can see</option>
+    <option value="followers">👥 Followers Only</option>
+    <option value="private">🔒 Only Me</option>
+  </select>
+
+  <div class="progress" id="progress"><div id="bar"></div></div>
+  <button class="publish" onclick="publishPost()">🚀 Publish to NEURIX</button>
+  <p style="text-align:center;color:#666;font-size:12px">Your post saves to your phone instantly</p>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='explore.html'"><span>🔍</span>Explore</div>
+  <div class="active" onclick="location.href='upload.html'"><span>➕</span>Post</div>
+  <div onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let fileData = '';
+let postType = 'post';
+let currentFilter = 'none';
+
+function previewFile(e){
+  let f = e.target.files[0]; if(!f) return;
+  let r = new FileReader();
+  r.onload = function(){
+    fileData = r.result;
+    if(f.type.startsWith('video')){
+      document.getElementById('vidPrev').src = fileData;
+      document.getElementById('vidPrev').style.display = 'block';
+      document.getElementById('imgPrev').style.display = 'none';
+    } else {
+      document.getElementById('imgPrev').src = fileData;
+      document.getElementById('imgPrev').style.display = 'block';
+      document.getElementById('vidPrev').style.display = 'none';
+    }
+  };
+  r.readAsDataURL(f);
+}
+
+function removeFile(){
+  fileData = '';
+  document.getElementById('imgPrev').style.display='none';
+  document.getElementById('vidPrev').style.display='none';
+  document.getElementById('file').value='';
+}
+
+function setFilter(filter, btn){
+  currentFilter = filter;
+  document.getElementById('imgPrev').style.filter = filter;
+  document.getElementById('vidPrev').style.filter = filter;
+  document.querySelectorAll('#filters button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setType(type, btn){
+  postType = type;
+  document.getElementById('btnPost').classList.toggle('active', type==='post');
+  document.getElementById('btnReel').classList.toggle('active', type==='reel');
+}
+
+function genCaption(style){
+  let caps = {
+    funny: ["Me trying to be serious for 5 seconds 😂 #NEURIX", "POV: You said one more episode... 3 hours later 😭", "My last brain cell carrying me today 🧠✦"],
+    motivational: ["Built different. Stayed consistent. 🧠✦ #NEURIX", "No excuses. Just results. Eldoret to the world 🌍", "You are 1 post away from changing your life. Post it! 🚀"],
+    business: ["One App. Everything. This is NEURIX ✦ Link in bio 💰", "Stop scrolling. Start building. Your future self is watching 👀", "I help people grow on NEURIX. DM me 'START' 📩"],
+    love: ["Good vibes only ✨ Grateful for today ❤️", "Main character energy today 💅✦", "Soft life, big dreams, NEURIX vibes 🌸"],
+    kenya: ["Eldoret to the world 🇰🇪 No limits. #Kenya #fyp", "Made in Kenya, built for the world 🧠✦ #NEURIX", "254 to the world! Who's repping Eldoret? 🇰🇪🔥"]
+  };
+  let list = caps[style];
+  let chosen = list[Math.floor(Math.random()*list.length)];
+  document.getElementById('aiCap').innerText = chosen;
+  document.getElementById('caption').value = chosen;
+}
+
+function publishPost(){
+  let cap = document.getElementById('caption').value.trim() || "New post from NEURIX 🧠✦";
+  let tags = document.getElementById('tags').value.trim();
+  let loc = document.getElementById('location').value.trim();
+  let user = JSON.parse(localStorage.getItem('neurix_current_user') || '{"name":"You"}');
+  if(tags) cap += " " + tags;
+  if(loc) cap += " 📍 " + loc;
+
+  // Show fake upload progress like Instagram
+  document.getElementById('progress').style.display='block';
+  let bar = document.getElementById('bar');
+  let w = 0;
+  let timer = setInterval(()=>{
+    w += 20; bar.style.width = w + '%';
+    if(w >= 100){
+      clearInterval(timer);
+      let posts = JSON.parse(localStorage.getItem('neurix_posts') || '[]');
+      posts.unshift({
+        name: user.name || "You",
+        time: "Just now",
+        avatar: "🧠",
+        text: cap,
+        img: postType === 'post' ? fileData : "",
+        video: postType === 'reel' ? fileData : "",
+        filter: currentFilter,
+        type: postType,
+        privacy: document.getElementById('privacy').value,
+        likes: 0,
+        liked: false
+      });
+      localStorage.setItem('neurix_posts', JSON.stringify(posts));
+      alert(postType === 'reel' ? "Reel Published! 🔥 Check Reels" : "Post Published! 🔥 Check Home Feed");
+      location.href = postType === 'reel' ? 'reels.html' : 'index.html';
+    }
+  }, 200);
+}
+</script>
+</body>
+</html>
+```
+
+</body>
+
+</html>

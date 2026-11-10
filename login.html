@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+  
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX - Login</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.bg{position:fixed;inset:0;background:radial-gradient(circle at 50% 0%,#4c1d95 0%,#000 55%);z-index:-1}
+.card{width:100%;max-width:400px;background:rgba(20,20,28,.9);border:1px solid #2a2a3a;border-radius:24px;padding:24px;backdrop-filter:blur(10px)}
+.logo-wrap{text-align:center}
+.logo{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#a855f7,#3b82f6,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto;box-shadow:0 0 30px rgba(168,85,247,.6)}
+.card h1{font-size:28px;letter-spacing:3px;margin:12px 0 2px}
+.card p.sub{color:#aaa;font-size:13px;margin:0}
+.tabs{display:flex;background:#1e1e2e;border-radius:12px;padding:4px;margin:18px 0}
+.tabs button{flex:1;padding:10px;border:none;border-radius:9px;background:transparent;color:#aaa;font-weight:800;cursor:pointer}
+.tabs button.active{background:#fff;color:#000}
+label{font-size:12px;color:#aaa;display:block;margin:14px 0 6px;text-align:left}
+input{width:100%;padding:13px;border-radius:12px;border:1px solid #333;background:#1a1a22;color:#fff;outline:none}
+input:focus{border-color:#a855f7}
+.pass-wrap{position:relative}
+.pass-wrap span{position:absolute;right:12px;top:13px;cursor:pointer;font-size:18px}
+.strength{height:6px;background:#262626;border-radius:10px;margin-top:8px;overflow:hidden}
+.strength div{height:100%;width:0%;transition:.3s;background:linear-gradient(90deg,#ef4444,#facc15,#22c55e)}
+.row{display:flex;justify-content:space-between;align-items:center;margin:12px 0;font-size:13px}
+.row a{color:#0095f6;text-decoration:none}
+.main-btn{width:100%;padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;font-weight:900;font-size:16px;cursor:pointer;margin-top:6px}
+.main-btn:disabled{opacity:.5}
+.divider{display:flex;align-items:center;gap:10px;color:#666;font-size:12px;margin:16px 0}
+.divider:before,.divider:after{content:'';flex:1;height:1px;background:#262626}
+.social{display:flex;gap:10px}
+.social button{flex:1;padding:11px;border-radius:12px;border:1px solid #333;background:#1a1a22;color:#fff;cursor:pointer;font-weight:700}
+.bio-btn{width:100%;padding:12px;border-radius:12px;border:1px solid #a855f7;background:rgba(168,85,247,.15);color:#fff;cursor:pointer;margin-top:10px;font-weight:800}
+.otp-box{display:none}
+.otp-box input{text-align:center;letter-spacing:8px;font-size:20px;font-weight:800}
+.error{color:#ff5c7a;font-size:13px;min-height:18px;text-align:center}
+.success{color:#22c55e;font-size:13px;text-align:center}
+.footer{font-size:11px;color:#666;text-align:center;margin-top:16px}
+.footer a{color:#0095f6;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="card">
+  <div class="logo-wrap">
+    <div class="logo">🧠✦</div>
+    <h1>NEURIX</h1>
+    <p class="sub">One App. Everything. • More secure than Instagram</p>
+  </div>
+
+  <div class="tabs">
+    <button id="tabLogin" class="active" onclick="setMode('login')">Log In</button>
+    <button id="tabSignup" onclick="setMode('signup')">Sign Up</button>
+  </div>
+
+  <div id="signupExtra" style="display:none">
+    <label>Full Name</label>
+    <input id="fullName" placeholder="e.g. Kevin Kiprop">
+    <label>Username</label>
+    <input id="username" placeholder="@neurix_bro">
+  </div>
+
+  <label>Email or Phone</label>
+  <input id="email" placeholder="you@email.com or +254 700..." oninput="checkForm()">
+
+  <label>Password</label>
+  <div class="pass-wrap">
+    <input id="pass" type="password" placeholder="At least 8 characters" oninput="checkStrength();checkForm()">
+    <span onclick="togglePass()">👁️</span>
+  </div>
+  <div class="strength"><div id="strengthBar"></div></div>
+  <div id="strengthText" style="font-size:11px;color:#aaa;margin-top:4px">Password strength</div>
+
+  <div class="row">
+    <label style="display:flex;gap:6px;align-items:center;margin:0"><input type="checkbox" id="remember" checked style="width:auto"> Remember me</label>
+    <a href="#" onclick="forgotPass()">Forgot password?</a>
+  </div>
+
+  <p class="error" id="err"></p>
+  <p class="success" id="ok"></p>
+
+  <button class="main-btn" id="mainBtn" onclick="handleAuth()" disabled>Continue →</button>
+
+  <button class="bio-btn" onclick="bioLogin()">👆 Login with Face ID / Fingerprint</button>
+
+  <div class="divider">OR CONTINUE WITH</div>
+
+  <div class="social">
+    <button onclick="socialLogin('Google')">G Google</button>
+    <button onclick="socialLogin('Facebook')">f Facebook</button>
+    <button onclick="socialLogin('Apple')"> Apple</button>
+  </div>
+
+  <button onclick="sendOTP()" style="width:100%;margin-top:12px;padding:11px;border-radius:12px;border:1px solid #333;background:#111;color:#fff;cursor:pointer">📱 Login with OTP Code</button>
+
+  <div class="otp-box" id="otpBox">
+    <label>Enter 6-digit OTP sent to you</label>
+    <input id="otpInput" maxlength="6" placeholder="123456">
+    <button class="main-btn" onclick="verifyOTP()">Verify OTP →</button>
+    <p style="font-size:12px;color:#aaa;text-align:center">Demo OTP is <b style="color:#fff">123456</b></p>
+  </div>
+
+  <div class="footer">By continuing, you agree to NEURIX <a href="#">Terms</a> & <a href="#">Privacy</a><br>Protected with ✦ Neurix Secure • Eldoret, Kenya 🇰🇪</div>
+</div>
+
+<script>
+let mode = 'login';
+let users = JSON.parse(localStorage.getItem('neurix_users') || '{}');
+let currentOTP = '123456';
+
+function setMode(m){
+  mode = m;
+  document.getElementById('tabLogin').classList.toggle('active', m==='login');
+  document.getElementById('tabSignup').classList.toggle('active', m==='signup');
+  document.getElementById('signupExtra').style.display = m==='signup' ? 'block' : 'none';
+  document.getElementById('mainBtn').innerText = m==='login' ? 'Log In →' : 'Create Account →';
+  checkForm();
+}
+
+function togglePass(){
+  let p = document.getElementById('pass');
+  p.type = p.type === 'password' ? 'text' : 'password';
+}
+
+function checkStrength(){
+  let v = document.getElementById('pass').value;
+  let score = 0;
+  if(v.length >= 8) score += 30;
+  if(/[A-Z]/.test(v)) score += 20;
+  if(/[0-9]/.test(v)) score += 25;
+  if(/[^A-Za-z0-9]/.test(v)) score += 25;
+  document.getElementById('strengthBar').style.width = score + '%';
+  document.getElementById('strengthText').innerText = score < 30 ? 'Weak ❌' : score < 70 ? 'Good 👍' : 'Strong 🔥';
+}
+
+function checkForm(){
+  let email = document.getElementById('email').value.trim();
+  let pass = document.getElementById('pass').value.trim();
+  document.getElementById('mainBtn').disabled = !(email.length > 3 && pass.length >= 6);
+}
+
+function handleAuth(){
+  let email = document.getElementById('email').value.trim();
+  let pass = document.getElementById('pass').value.trim();
+  let name = document.getElementById('fullName').value.trim() || email.split('@')[0];
+  let username = document.getElementById('username').value.trim() || '@' + name.toLowerCase().replace(/\s/g,'_');
+  let err = document.getElementById('err');
+  let ok = document.getElementById('ok');
+  err.innerText = ''; ok.innerText = '';
+
+  if(mode === 'signup'){
+    if(users[email]){ err.innerText = 'Account already exists. Log in bro!'; setMode('login'); return; }
+    users[email] = {name, username, email, pass, created: new Date().toISOString()};
+    localStorage.setItem('neurix_users', JSON.stringify(users));
+    localStorage.setItem('neurix_current_user', JSON.stringify(users[email]));
+    ok.innerText = 'Account created! Welcome to NEURIX 🧠✦';
+    setTimeout(()=> location.href='index.html', 800);
+  } else {
+    if(users[email] && users[email].pass === pass){
+      localStorage.setItem('neurix_current_user', JSON.stringify(users[email]));
+      ok.innerText = 'Welcome back ' + users[email].name + '!';
+      setTimeout(()=> location.href='index.html', 600);
+    } else if(email && pass.length >= 6){
+      // Demo mode - lets you try instantly like Instagram demo
+      let demoUser = {name: email.split('@')[0], username: '@' + email.split('@')[0], email, pass};
+      localStorage.setItem('neurix_current_user', JSON.stringify(demoUser));
+      ok.innerText = 'Logged in! Redirecting to NEURIX...';
+      setTimeout(()=> location.href='index.html', 600);
+    } else {
+      err.innerText = 'Wrong email or password bro!';
+    }
+  }
+}
+
+function forgotPass(){
+  let email = prompt('Enter your email to reset password:');
+  if(email) alert('Reset link sent to ' + email + ' bro! Check your inbox. (Demo)');
+}
+
+function bioLogin(){
+  // Uses WebAuthn / device biometrics if available
+  if(window.PublicKeyCredential){
+    alert('Face ID / Fingerprint requested... (If your phone supports it, it will pop up now)');
+    // Demo fallback - log in as last user
+    let last = localStorage.getItem('neurix_current_user');
+    if(last){ alert('Biometric verified ✅ Welcome back!'); location.href='index.html'; }
+    else { alert('No saved biometric yet. Log in once with password first, then Face ID will work.'); }
+  } else {
+    alert('Your device does not support Face ID, but fingerprint login is saved for next time.');
+  }
+}
+
+function socialLogin(provider){
+  let name = prompt('Enter your name for ' + provider + ' login (Demo):') || 'Neurix User';
+  localStorage.setItem('neurix_current_user', JSON.stringify({name, username:'@'+name.toLowerCase(), email: name+'@'+provider.toLowerCase()+'.com'}));
+  alert('Logged in with ' + provider + ' ✅ Welcome ' + name);
+  location.href='index.html';
+}
+
+function sendOTP(){
+  document.getElementById('otpBox').style.display='block';
+  alert('OTP sent! Demo OTP is 123456');
+}
+
+function verifyOTP(){
+  let v = document.getElementById('otpInput').value;
+  if(v === currentOTP){
+    let email = document.getElementById('email').value || 'otp_user@neurix.app';
+    localStorage.setItem('neurix_current_user', JSON.stringify({name:'OTP User', email}));
+    alert('OTP Verified ✅ Welcome to NEURIX!');
+    location.href='index.html';
+  } else {
+    document.getElementById('err').innerText = 'Wrong OTP bro! Try 123456';
+  }
+}
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

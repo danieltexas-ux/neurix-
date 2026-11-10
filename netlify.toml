@@ -1,0 +1,71 @@
+
+```toml
+# NEURIX - Publish Config
+# One App. Everything. 🧠✦
+
+[build]
+  publish = "."
+  command = "echo NEURIX Build OK"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Make NEURIX installable + fast
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+    Service-Worker-Allowed = "/"
+
+[[headers]]
+  for = "manifest.json"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# SPA fallback - so all pages work with direct links
+[[redirects]]
+  from = "/app/*"
+  to = "/index.html"
+  status = 200
+
+# Pretty URLs - /login goes to login.html
+[[redirects]]
+  from = "/login"
+  to = "/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/home"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/chat"
+  to = "/chat.html"
+  status = 200
+
+[[redirects]]
+  from = "/profile"
+  to = "/profile.html"
+  status = 200
+
+[[redirects]]
+  from = "/upload"
+  to = "/upload.html"
+  status = 200
+```

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Skills - Hire Talent in Eldoret</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:85px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.search{margin:10px 14px;background:#262626;border-radius:20px;padding:11px 14px;display:flex;gap:8px;align-items:center}
+.search input{flex:1;background:none;border:none;color:#fff;outline:none;font-size:14px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
+.tabs button{background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.tabs button.active{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.banner{margin:0 14px 12px;background:linear-gradient(135deg,#22c55e,#06b6d4);border-radius:16px;padding:14px;display:flex;gap:12px;align-items:center}
+.banner div{flex:1}
+.banner b{font-size:15px}
+.banner p{font-size:12px;opacity:.9;margin:4px 0 0}
+.skill-card{background:#111;border-radius:18px;margin:0 14px 12px;padding:14px;cursor:pointer;border:1px solid #1a1a1a}
+.skill-head{display:flex;gap:12px}
+.skill-head .icon{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.skill-head div{flex:1}
+.skill-head b{font-size:15px;line-height:1.3;display:block}
+.skill-head small{color:#aaa;font-size:12px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tag{background:#262626;padding:5px 10px;border-radius:20px;font-size:11px}
+.tag.green{background:#052e16;color:#22c55e}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.price{color:#22c55e;font-weight:800;font-size:16px}
+.hire-btn{background:linear-gradient(135deg,#a855f7,#3b82f6);border:none;color:#fff;padding:9px 16px;border-radius:20px;font-weight:800;cursor:pointer}
+.my-orders{margin:0 14px 12px;background:#1a1a2e;border:1px solid #333;border-radius:14px;padding:12px;display:none}
+.post-btn{position:fixed;bottom:90px;right:14px;background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;border:none;padding:12px 16px;border-radius:30px;font-weight:800;z-index:40;cursor:pointer;box-shadow:0 4px 20px rgba(168,85,247,.5)}
+/* Detail Modal */
+.modal{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:50;overflow-y:auto;padding-bottom:80px}
+.modal-header{padding:10px 12px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #222;background:#111;position:sticky;top:0}
+.modal-header button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.modal-body{padding:14px}
+.pkg{border:2px solid #262626;border-radius:14px;padding:12px;margin:8px 0;cursor:pointer}
+.pkg.active{border-color:#a855f7;background:#1a1a2e}
+.pkg b{display:block}
+.pkg small{color:#aaa}
+.order-btn{width:100%;padding:14px;border:none;border-radius:14px;background:#22c55e;color:#fff;font-weight:800;font-size:16px;cursor:pointer;margin-top:10px}
+.review{margin-top:10px;background:#111;padding:10px;border-radius:12px;font-size:13px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">🛠️ NEURIX Skills</b>
+  <span onclick="location.href='wallet.html'" style="cursor:pointer">💰</span>
+</div>
+
+<div class="search">🔍 <input id="searchInput" placeholder="Search logo, video edit, website..." oninput="filterSkills()"></div>
+
+<div class="tabs">
+  <button class="active" onclick="filterCat('All',this)">All</button>
+  <button onclick="filterCat('Design',this)">🎨 Design</button>
+  <button onclick="filterCat('Video',this)">🎬 Video</button>
+  <button onclick="filterCat('Tech',this)">💻 Tech</button>
+  <button onclick="filterCat('Writing',this)">✍️ Writing</button>
+  <button onclick="filterCat('Music',this)">🎵 Music</button>
+</div>
+
+<div class="banner">
+  <div><b>💰 Earn From Your Skill!</b><p>Offer a skill, get hired, paid via M-Pesa in 24h</p></div>
+  <span style="font-size:28px">💸</span>
+</div>
+
+<div class="my-orders" id="myOrdersBox">
+  <b>📋 My Orders (<span id="orderCount">0</span>)</b>
+  <div id="myOrdersList" style="margin-top:8px;font-size:13px;color:#aaa"></div>
+</div>
+
+<div id="skillList"></div>
+
+<button class="post-btn" onclick="offerSkill()">+ Offer Skill</button>
+
+<!-- DETAIL MODAL -->
+<div class="modal" id="detailModal">
+  <div class="modal-header">
+    <button onclick="closeModal()">←</button>
+    <b id="dTitle" style="flex:1">Skill</b>
+    <span id="dFav" onclick="toggleFav()" style="font-size:22px;cursor:pointer">🤍</span>
+  </div>
+  <div class="modal-body">
+    <div style="display:flex;gap:12px;align-items:center">
+      <div id="dIcon" style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:30px">🎨</div>
+      <div><b id="dSeller" style="font-size:16px">Seller</b><br><small id="dMeta" style="color:#aaa">⭐ 5.0 • 120 orders</small><br><small id="dLoc" style="color:#aaa">Eldoret</small></div>
+    </div>
+    <p id="dDesc" style="font-size:14px;line-height:1.5;margin-top:12px"></p>
+    <h3 style="font-size:15px">📦 Choose Package</h3>
+    <div class="pkg active" id="pkg-basic" onclick="selectPkg('basic',this)"><b>Basic - <span id="pBasic">KES 500</span></b><small>1 design • 1 revision • Delivery in 1 day</small></div>
+    <div class="pkg" id="pkg-standard" onclick="selectPkg('standard',this)"><b>Standard - <span id="pStandard">KES 1000</span></b><small>3 designs • 3 revisions • Delivery in 2 days • Source file</small></div>
+    <div class="pkg" id="pkg-premium" onclick="selectPkg('premium',this)"><b>Premium - <span id="pPremium">KES 2000</span></b><small>Unlimited • Priority • Delivery in 1 day • Full branding</small></div>
+    <button class="order-btn" onclick="orderSkill()">Order Now - Pay via M-Pesa →</button>
+    <button onclick="chatSeller()" style="width:100%;padding:12px;margin-top:8px;border:none;border-radius:12px;background:#262626;color:#fff;font-weight:800;cursor:pointer">💬 Chat Seller First</button>
+    <h3 style="font-size:15px">⭐ Reviews</h3>
+    <div id="dReviews"></div>
+    <div style="display:flex;gap:8px;margin-top:10px"><input id="reviewInput" placeholder="Write a review..." style="flex:1;padding:11px;border:none;border-radius:12px;background:#262626;color:#fff;outline:none"><button onclick="addReview()" style="padding:10px 14px;border:none;border-radius:12px;background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;font-weight:800;cursor:pointer">Post</button></div>
+  </div>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='jobs.html'"><span>💼</span>Jobs</div>
+  <div onclick="location.href='chat.html'"><span>💬</span>Chat</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let skills = JSON.parse(localStorage.getItem('neurix_skills') || 'null') || [
+  {id:1, title:"I will design your logo", seller:"Faith", emoji:"🎨", cat:"Design", price:500, rating:5.0, orders:124, location:"Eldoret Town", desc:"Professional logo for your shop, church, or brand. 3 concepts, unlimited colours, PNG + JPG. Fast delivery in Eldoret. Send your business name and I start today!", tags:["Logo","Branding","Fast"], reviews:["Best logo in Eldoret! ⭐ - Kevin","Faith is talented ❤️ - Sarah"]},
+  {id:2, title:"I will edit your TikTok / Reels video", seller:"Kevin", emoji:"🎬", cat:"Video", price:300, rating:4.9, orders:89, location:"Zion Mall", desc:"Viral edits for TikTok & Reels. CapCut, transitions, subtitles, trending sounds. Send raw video, get viral edit in 1 day!", tags:["CapCut","Reels","Viral"], reviews:["My video got 50K views! 🔥 - Mike"]},
+  {id:3, title:"I will build your website", seller:"Bro", emoji:"💻", cat:"Tech", price:5000, rating:5.0, orders:45, location:"Remote", desc:"Modern website for your business in Eldoret. Shop, church, school, portfolio. Mobile friendly, M-Pesa payment, Google Maps. Done in 3 days!", tags:["Website","M-Pesa","SEO"], reviews:["Website is 🔥 - Mama Njoroge"]},
+  {id:4, title:"I will write your CV & cover letter", seller:"Grace", emoji:"✍️", cat:"Writing", price:400, rating:4.8, orders:156, location:"Eldoret Town", desc:"Win jobs with a pro CV! I rewrite your CV for Eldoret jobs, ATS friendly, cover letter included.", tags:["CV","Jobs"], reviews:["Got a job after Grace CV! - John"]},
+  {id:5, title:"I will make a song / beat for you", seller:"Ethic", emoji:"🎵", cat:"Music", price:2000, rating:4.9, orders:67, location:"Eldoret", desc:"Gengetone / Afrobeat beat made for you. Custom lyrics, mixing, mastering. Become next star in Eldoret!", tags:["Gengetone","Beat","Studio"], reviews:["Beat is fire! - David"]},
+  {id:6, title:"I will take professional photos", seller:"David", emoji:"📷", cat:"Design", price:1500, rating:4.9, orders:78, location:"Elgon View", desc:"Photoshoot in Eldoret - birthday, graduation, business, couple. 50 edited photos, same day delivery.", tags:["Photoshoot","Graduation"], reviews:["Photos were amazing! - Faith"]},
+];
+let myOrders = JSON.parse(localStorage.getItem('neurix_skill_orders') || '[]');
+let favorites = JSON.parse(localStorage.getItem('neurix_skill_favs') || '[]');
+let currentCat = 'All';
+let currentSearch = '';
+let currentSkill = null;
+let selectedPkg = 'basic';
+let pkgPrices = {basic:1, standard:2, premium:4};
+
+function render(){
+  let filtered = skills.filter(s => (currentCat==='All' || s.cat===currentCat) && (s.title.toLowerCase().includes(currentSearch) || s.seller.toLowerCase().includes(currentSearch)));
+  document.getElementById('skillList').innerHTML = filtered.map(s => `
+    <div class="skill-card" onclick="openSkill(${s.id})">
+      <div class="skill-head"><div class="icon">${s.emoji}</div><div><b>${s.title} ${favorites.includes(s.id)?'❤️':''}</b><small>by ${s.seller} • ⭐ ${s.rating} (${s.orders} orders) • 📍 ${s.location}</small></div></div>
+      <p style="font-size:13px;color:#aaa;line-height:1.4;margin:8px 0 0">${s.desc.slice(0,80)}...</p>
+      <div class="tags"><span class="tag">${s.cat}</span>${s.tags.map(t=>`<span class="tag ${t==='Fast'?'green':''}">${t}</span>`).join('')}</div>
+      <div class="foot"><span class="price">From KES ${s.price}</span><button class="hire-btn" onclick="event.stopPropagation(); openSkill(${s.id})">View →</button></div>
+    </div>
+  `).join('');
+  if(myOrders.length>0){
+    document.getElementById('myOrdersBox').style.display='block';
+    document.getElementById('orderCount').innerText = myOrders.length;
+    document.getElementById('myOrdersList').innerHTML = myOrders.map(o=>`• ${o.title} - ${o.pkg} - <b style="color:#22c55e">KES ${o.price}</b> - ${o.status} <button onclick="completeOrder(${o.id})" style="background:none;border:none;color:#a855f7;cursor:pointer">Mark Done</button>`).join('<br>');
+  } else {
+    document.getElementById('myOrdersBox').style.display='none';
+  }
+  localStorage.setItem('neurix_skills', JSON.stringify(skills));
+}
+render();
+
+function filterCat(cat, btn){
+  currentCat = cat;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  render();
+}
+function filterSkills(){ currentSearch = document.getElementById('searchInput').value.toLowerCase(); render(); }
+
+function openSkill(id){
+  currentSkill = skills.find(s=>s.id===id);
+  selectedPkg = 'basic';
+  document.getElementById('dTitle').innerText = currentSkill.title;
+  document.getElementById('dIcon').innerText = currentSkill.emoji;
+  document.getElementById('dSeller').innerText = currentSkill.seller;
+  document.getElementById('dMeta').innerText = `⭐ ${currentSkill.rating} • ${currentSkill.orders} orders • ${currentSkill.cat}`;
+  document.getElementById('dLoc').innerText = '📍 ' + currentSkill.location;
+  document.getElementById('dDesc').innerText = currentSkill.desc;
+  document.getElementById('dFav').innerText = favorites.includes(currentSkill.id) ? '❤️' : '🤍';
+  document.getElementById('pBasic').innerText = 'KES ' + currentSkill.price;
+  document.getElementById('pStandard').innerText = 'KES ' + (currentSkill.price*2);
+  document.getElementById('pPremium').innerText = 'KES ' + (currentSkill.price*4);
+  document.getElementById('dReviews').innerHTML = currentSkill.reviews.map(r=>`<div class="review">${r}</div>`).join('');
+  document.querySelectorAll('.pkg').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pkg-basic').classList.add('active');
+  document.getElementById('detailModal').style.display = 'flex';
+  document.querySelector('.nav').style.display = 'none';
+}
+function closeModal(){ document.getElementById('detailModal').style.display='none'; document.querySelector('.nav').style.display='flex'; render(); }
+function toggleFav(){
+  if(!currentSkill) return;
+  if(favorites.includes(currentSkill.id)) favorites = favorites.filter(x=>x!==currentSkill.id);
+  else favorites.push(currentSkill.id);
+  localStorage.setItem('neurix_skill_favs', JSON.stringify(favorites));
+  document.getElementById('dFav').innerText = favorites.includes(currentSkill.id) ? '❤️' : '🤍';
+}
+function selectPkg(pkg, el){
+  selectedPkg = pkg;
+  document.querySelectorAll('.pkg').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+}
+function orderSkill(){
+  let price = currentSkill.price * pkgPrices[selectedPkg];
+  let phone = prompt('Pay KES ' + price.toLocaleString() + ' for ' + selectedPkg + ' package via M-Pesa? Enter number') || '0712345678';
+  if(!confirm('Order: ' + currentSkill.title + '\nPackage: ' + selectedPkg + ' - KES ' + price.toLocaleString() + '\nSeller: ' + currentSkill.seller + '\nPay via M-Pesa ' + phone + '?')) return;
+  myOrders.unshift({id: Date.now(), title: currentSkill.title, pkg: selectedPkg, price: price.toLocaleString(), status: 'In Progress'});
+  localStorage.setItem('neurix_skill_orders', JSON.stringify(myOrders));
+  alert('✅ Order placed! ' + currentSkill.seller + ' will start now and chat you in Chat tab.\nPay KES ' + price + ' via M-Pesa prompt.');
+  closeModal();
+}
+function completeOrder(id){
+  let o = myOrders.find(x=>x.id===id);
+  if(o) o.status = 'Completed ✅';
+  localStorage.setItem('neurix_skill_orders', JSON.stringify(myOrders));
+  render();
+  alert('Order marked done! Please rate seller ⭐');
+}
+function chatSeller(){
+  if(!currentSkill) return;
+  alert('Opening chat with ' + currentSkill.seller + ' 💬 Ask about your project!');
+  location.href = 'chat.html';
+}
+function addReview(){
+  let inp = document.getElementById('reviewInput');
+  let v = inp.value.trim(); if(!v) return;
+  currentSkill.reviews.unshift(v + ' - You');
+  inp.value=''; document.getElementById('dReviews').innerHTML = currentSkill.reviews.map(r=>`<div class="review">${r}</div>`).join('');
+  alert('Review posted! ⭐');
+}
+function offerSkill(){
+  let title = prompt('What skill? (e.g. I will design posters)');
+  if(!title) return;
+  let price = prompt('Starting price KES?') || 500;
+  let cat = prompt('Category? Design / Video / Tech / Writing / Music', 'Design') || 'Design';
+  let desc = prompt('Describe your skill?') || 'New skill on NEURIX 🔥 I deliver fast in Eldoret!';
+  skills.unshift({id: Date.now(), title:title, seller:"You", emoji:"✨", cat:cat, price:parseInt(price), rating:5.0, orders:0, location:"Eldoret", desc:desc, tags:["New","Your Skill"], reviews:[]});
+  render();
+  alert('Your skill is LIVE! 🛠️ People can now hire you!');
+}
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

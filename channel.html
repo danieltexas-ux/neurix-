@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Channels - Follow What You Love</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:85px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.search{margin:10px 14px;background:#262626;border-radius:20px;padding:11px 14px;display:flex;gap:8px;align-items:center}
+.search input{flex:1;background:none;border:none;color:#fff;outline:none;font-size:14px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
+.tabs button{background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.tabs button.active{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.my-channels{display:flex;gap:12px;overflow-x:auto;padding:0 14px 12px;scrollbar-width:none}
+.my-ch{width:68px;text-align:center;flex-shrink:0;cursor:pointer}
+.my-ch div{width:62px;height:62px;border-radius:50%;background:#111;border:2px solid #a855f7;display:flex;align-items:center;justify-content:center;font-size:28px;margin:auto}
+.my-ch small{font-size:11px;color:#aaa;display:block;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.channel-card{background:#111;border-radius:18px;margin:0 14px 12px;padding:14px;cursor:pointer}
+.channel-head{display:flex;gap:12px;align-items:center}
+.channel-head .icon{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.channel-head div{flex:1}
+.channel-head b{font-size:15px;display:block}
+.channel-head small{color:#aaa;font-size:12px}
+.follow-btn{background:linear-gradient(135deg,#a855f7,#3b82f6);border:none;color:#fff;padding:8px 14px;border-radius:20px;font-weight:800;cursor:pointer;flex-shrink:0}
+.follow-btn.following{background:#262626;color:#22c55e}
+.post{margin-top:12px;background:#0a0a0a;border-radius:12px;padding:10px}
+.post img{width:100%;border-radius:10px;max-height:220px;object-fit:cover;margin-top:8px}
+.post p{font-size:14px;line-height:1.4;margin:0}
+.reactions{display:flex;gap:8px;margin-top:10px}
+.reactions button{background:#262626;border:none;color:#fff;padding:6px 12px;border-radius:20px;cursor:pointer;font-size:13px}
+.reactions button.liked{background:#3a1a1a;color:#ff3040}
+.create-btn{position:fixed;bottom:90px;right:14px;background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;border:none;padding:12px 16px;border-radius:30px;font-weight:800;z-index:40;cursor:pointer;box-shadow:0 4px 20px rgba(168,85,247,.5)}
+/* Channel View */
+.channel-view{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:50}
+.channel-header{padding:10px 12px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #222;background:#111}
+.channel-header button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.feed{flex:1;overflow-y:auto;padding:12px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">📢 NEURIX Channels</b>
+  <span onclick="location.href='chat.html'" style="cursor:pointer">💬</span>
+</div>
+
+<div class="search">🔍 <input id="searchInput" placeholder="Search channels..." oninput="filterChannels()"></div>
+
+<div class="tabs">
+  <button class="active" onclick="filterCat('All',this)">All</button>
+  <button onclick="filterCat('News',this)">📰 News</button>
+  <button onclick="filterCat('Music',this)">🎵 Music</button>
+  <button onclick="filterCat('Jobs',this)">💼 Jobs</button>
+  <button onclick="filterCat('Sports',this)">⚽ Sports</button>
+</div>
+
+<div style="padding:0 14px 6px"><b style="font-size:14px">Your Channels</b></div>
+<div class="my-channels" id="myChannels"></div>
+
+<div style="padding:0 14px 10px;display:flex;justify-content:space-between"><h3 style="margin:0;font-size:15px">🔥 Discover Channels</h3><small style="color:#888" id="count">6 channels</small></div>
+
+<div id="channelList"></div>
+
+<button class="create-btn" onclick="createChannel()">+ Create Channel</button>
+
+<!-- CHANNEL VIEW -->
+<div class="channel-view" id="channelView">
+  <div class="channel-header">
+    <button onclick="closeChannel()">←</button>
+    <div id="chIcon" style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:22px">📢</div>
+    <div style="flex:1"><b id="chName">Channel</b><br><small id="chMeta" style="color:#22c55e">12K followers</small></div>
+    <button onclick="shareChannel()">↗️</button>
+  </div>
+  <div class="feed" id="channelFeed"></div>
+  <div style="padding:10px;background:#111;border-top:1px solid #222;display:flex;gap:8px">
+    <input id="chInput" placeholder="Send update to followers..." style="flex:1;padding:11px;border-radius:20px;border:none;background:#262626;color:#fff;outline:none">
+    <button onclick="sendUpdate()" style="padding:10px 16px;border-radius:20px;border:none;background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;font-weight:800;cursor:pointer">Send</button>
+  </div>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='explore.html'"><span>🔍</span>Explore</div>
+  <div onclick="location.href='upload.html'"><span>➕</span>Post</div>
+  <div onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let channels = JSON.parse(localStorage.getItem('neurix_channels') || 'null') || [
+  {id:1, name:"NEURIX Official 🧠", emoji:"🧠", cat:"News", desc:"Official updates, new features, announcements", followers:"124K", followed:true, verified:true, posts:[{text:"🧠✦ NEURIX Update: Duet + Channels are LIVE! Try them now 🔥", img:"https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600", likes:2340, time:"2h ago"}, {text:"Eldoret to the world 🌍 We are now 100K users! Thank you bro!", img:"", likes:1200, time:"1d ago"}]},
+  {id:2, name:"Eldoret News 🇰🇪", emoji:"📰", cat:"News", desc:"Breaking news in Eldoret daily", followers:"45K", followed:false, verified:true, posts:[{text:"BREAKING: New road in Eldoret Town opening next week! Traffic will be easier 🚗", img:"https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600", likes:890, time:"3h ago"}]},
+  {id:3, name:"Gengetone Hits 🎵", emoji:"🎵", cat:"Music", desc:"New music daily, freestyles", followers:"89K", followed:false, verified:false, posts:[{text:"🔥 NEW DROP: Ethic - New Gengetone is FIRE! Listen in Music tab 🎵", img:"https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600", likes:1560, time:"5h ago"}]},
+  {id:4, name:"Jobs in Eldoret 💼", emoji:"💼", cat:"Jobs", desc:"New jobs every morning at 8am", followers:"32K", followed:true, verified:true, posts:[{text:"💼 TODAY: 12 new jobs! Delivery Rider KES 800/day, Waiter KES 12K/month. Check Jobs tab!", img:"", likes:456, time:"1h ago"}]},
+  {id:5, name:"Gor Mahia FC ⚽", emoji:"⚽", cat:"Sports", desc:"Gor Mahia news, scores, transfers", followers:"67K", followed:false, verified:true, posts:[{text:"⚽ Gor Mahia WINS 2-1! Kogalo to the world! Next match Saturday in Eldoret", img:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600", likes:2100, time:"4h ago"}]},
+  {id:6, name:"Eldoret Food 🍔", emoji:"🍔", cat:"News", desc:"Best food spots, discounts", followers:"21K", followed:false, verified:false, posts:[{text:"🍔 Mama Njoroge: Smokie + Chips KES 250 today only! Order in Shop", img:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600", likes:678, time:"6h ago"}]},
+];
+let currentCat = 'All';
+let currentSearch = '';
+let currentChannel = null;
+
+function render(){
+  let filtered = channels.filter(c => (currentCat==='All' || c.cat===currentCat) && (c.name.toLowerCase().includes(currentSearch) || c.desc.toLowerCase().includes(currentSearch)));
+  document.getElementById('count').innerText = filtered.length + ' channels';
+  document.getElementById('channelList').innerHTML = filtered.map(c => `
+    <div class="channel-card">
+      <div class="channel-head" onclick="openChannel(${c.id})">
+        <div class="icon">${c.emoji}</div>
+        <div><b>${c.name} ${c.verified?'✅':''}</b><small>${c.desc} • ${c.followers} followers • ${c.cat}</small></div>
+        <button class="follow-btn ${c.followed?'following':''}" onclick="event.stopPropagation(); toggleFollow(${c.id})">${c.followed?'✓ Following':'Follow'}</button>
+      </div>
+      ${c.posts.slice(0,1).map(p=>`
+        <div class="post" onclick="openChannel(${c.id})">
+          <p>${p.text}</p>
+          ${p.img?`<img src="${p.img}">`:''}
+          <div class="reactions"><button>❤️ ${p.likes}</button><button>💬 Reply</button><button>↗️ Share</button><small style="color:#888;margin-left:auto">${p.time}</small></div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+  // My channels row
+  let mine = channels.filter(c=>c.followed);
+  document.getElementById('myChannels').innerHTML = mine.length ? mine.map(c=>`<div class="my-ch" onclick="openChannel(${c.id})"><div>${c.emoji}</div><small>${c.name.split(' ')[0]}</small></div>`).join('') : '<small style="color:#888;padding:10px">Follow a channel to see it here</small>';
+  localStorage.setItem('neurix_channels', JSON.stringify(channels));
+}
+render();
+
+function filterCat(cat, btn){
+  currentCat = cat;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  render();
+}
+function filterChannels(){ currentSearch = document.getElementById('searchInput').value.toLowerCase(); render(); }
+
+function toggleFollow(id){
+  let c = channels.find(x=>x.id===id);
+  c.followed = !c.followed;
+  if(c.followed) alert('Following ' + c.name + ' ✅ You will get updates!');
+  render();
+  if(c.followed) openChannel(id);
+}
+
+function createChannel(){
+  let name = prompt('Channel name? (e.g. My Music Channel)');
+  if(!name) return;
+  let cat = prompt('Category? News / Music / Jobs / Sports', 'News');
+  let desc = prompt('What is channel about?') || 'New NEURIX channel 🔥';
+  let newC = {id: Date.now(), name:name, emoji:"📢", cat:cat||'News', desc:desc, followers:"1", followed:true, verified:false, posts:[{text:"Welcome to " + name + "! 🔥 Follow for updates!", img:"", likes:0, time:"Just now"}]};
+  channels.unshift(newC);
+  render();
+  alert('Channel created! ' + name + ' is LIVE 📢');
+  openChannel(newC.id);
+}
+
+function openChannel(id){
+  let c = channels.find(x=>x.id===id);
+  if(!c.followed){
+    if(!confirm('Follow ' + c.name + ' to view?')) return;
+    c.followed = true; render();
+  }
+  currentChannel = c;
+  document.getElementById('chName').innerText = c.name;
+  document.getElementById('chIcon').innerText = c.emoji;
+  document.getElementById('chMeta').innerText = c.followers + ' followers • ' + c.cat;
+  document.getElementById('channelView').style.display = 'flex';
+  document.querySelector('.nav').style.display = 'none';
+  renderChannelFeed();
+}
+
+function renderChannelFeed(){
+  document.getElementById('channelFeed').innerHTML = currentChannel.posts.map(p=>`
+    <div style="background:#111;border-radius:14px;padding:12px;margin-bottom:10px">
+      <b>${currentChannel.name}</b> <small style="color:#888">${p.time}</small>
+      <p style="margin:8px 0;line-height:1.4">${p.text}</p>
+      ${p.img?`<img src="${p.img}" style="width:100%;border-radius:10px">`:''}
+      <div class="reactions"><button onclick="likePost(this)">❤️ ${p.likes}</button><button onclick="alert('Reply sent to channel!')">💬 Reply</button><button onclick="shareChannel()">↗️ Forward</button></div>
+    </div>
+  `).join('');
+}
+
+function likePost(btn){
+  let txt = btn.innerText;
+  let num = parseInt(txt.replace(/\D/g,'')) || 0;
+  if(btn.classList.contains('liked')){ btn.classList.remove('liked'); btn.innerText = '❤️ ' + (num-1); }
+  else { btn.classList.add('liked'); btn.innerText = '❤️ ' + (num+1); }
+}
+
+function closeChannel(){
+  document.getElementById('channelView').style.display = 'none';
+  document.querySelector('.nav').style.display = 'flex';
+  render();
+}
+
+function shareChannel(){
+  alert('Channel link copied! 🔗\n' + (currentChannel ? currentChannel.name : '') + '\nShare to WhatsApp, TikTok, anywhere!');
+}
+
+function sendUpdate(){
+  let inp = document.getElementById('chInput');
+  let v = inp.value.trim(); if(!v) return;
+  currentChannel.posts.unshift({text:v, img:"", likes:0, time:"Just now"});
+  inp.value=''; renderChannelFeed();
+  alert('Update sent to ' + currentChannel.followers + ' followers! 📢');
+}
+document.getElementById('chInput').addEventListener('keydown', e=>{ if(e.key==='Enter') sendUpdate(); });
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

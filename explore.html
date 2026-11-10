@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Explore - NEURIX</title>
+<style>
+*{box-sizing:border-box} body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:70px}
+.top{position:sticky;top:0;background:#000;padding:12px;display:flex;gap:10px;align-items:center;z-index:10;border-bottom:1px solid #222}
+.search{flex:1;background:#262626;border:none;padding:11px 14px;border-radius:10px;color:#fff;outline:none}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px}
+.item{aspect-ratio:1/1.2;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:40px;position:relative;cursor:pointer;overflow:hidden}
+.item img{width:100%;height:100%;object-fit:cover}
+.item .badge{position:absolute;top:6px;right:6px;font-size:14px;background:rgba(0,0,0,.6);padding:3px 6px;border-radius:8px}
+.item .views{position:absolute;bottom:6px;left:6px;font-size:11px;background:rgba(0,0,0,.6);padding:3px 6px;border-radius:8px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:10px}
+.tabs button{background:#262626;color:#fff;border:none;padding:8px 14px;border-radius:20px;white-space:nowrap}
+.tabs button.active{background:#fff;color:#000;font-weight:800}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #222}
+.nav div{text-align:center;font-size:12px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style></head>
+<body>
+<div class="top"><button onclick="history.back()" style="background:none;border:none;color:#fff;font-size:22px">←</button><input class="search" id="search" placeholder="🔍 Search" oninput="filterPosts()"><span onclick="location.href='notifications.html'">🔔</span></div>
+<div class="tabs" id="tabs">
+<button class="active" onclick="setCat('All',this)">All</button><button onclick="setCat('AI',this)">🧠 AI</button><button onclick="setCat('Music',this)">🎵 Music</button><button onclick="setCat('Sports',this)">⚽ Sports</button><button onclick="setCat('Funny',this)">😂 Funny</button><button onclick="setCat('Fashion',this)">👗 Fashion</button>
+</div>
+<div class="grid" id="grid"></div>
+<div class="nav">
+<div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+<div class="active" onclick="location.href='explore.html'"><span>🔍</span>Explore</div>
+<div onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+<div onclick="location.href='ai.html'"><span>✦</span>AI</div>
+<div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+<script>
+let cat='All';
+let posts=[
+{emoji:'🔥',cat:'AI',views:'1.2M',type:'🔥',img:'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400'},
+{emoji:'🎵',cat:'Music',views:'856K',type:'▶️',img:'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400'},
+{emoji:'⚽',cat:'Sports',views:'2.1M',type:'▶️',img:'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400'},
+{emoji:'😂',cat:'Funny',views:'3.4M',type:'▶️',img:'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400'},
+{emoji:'👗',cat:'Fashion',views:'980K',type:'',img:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400'},
+{emoji:'🧠',cat:'AI',views:'4.5M',type:'▶️',img:'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400'},
+{emoji:'🚀',cat:'AI',views:'672K',type:'',img:'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400'},
+{emoji:'🌍',cat:'Sports',views:'1.8M',type:'▶️',img:'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400'},
+{emoji:'🍔',cat:'Funny',views:'2.9M',type:'▶️',img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400'},
+];
+function setCat(c,btn){cat=c;document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');filterPosts()}
+function filterPosts(){
+let q=document.getElementById('search').value.toLowerCase();
+let f=posts.filter(p=>(cat==='All'||p.cat===cat)&&(p.cat.toLowerCase().includes(q)||p.emoji.includes(q)));
+document.getElementById('grid').innerHTML=f.map(p=>`<div class="item" onclick="location.href='reels.html'"><img src="${p.img}"><span class="badge">${p.type||'🖼️'}</span><span class="views">👁️ ${p.views}</span></div>`).join('');
+}
+filterPosts();
+</script></body></html>
+```
+
+</body>
+
+</html>

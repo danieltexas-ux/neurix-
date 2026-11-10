@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Reels - NEURIX</title>
+<style>
+*{box-sizing:border-box} body{margin:0;background:#000;color:#fff;font-family:Inter,Arial;overflow:hidden}
+.top{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:14px;z-index:20;background:linear-gradient(to bottom,rgba(0,0,0,.7),transparent)}
+.top b{font-size:18px}
+.feed{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory}
+.reel{height:100vh;scroll-snap-align:start;position:relative;display:flex;align-items:center;justify-content:center;background:#111}
+.reel video{width:100%;height:100%;object-fit:cover}
+.overlay{position:absolute;bottom:0;left:0;right:0;padding:16px;padding-bottom:80px;background:linear-gradient(to top,rgba(0,0,0,.8),transparent)}
+.user{display:flex;gap:8px;align-items:center}
+.follow{border:1px solid #fff;padding:4px 10px;border-radius:20px;font-size:12px;background:#fe2c55;border:none;color:#fff}
+.actions{position:absolute;right:10px;bottom:90px;display:flex;flex-direction:column;gap:18px;text-align:center;z-index:10}
+.actions div{font-size:28px;cursor:pointer}
+.actions small{font-size:12px;display:block}
+.actions .avatar{width:48px;height:48px;border-radius:50%;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid #fff}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #222;z-index:30}
+.nav div{font-size:12px;color:#aaa;text-align:center;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style></head>
+<body>
+<div class="top"><span onclick="history.back()" style="font-size:22px">←</span><b>NEURIX Reels</b><span onclick="location.href='ai.html'">✦ AI</span></div>
+<div class="feed" id="feed"></div>
+<div class="nav">
+<div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+<div onclick="location.href='explore.html'"><span>🔍</span>Explore</div>
+<div class="active" onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+<div onclick="location.href='ai.html'"><span>✦</span>AI</div>
+<div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+<script>
+let videos=[
+{user:"@sarah_vibes",avatar:"👩",caption:"This app is FIRE 🔥 #NEURIX #fyp",song:"🎵 Original - Sarah",likes:12400,comments:342,src:"https://cdn.coverr.co/videos/coverr-dancing-in-the-street-1584/1080p.mp4"},
+{user:"@neurix_ai",avatar:"✦",caption:"POV: You built an app in 1 day with AI 🧠✦",song:"🎵 Trending - Neurix",likes:45200,comments:1204,src:"https://cdn.coverr.co/videos/coverr-typing-on-a-keyboard-1588/1080p.mp4"},
+{user:"@kevin_ke",avatar:"👨",caption:"Eldoret to the world 🌍 #Kenya #fyp",song:"🎵 Amapiano - Kevin",likes:8900,comments:210,src:"https://cdn.coverr.co/videos/coverr-a-man-walking-in-the-city-1579/1080p.mp4"},
+];
+let liked=[false,false,false];
+document.getElementById('feed').innerHTML=videos.map((v,i)=>`
+<div class="reel">
+<video src="${v.src}" loop muted playsinline onclick="this.paused?this.play():this.pause()" autoplay></video>
+<div class="overlay">
+<div class="user"><b>${v.user}</b><button class="follow" onclick="this.innerText='Following ✓'">Follow</button></div>
+<p>${v.caption}</p><small>${v.song}</small>
+</div>
+<div class="actions">
+<div class="avatar">${v.avatar}</div>
+<div onclick="likeReel(${i},this)">❤️<small>${v.likes}</small></div>
+<div onclick="location.href='chat.html?id=sarah'">💬<small>${v.comments}</small></div>
+<div onclick="alert('Link copied bro! Share this Reel 🔥')">↗️<small>Share</small></div>
+<div onclick="location.href='ai.html'">✦<small>AI</small></div>
+</div>
+</div>`).join('');
+function likeReel(i,el){liked[i]=!liked[i];let n=videos[i].likes+(liked[i]?1:-1);el.innerHTML=`${liked[i]?'❤️':'🤍'}<small>${n.toLocaleString()}</small>`}
+</script></body></html>
+```
+</body>
+
+</html>

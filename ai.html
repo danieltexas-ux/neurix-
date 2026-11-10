@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ Neurix AI - Powered by Meta AI</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:90px}
+.top{position:sticky;top:0;background:#111;padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #262626;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.badge{background:linear-gradient(135deg,#a855f7,#3b82f6);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800}
+.bubble{padding:12px 14px;border-radius:18px;margin:10px;max-width:85%;line-height:1.5;font-size:15px;white-space:pre-wrap}
+.me{background:linear-gradient(135deg,#a855f7,#3b82f6);margin-left:auto;border-bottom-right-radius:4px}
+.ai{background:#1e1e2e;border-bottom-left-radius:4px}
+.ai b{color:#c4b5fd}
+.quick{display:flex;gap:8px;overflow-x:auto;padding:0 10px}
+.quick button{background:#262626;color:#fff;border:1px solid #333;padding:8px 14px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.input{position:fixed;bottom:58px;left:0;right:0;display:flex;gap:8px;padding:10px;background:#111;border-top:1px solid #262626}
+.input input{flex:1;padding:12px;border-radius:20px;border:none;background:#262626;color:#fff;outline:none}
+.input button{padding:12px 16px;border-radius:20px;border:none;background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;font-weight:800;cursor:pointer}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+.link-btn{background:#0082ff;color:#fff;border:none;padding:10px 14px;border-radius:12px;font-weight:800;margin-top:8px;cursor:pointer;width:100%}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:20px">✦</div>
+  <div style="flex:1"><b>✦ Neurix AI</b><br><small style="color:#a5b4fc">Powered by Meta AI • Always online</small></div>
+  <span class="badge">LINKED TO META AI</span>
+</div>
+
+<div id="msgs"></div>
+
+<div class="quick">
+  <button onclick="quickAsk('Give me a caption for my photo')">✍️ Caption</button>
+  <button onclick="quickAsk('Give me a business idea for a student in Kenya')">💡 Business Idea</button>
+  <button onclick="quickAsk('Help me build my app')">💻 Build App</button>
+  <button onclick="quickAsk('Write a funny joke')">😂 Joke</button>
+  <button onclick="quickAsk('Help me with homework')">📚 Homework</button>
+</div>
+
+<div class="input">
+  <input id="inp" placeholder="Ask Neurix AI anything...">
+  <button onclick="ask()">Send</button>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='explore.html'"><span>🔍</span>Explore</div>
+  <div onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+  <div class="active" onclick="location.href='ai.html'"><span>✦</span>AI</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let msgs = document.getElementById('msgs');
+let history = JSON.parse(localStorage.getItem('neurix_ai_history') || '[]');
+
+function add(text, cls){
+  msgs.innerHTML += `<div class="bubble ${cls}">${text}</div>`;
+  window.scrollTo(0, document.body.scrollHeight);
+}
+
+function showHistory(){
+  if(history.length === 0){
+    add("Hey bro! I'm <b>✦ Neurix AI</b> 🧠✦\n\nI'm linked to Meta AI - the same AI you're chatting with right now.\n\nAsk me anything: captions, business, code, homework, jokes, ideas. If you want the full power, tap 'Open in Meta AI' below and you'll talk to me directly.", 'ai');
+  } else {
+    history.forEach(h => { add(h.q, 'me'); add(h.a, 'ai'); });
+  }
+}
+showHistory();
+
+function quickAsk(q){
+  document.getElementById('inp').value = q;
+  ask();
+}
+
+function ask(){
+  let v = document.getElementById('inp').value.trim();
+  if(!v) return;
+  add(v, 'me');
+  document.getElementById('inp').value = '';
+  add("Typing... ✦", 'ai');
+
+  setTimeout(()=>{
+    // Remove typing
+    let bubbles = document.querySelectorAll('.bubble.ai');
+    bubbles[bubbles.length-1].remove();
+
+    let low = v.toLowerCase();
+    let reply = "";
+
+    if(low.includes('caption')) reply = "Here's a fire caption bro 🔥:\n\n'Built different. Stayed consistent. 🧠✦ #NEURIX'\n\nWant another one? Tell me what the photo is about - gym, money, vibes, friends?";
+    else if(low.includes('business') || low.includes('money') || low.includes('hustle')) reply = "Best business idea for you in Kenya bro:\n\n1. Find 1 problem people pay for\n2. Post 1 Reel daily about it\n3. Sell the solution in NEURIX\n\nExample: Help shops in Eldoret make posters / videos. Charge 500 KES per poster. 2 clients a day = 30K a month. Want me to make a full plan?";
+    else if(low.includes('code') || low.includes('app') || low.includes('neurix')) reply = "For your NEURIX app bro, do this next:\n\n1. index.html = Home Feed\n2. reels.html = TikTok videos\n3. explore.html = Instagram grid\n4. ai.html = This AI (linked to Meta AI)\n5. profile.html = Instagram profile\n\nYou already have all of them! Next step: Add login + upload photo. Want the code?";
+    else if(low.includes('hello') || low.includes('hi') || low.includes('yo')) reply = "Yo bro! What's up? 👋 What are we building today? App, business, caption, or just vibing?";
+    else if(low.includes('joke')) reply = "Why did the developer go broke? 😂\n\nBecause he used up all his cache! \n\nWant another one?";
+    else if(low.includes('homework') || low.includes('school') || low.includes('math')) reply = "I got you bro 📚 Tell me the exact question and I'll break it down step by step so you actually understand it, not just copy. What subject is it?";
+    else if(low.includes('who are you') || low.includes('what are you')) reply = "I'm ✦ Neurix AI - your AI inside NEURIX. I'm powered by Meta AI, the same AI you talk to in Messenger. One brain, two places. 🧠✦";
+    else reply = `Good question bro! Here's how I'd think about "${v}":\n\n1. Break it into 3 small steps\n2. Start with the easiest one TODAY\n3. Post your progress in NEURIX\n\nWant me to make a full step-by-step plan for this? Tap below to open me in Meta AI for a deeper answer.`;
+
+    let fullReply = reply + `<br><button class="link-btn" onclick="openMetaAI('${encodeURIComponent(v)}')">Open in Meta AI → Ask Me Directly</button>`;
+
+    add(fullReply, 'ai');
+    history.push({q: v, a: fullReply});
+    localStorage.setItem('neurix_ai_history', JSON.stringify(history));
+  }, 800);
+}
+
+function openMetaAI(q){
+  // This links Neurix AI to Meta AI in Messenger / meta.ai
+  // It opens Meta AI with your question pre-filled
+  let url = "https://www.meta.ai/?prompt=" + q;
+  window.open(url, "_blank");
+  alert("Opening Meta AI bro! That's me - ask me there and I'll answer with full power 🧠✦");
+}
+
+document.getElementById('inp').addEventListener('keydown', e => { if(e.key === 'Enter') ask(); });
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

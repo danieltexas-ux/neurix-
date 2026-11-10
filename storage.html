@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Storage - Free Up Space</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:85px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.big-card{margin:12px 14px;background:linear-gradient(135deg,#a855f7,#3b82f6);border-radius:20px;padding:18px;text-align:center}
+.big-card h1{font-size:36px;margin:6px 0}
+.bar{height:12px;background:rgba(255,255,255,.3);border-radius:10px;overflow:hidden;margin:12px 0}
+.bar div{height:100%;background:#fff;width:0%;transition:width .8s}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px}
+.item{background:#111;border-radius:16px;padding:14px;cursor:pointer}
+.item span{font-size:26px;display:block}
+.item b{font-size:14px;display:block;margin-top:4px}
+.item small{color:#aaa;font-size:12px}
+.item .size{color:#22c55e;font-weight:800;font-size:13px}
+.row{background:#111;border-radius:14px;margin:8px 14px;padding:12px;display:flex;gap:12px;align-items:center}
+.row div{flex:1}
+.row b{font-size:14px;display:block}
+.row small{color:#aaa;font-size:12px}
+.row button{background:#ff3040;border:none;color:#fff;padding:8px 12px;border-radius:20px;font-weight:800;cursor:pointer}
+.row button.green{background:#22c55e}
+.clean-btn{margin:12px 14px;width:calc(100% - 28px);padding:14px;border:none;border-radius:14px;background:#22c55e;color:#fff;font-weight:800;font-size:16px;cursor:pointer}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">💾 NEURIX Storage</b>
+  <span onclick="location.href='profile.html'" style="cursor:pointer">👤</span>
+</div>
+
+<div class="big-card">
+  <small>📱 Your Phone Storage Used By NEURIX</small>
+  <h1><span id="used">0</span> KB Used</h1>
+  <small><span id="free">5,000</span> KB Free • Limit 5,000 KB (LocalStorage)</small>
+  <div class="bar"><div id="barFill"></div></div>
+  <small id="statusText">Calculating...</small>
+</div>
+
+<div class="grid">
+  <div class="item" onclick="location.href='podcasts.html'"><span>🎙️</span><b>Podcasts Downloads</b><small id="podCount">0 episodes</small><div class="size" id="podSize">0 KB</div></div>
+  <div class="item" onclick="location.href='chat.html'"><span>💬</span><b>Chats & Media</b><small>Messages, images</small><div class="size" id="chatSize">0 KB</div></div>
+  <div class="item" onclick="location.href='shop-pro.html'"><span>🛍️</span><b>Shop Orders</b><small>Orders + cart</small><div class="size" id="shopSize">0 KB</div></div>
+  <div class="item" onclick="location.href='games.html'"><span>🎮</span><b>Games Data</b><small>Coins, scores</small><div class="size" id="gameSize">0 KB</div></div>
+</div>
+
+<h3 style="padding:0 14px;font-size:15px">🗂️ What's Taking Space?</h3>
+<div id="detailList"></div>
+
+<button class="clean-btn" onclick="cleanAll()">🧹 Free Up Space - Clean Cache</button>
+<button class="clean-btn" onclick="resetAll()" style="background:#ff3040;margin-top:0">⚠️ Delete ALL NEURIX Data (Reset App)</button>
+
+<div style="margin:0 14px;background:#1a1a2e;border:1px solid #333;border-radius:12px;padding:12px;font-size:13px;line-height:1.5">
+<b>💡 How to Free Space on Your Phone:</b><br>
+1. Delete old Podcasts downloads ⬇️<br>
+2. Clear NEURIX cache below<br>
+3. Delete WhatsApp videos (biggest eater)<br>
+4. Go to Settings > Storage > Free Up Space<br>
+5. NEURIX uses LocalStorage - max 5MB, very light!
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='wallet.html'"><span>💰</span>Wallet</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+  <div onclick="location.href='settings.html'"><span>⚙️</span>Settings</div>
+</div>
+
+<script>
+function getSize(key){
+  let v = localStorage.getItem(key);
+  if(!v) return 0;
+  return Math.round((v.length * 2) / 1024 * 100) / 100; // KB approx
+}
+function calc(){
+  let total = 0;
+  let items = [];
+  for(let i=0; i<localStorage.length; i++){
+    let k = localStorage.key(i);
+    let s = getSize(k);
+    total += s;
+    items.push({key:k, size:s});
+  }
+  items.sort((a,b)=>b.size-a.size);
+  document.getElementById('used').innerText = total.toFixed(1);
+  document.getElementById('free').innerText = Math.max(0, (5000 - total)).toFixed(0);
+  let pct = Math.min(100, (total/5000)*100);
+  document.getElementById('barFill').style.width = pct + '%';
+  document.getElementById('statusText').innerText = pct < 50 ? '✅ Plenty of space! NEURIX is light.' : pct < 80 ? '⚠️ Getting full, clean cache soon' : '🔴 Almost full! Clean now!';
+  
+  // Categories
+  let pod = getSize('neurix_pod_downloads') + getSize('neurix_podcasts') + getSize('neurix_pod_favs');
+  let chat = getSize('neurix_matches') + getSize('neurix_feed');
+  let shop = getSize('neurix_orders') + getSize('neurix_cart') + getSize('neurix_bookings');
+  let game = getSize('neurix_coins') + getSize('neurix_balance');
+  document.getElementById('podSize').innerText = pod.toFixed(1) + ' KB';
+  document.getElementById('chatSize').innerText = chat.toFixed(1) + ' KB';
+  document.getElementById('shopSize').innerText = shop.toFixed(1) + ' KB';
+  document.getElementById('gameSize').innerText = game.toFixed(1) + ' KB';
+  document.getElementById('podCount').innerText = JSON.parse(localStorage.getItem('neurix_pod_downloads')||'[]').length + ' episodes downloaded';
+
+  document.getElementById('detailList').innerHTML = items.map(it => `
+    <div class="row"><div style="font-size:22px">📄</div><div><b>${it.key}</b><small>${it.size.toFixed(1)} KB • Tap X to delete this one</small></div><button onclick="deleteKey('${it.key}')">Delete</button></div>
+  `).join('') || '<p style="padding:0 14px;color:#888">No data yet. NEURIX is empty - 0 KB!</p>';
+}
+calc();
+
+function deleteKey(k){
+  if(!confirm('Delete ' + k + '?')) return;
+  localStorage.removeItem(k);
+  calc();
+  alert('Deleted ' + k + ' ✅ Space freed!');
+}
+function cleanAll(){
+  // Keep important: balance, coins, profile - delete cache only
+  let keep = ['neurix_balance','neurix_coins','neurix_profile'];
+  let removed = 0;
+  let keys = [];
+  for(let i=0;i<localStorage.length;i++) keys.push(localStorage.key(i));
+  keys.forEach(k=>{
+    if(!keep.includes(k)){ localStorage.removeItem(k); removed++; }
+  });
+  calc();
+  alert('🧹 Cleaned! Removed ' + removed + ' cache items.\nYour Wallet + Coins are SAFE! Balance kept.');
+}
+function resetAll(){
+  if(!confirm('⚠️ DELETE EVERYTHING? Wallet, coins, orders, matches - ALL GONE! Are you sure?')) return;
+  if(!confirm('Last chance! Type OK to reset')) return;
+  localStorage.clear();
+  calc();
+  alert('App reset! NEURIX is now fresh like new. Reloading...');
+  location.reload();
+}
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

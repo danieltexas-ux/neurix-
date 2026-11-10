@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+  
+  
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Shop Pro - Order, Track, Rate</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:85px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.search{margin:10px 14px;background:#262626;border-radius:20px;padding:11px 14px;display:flex;gap:8px;align-items:center}
+.search input{flex:1;background:none;border:none;color:#fff;outline:none;font-size:14px}
+.flash{margin:0 14px;background:linear-gradient(135deg,#f59e0b,#ff3040);border-radius:16px;padding:14px;display:flex;justify-content:space-between;align-items:center}
+.flash b{font-size:15px}
+.flash span{background:#000;padding:6px 10px;border-radius:10px;font-weight:800;font-size:14px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;scrollbar-width:none}
+.tabs button{background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.tabs button.active{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.order-card{background:#111;border-radius:18px;margin:0 14px 12px;padding:14px;border:1px solid #1a1a1a}
+.order-head{display:flex;gap:12px;align-items:center}
+.order-head img{width:56px;height:56px;border-radius:12px;object-fit:cover}
+.order-head div{flex:1}
+.order-head b{font-size:14px;display:block}
+.order-head small{color:#aaa;font-size:12px}
+.track{display:flex;justify-content:space-between;margin:14px 0 6px;position:relative}
+.track::before{content:'';position:absolute;top:14px;left:10%;right:10%;height:3px;background:#262626;z-index:0}
+.track-progress{position:absolute;top:14px;left:10%;height:3px;background:#22c55e;z-index:1;transition:width .8s}
+.track div{text-align:center;font-size:11px;z-index:2;position:relative;flex:1}
+.track div span{width:30px;height:30px;border-radius:50%;background:#262626;display:flex;align-items:center;justify-content:center;font-size:14px;margin:auto;border:2px solid #000}
+.track div.done span{background:#22c55e}
+.track div.active span{background:#a855f7;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.order-btns{display:flex;gap:8px;margin-top:10px}
+.order-btns button{flex:1;padding:10px;border:none;border-radius:12px;font-weight:800;cursor:pointer}
+.btn-track{background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff}
+.btn-ghost{background:#262626;color:#fff}
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px}
+.product{background:#111;border-radius:16px;overflow:hidden;cursor:pointer}
+.product img{width:100%;height:140px;object-fit:cover}
+.product div{padding:10px}
+.product b{font-size:13px;display:block;line-height:1.3}
+.product small{color:#aaa;font-size:11px}
+.product .price{color:#22c55e;font-weight:800;font-size:15px;margin-top:4px}
+.old{color:#888;text-decoration:line-through;font-size:12px;margin-left:6px}
+.add-btn{width:100%;margin-top:8px;padding:8px;border:none;border-radius:10px;background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;font-weight:800;cursor:pointer}
+.cart-bar{position:fixed;bottom:70px;left:12px;right:12px;background:linear-gradient(135deg,#a855f7,#3b82f6);padding:12px 14px;border-radius:16px;display:none;justify-content:space-between;align-items:center;z-index:40;cursor:pointer}
+.review-box{background:#0a0a0a;border-radius:12px;padding:10px;margin-top:10px;display:none}
+.review-box input{width:100%;padding:10px;border:none;border-radius:10px;background:#262626;color:#fff;outline:none;margin:6px 0}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">🛍️ NEURIX Shop Pro</b>
+  <span onclick="location.href='wallet.html'" style="cursor:pointer">💰</span>
+</div>
+
+<div class="search">🔍 <input id="searchInput" placeholder="Search iPhone, shoes, smokie..." oninput="filterProducts()"></div>
+
+<div class="flash">
+  <div><b>⚡ Flash Sale - 50% OFF</b><br><small>Ends soon! Eldoret only</small></div>
+  <span id="timer">02:59:59</span>
+</div>
+
+<div class="tabs">
+  <button class="active" onclick="filterCat('All',this)">All</button>
+  <button onclick="filterCat('Phones',this)">📱 Phones</button>
+  <button onclick="filterCat('Fashion',this)">👟 Fashion</button>
+  <button onclick="filterCat('Food',this)">🍔 Food</button>
+  <button onclick="filterCat('Orders',this)">📦 My Orders</button>
+</div>
+
+<div id="ordersSection"></div>
+
+<div id="productsSection">
+  <h3 style="padding:0 14px;font-size:15px">🔥 Hot Deals Today</h3>
+  <div class="product-grid" id="productGrid"></div>
+</div>
+
+<div class="cart-bar" id="cartBar" onclick="checkout()">
+  <span id="cartText">🛒 0 items</span>
+  <b id="cartTotal">KES 0 → Checkout</b>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='shop.html'"><span>🛍️</span>Shop</div>
+  <div onclick="location.href='ride.html'"><span>🛵</span>Ride</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let products = [
+  {id:1, name:"iPhone 13 - 128GB", cat:"Phones", price:58000, old:75000, img:"https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600", seller:"Eldoret Phones", rating:4.9, reviews:234, stock:3},
+  {id:2, name:"Nike Air Force - White", cat:"Fashion", price:3500, old:5500, img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600", seller:"Shoe Palace Eldoret", rating:4.8, reviews:189, stock:12},
+  {id:3, name:"Smokie + Chips Combo", cat:"Food", price:250, old:400, img:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600", seller:"Mama Njoroge", rating:5.0, reviews:567, stock:50},
+  {id:4, name:"Samsung Galaxy A55", cat:"Phones", price:42000, old:52000, img:"https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600", seller:"Eldoret Phones", rating:4.7, reviews:98, stock:5},
+  {id:5, name:"Hoodie - NEURIX Black", cat:"Fashion", price:1800, old:2800, img:"https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600", seller:"NEURIX Store", rating:4.9, reviews:76, stock:20},
+  {id:6, name:"Pilau + Chicken - Large", cat:"Food", price:350, old:500, img:"https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600", seller:"Mama Njoroge", rating:4.9, reviews:312, stock:30},
+];
+let cart = JSON.parse(localStorage.getItem('neurix_cart') || '[]');
+let orders = JSON.parse(localStorage.getItem('neurix_orders') || '[{"id":"NEU-123","name":"iPhone 13 - 128GB","img":"https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600","price":58000,"status":2,"seller":"Eldoret Phones","rating":0,"reviews":[]}]');
+let currentCat = 'All';
+let currentSearch = '';
+
+function renderProducts(){
+  let filtered = products.filter(p => (currentCat==='All' || currentCat==='Orders' || p.cat===currentCat) && (p.name.toLowerCase().includes(currentSearch) || p.seller.toLowerCase().includes(currentSearch)));
+  if(currentCat==='Orders'){
+    document.getElementById('productsSection').style.display = 'none';
+    renderOrders();
+    return;
+  }
+  document.getElementById('productsSection').style.display = 'block';
+  document.getElementById('ordersSection').innerHTML = '';
+  document.getElementById('productGrid').innerHTML = filtered.map(p => `
+    <div class="product">
+      <img src="${p.img}" onclick="viewProduct(${p.id})">
+      <div><b>${p.name}</b><small>${p.seller} • ⭐ ${p.rating} (${p.reviews}) • ${p.stock} left</small><div><span class="price">KES ${p.price.toLocaleString()}</span><span class="old">KES ${p.old.toLocaleString()}</span></div><button class="add-btn" onclick="addToCart(${p.id})">🛒 Add to Cart</button></div>
+    </div>
+  `).join('');
+}
+
+function renderOrders(){
+  document.getElementById('ordersSection').innerHTML = `<h3 style="padding:0 14px;font-size:15px">📦 My Orders (${orders.length})</h3>` + orders.map((o,i) => {
+    let steps = ['Ordered','Packed','On Way','Delivered'];
+    let emojis = ['✅','📦','🛵','🏠'];
+    return `
+    <div class="order-card">
+      <div class="order-head"><img src="${o.img}"><div><b>${o.name}</b><small>Order ${o.id} • ${o.seller} • KES ${o.price.toLocaleString()}</small></div><b style="color:#22c55e">${steps[o.status]}</b></div>
+      <div class="track"><div class="track-progress" id="prog-${i}" style="width:${o.status*33}%"></div>${steps.map((s,si)=>`<div class="${si<o.status?'done':si===o.status?'active':''}"><span>${emojis[si]}</span>${s}</div>`).join('')}</div>
+      <div class="order-btns"><button class="btn-track" onclick="trackOrder(${i})">📍 Track Live</button><button class="btn-ghost" onclick="advanceOrder(${i})">⏩ Next Step</button></div>
+      ${o.status===3 ? `<div style="margin-top:10px"><b>Rate this product:</b><br><span style="font-size:26px;cursor:pointer" id="stars-${i}">${[1,2,3,4,5].map(n=>`<span onclick="rateOrder(${i},${n})">${n<=o.rating?'⭐':'☆'}</span>`).join('')}</span> <span style="font-size:13px;color:#aaa">${o.rating?o.rating+' stars - Thanks!':''}</span><div class="review-box" id="review-${i}" style="display:block"><input id="reviewText-${i}" placeholder="Write a review... e.g. Fast delivery, original phone!"><button class="btn-track" style="width:100%;padding:10px" onclick="submitReview(${i})">Post Review</button><div style="margin-top:8px;font-size:13px;color:#aaa">${o.reviews.map(r=>`• ${r}<br>`).join('')}</div></div></div>` : `<div class="review-box" id="review-${i}"><p>Rate after delivery</p></div>`}
+    </div>
+    `;
+  }).join('');
+}
+
+function filterCat(cat, btn){
+  currentCat = cat;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderProducts();
+}
+function filterProducts(){ currentSearch = document.getElementById('searchInput').value.toLowerCase(); renderProducts(); }
+
+function viewProduct(id){
+  let p = products.find(x=>x.id===id);
+  if(confirm(p.name + '\n\nSeller: ' + p.seller + '\nRating: ⭐ ' + p.rating + ' (' + p.reviews + ' reviews)\nPrice: KES ' + p.price.toLocaleString() + ' (was ' + p.old.toLocaleString() + ')\nStock: ' + p.stock + ' left\n\nAdd to cart?')) addToCart(id);
+}
+
+function addToCart(id){
+  let p = products.find(x=>x.id===id);
+  cart.push(p);
+  localStorage.setItem('neurix_cart', JSON.stringify(cart));
+  updateCartBar();
+  alert('Added to cart! 🛒 ' + p.name);
+}
+
+function updateCartBar(){
+  let total = cart.reduce((s,p)=>s+p.price,0);
+  let bar = document.getElementById('cartBar');
+  if(cart.length===0){ bar.style.display='none'; return; }
+  bar.style.display='flex';
+  document.getElementById('cartText').innerText = '🛒 ' + cart.length + ' items';
+  document.getElementById('cartTotal').innerText = 'KES ' + total.toLocaleString() + ' → Checkout';
+}
+
+function checkout(){
+  let total = cart.reduce((s,p)=>s+p.price,0);
+  let phone = prompt('M-Pesa number to pay KES ' + total.toLocaleString() + '? (e.g. 0712345678)') || '0712345678';
+  if(!confirm('Pay KES ' + total.toLocaleString() + ' via M-Pesa to ' + phone + '?\n\nYou will get M-Pesa prompt.')) return;
+  // Create orders from cart
+  cart.forEach(p => {
+    orders.unshift({id:'NEU-'+Math.floor(100+Math.random()*900), name:p.name, img:p.img, price:p.price, status:0, seller:p.seller, rating:0, reviews:[]});
+  });
+  localStorage.setItem('neurix_orders', JSON.stringify(orders));
+  cart = [];
+  localStorage.setItem('neurix_cart', JSON.stringify(cart));
+  updateCartBar();
+  alert('✅ Payment sent! Check M-Pesa prompt.\nOrder placed! Track in Orders tab 📦');
+  filterCat('Orders', document.querySelectorAll('.tabs button')[4]);
+}
+
+function trackOrder(i){
+  let o = orders[i];
+  let locs = ['Eldoret Phones - Order received', 'Packed at shop - Ready', 'Rider Kevin is on the way - 5 mins away', 'Delivered to you!'];
+  alert('📍 Live Tracking: ' + o.name + '\n\n' + locs[o.status] + '\nStatus: ' + ['Ordered','Packed','On Way','Delivered'][o.status]);
+  if(o.status===2) location.href = 'ride.html';
+}
+
+function advanceOrder(i){
+  if(orders[i].status<3){ orders[i].status++; localStorage.setItem('neurix_orders', JSON.stringify(orders)); renderOrders(); alert('Order moved to: ' + ['Ordered','Packed','On Way','Delivered'][orders[i].status]); }
+  else alert('Already delivered! Please rate it ⭐');
+}
+
+function rateOrder(i, n){
+  orders[i].rating = n;
+  localStorage.setItem('neurix_orders', JSON.stringify(orders));
+  renderOrders();
+  alert('Thanks! You rated ' + n + ' stars ⭐');
+}
+
+function submitReview(i){
+  let inp = document.getElementById('reviewText-'+i);
+  let v = inp.value.trim(); if(!v) return alert('Write a review first!');
+  orders[i].reviews.push(v);
+  localStorage.setItem('neurix_orders', JSON.stringify(orders));
+  renderOrders();
+  alert('Review posted! 🔥');
+}
+
+// Flash sale timer
+let s = 2*3600+59*60+59;
+setInterval(()=>{ s--; if(s<0) s=2*3600; let h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=s%60; document.getElementById('timer').innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`; },1000);
+
+renderProducts(); updateCartBar();
+</script>
+</body>
+</html>
+```
+""
+</body>
+
+</html>

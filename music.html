@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Music - One App. Everything.</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:140px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.search{margin:10px 14px;background:#262626;border-radius:20px;padding:11px 14px;display:flex;gap:8px;align-items:center}
+.search input{flex:1;background:none;border:none;color:#fff;outline:none;font-size:14px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
+.tabs button{background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.tabs button.active{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.section{padding:6px 14px}
+.section h3{margin:8px 0}
+.featured{background:linear-gradient(135deg,#a855f7,#3b82f6,#06b6d4);border-radius:18px;padding:18px;display:flex;gap:14px;align-items:center;cursor:pointer}
+.featured .cover{width:70px;height:70px;border-radius:14px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0}
+.song{display:flex;gap:12px;align-items:center;padding:10px 14px;cursor:pointer;border-bottom:1px solid #111}
+.song:active{background:#111}
+.song .cover{width:52px;height:52px;border-radius:10px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.song .info{flex:1;min-width:0}
+.song .info b{font-size:15px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song .info small{color:#aaa;font-size:12px}
+.song .play{width:36px;height:36px;border-radius:50%;background:#fff;color:#000;border:none;font-size:14px;cursor:pointer;flex-shrink:0}
+.song.playing{background:#1a1a2e}
+.song.playing .info b{color:#a855f7}
+.liked{color:#ff3040!important}
+/* Player */
+.player{position:fixed;bottom:72px;left:0;right:0;background:#111;border-top:1px solid #222;padding:10px 14px;z-index:40;display:none}
+.player-top{display:flex;gap:10px;align-items:center}
+.player-top .cover{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:22px}
+.progress{height:4px;background:#333;border-radius:10px;margin:10px 0;overflow:hidden;cursor:pointer}
+.progress div{height:100%;width:0%;background:linear-gradient(90deg,#a855f7,#3b82f6);transition:width .2s}
+.controls{display:flex;justify-content:center;gap:18px;align-items:center}
+.controls button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.controls button.main{width:46px;height:46px;border-radius:50%;background:#fff;color:#000;font-size:20px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">🎵 NEURIX Music</b>
+  <span onclick="location.href='ai.html'" style="cursor:pointer">✦</span>
+</div>
+
+<div class="search">🔍 <input id="searchInput" placeholder="Search songs, artists..." oninput="filterSongs()"></div>
+
+<div class="tabs" id="genreTabs">
+  <button class="active" onclick="filterGenre('All',this)">All</button>
+  <button onclick="filterGenre('Gengetone',this)">Gengetone 🔥</button>
+  <button onclick="filterGenre('Amapiano',this)">Amapiano 🎹</button>
+  <button onclick="filterGenre('Afrobeats',this)">Afrobeats 🌍</button>
+  <button onclick="filterGenre('Gospel',this)">Gospel 🙏</button>
+  <button onclick="filterGenre('Hip Hop',this)">Hip Hop 🎤</button>
+</div>
+
+<div class="section">
+  <div class="featured" onclick="playSong(0)">
+    <div class="cover">🔥</div>
+    <div style="flex:1"><small style="opacity:.8">TRENDING #1 IN ELDORET</small><br><b style="font-size:18px">NEURIX Hits 2026</b><br><small>Top songs everyone is using in Reels</small></div>
+    <div style="font-size:28px">▶️</div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🔥 Trending Now</h3>
+</div>
+
+<div id="songList"></div>
+
+<div class="section">
+  <h3>🎵 Your Library</h3>
+  <p style="color:#888;font-size:13px" id="libraryText">No liked songs yet. Tap ❤️ to save.</p>
+  <div id="likedList"></div>
+</div>
+
+<!-- PLAYER -->
+<div class="player" id="player">
+  <div class="player-top">
+    <div class="cover" id="pCover">🎵</div>
+    <div style="flex:1;min-width:0"><b id="pTitle">Song</b><br><small id="pArtist" style="color:#aaa">Artist</small></div>
+    <button onclick="toggleLike()" id="likeBtn" style="background:none;border:none;font-size:22px;cursor:pointer">🤍</button>
+    <button onclick="useInReel()" style="background:linear-gradient(135deg,#a855f7,#3b82f6);border:none;color:#fff;padding:8px 12px;border-radius:20px;font-weight:800;cursor:pointer;font-size:12px">Use in Reel ▶️</button>
+  </div>
+  <div class="progress" onclick="seek(event)"><div id="bar"></div></div>
+  <div style="display:flex;justify-content:space-between;font-size:11px;color:#aaa"><span id="curTime">0:00</span><span id="durTime">0:30</span></div>
+  <div class="controls">
+    <button onclick="shuffle()">🔀</button>
+    <button onclick="prevSong()">⏮️</button>
+    <button class="main" id="playBtn" onclick="togglePlay()">▶️</button>
+    <button onclick="nextSong()">⏭️</button>
+    <button onclick="repeat()">🔁</button>
+  </div>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='explore.html'"><span>🔍</span>Explore</div>
+  <div onclick="location.href='upload.html'"><span>➕</span>Post</div>
+  <div onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let songs = [
+  {title:"NEURIX Anthem", artist:"NEURIX Squad", genre:"Gengetone", emoji:"🔥", plays:"2.1M", duration:30},
+  {title:"Eldoret Nights", artist:"Kevin Kiprop", genre:"Amapiano", emoji:"🌃", plays:"1.8M", duration:30},
+  {title:"One App Everything", artist:"Sarah", genre:"Afrobeats", emoji:"🧠", plays:"1.2M", duration:30},
+  {title:"Hustle Hard", artist:"Gengetone Kings", genre:"Gengetone", emoji:"💪", plays:"980K", duration:30},
+  {title:"Amapiano Vibes", artist:"DJ Piano KE", genre:"Amapiano", emoji:"🎹", plays:"870K", duration:30},
+  {title:"Blessings", artist:"Gospel Choir KE", genre:"Gospel", emoji:"🙏", plays:"760K", duration:30},
+  {title:"Nairobi Flow", artist:"Young Rapper", genre:"Hip Hop", emoji:"🎤", plays:"650K", duration:30},
+  {title:"Afro Love", artist:"Afro Queen", genre:"Afrobeats", emoji:"❤️", plays:"540K", duration:30},
+];
+
+let current = -1;
+let isPlaying = false;
+let progress = 0;
+let timer = null;
+let liked = JSON.parse(localStorage.getItem('neurix_liked_songs') || '[]');
+let currentGenre = 'All';
+let currentSearch = '';
+
+function renderSongs(){
+  let filtered = songs.filter(s => (currentGenre==='All' || s.genre===currentGenre) && (s.title.toLowerCase().includes(currentSearch) || s.artist.toLowerCase().includes(currentSearch)));
+  document.getElementById('songList').innerHTML = filtered.map(s => {
+    let idx = songs.indexOf(s);
+    let isLiked = liked.includes(idx);
+    return `
+    <div class="song ${idx===current ? 'playing' : ''}" onclick="playSong(${idx})">
+      <div class="cover">${s.emoji}</div>
+      <div class="info"><b>${s.title}</b><small>${s.artist} • ${s.genre} • ${s.plays} plays</small></div>
+      <button onclick="event.stopPropagation(); toggleLikeSong(${idx})" style="background:none;border:none;font-size:20px;cursor:pointer" class="${isLiked?'liked':''}">${isLiked?'❤️':'🤍'}</button>
+      <button class="play" onclick="event.stopPropagation(); playSong(${idx})">${idx===current && isPlaying ? '⏸️' : '▶️'}</button>
+    </div>`;
+  }).join('');
+  renderLiked();
+}
+
+function renderLiked(){
+  let list = liked.map(i => songs[i]).filter(Boolean);
+  document.getElementById('libraryText').innerText = list.length===0 ? 'No liked songs yet. Tap ❤️ to save.' : list.length + ' liked songs';
+  document.getElementById('likedList').innerHTML = list.map(s => {
+    let idx = songs.indexOf(s);
+    return `<div class="song" onclick="playSong(${idx})"><div class="cover">${s.emoji}</div><div class="info"><b>${s.title}</b><small>${s.artist}</small></div><span>❤️</span></div>`;
+  }).join('');
+}
+
+function filterGenre(g, btn){
+  currentGenre = g;
+  document.querySelectorAll('#genreTabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSongs();
+}
+function filterSongs(){ currentSearch = document.getElementById('searchInput').value.toLowerCase(); renderSongs(); }
+
+function playSong(idx){
+  current = idx;
+  let s = songs[idx];
+  document.getElementById('player').style.display = 'block';
+  document.getElementById('pCover').innerText = s.emoji;
+  document.getElementById('pTitle').innerText = s.title;
+  document.getElementById('pArtist').innerText = s.artist + ' • ' + s.genre;
+  document.getElementById('durTime').innerText = '0:' + s.duration;
+  document.getElementById('likeBtn').innerText = liked.includes(idx) ? '❤️' : '🤍';
+  progress = 0;
+  isPlaying = true;
+  document.getElementById('playBtn').innerText = '⏸️';
+  startTimer();
+  renderSongs();
+}
+
+function startTimer(){
+  clearInterval(timer);
+  timer = setInterval(()=>{
+    if(!isPlaying) return;
+    progress += 1;
+    let pct = (progress / songs[current].duration) * 100;
+    document.getElementById('bar').style.width = pct + '%';
+    document.getElementById('curTime').innerText = '0:' + (progress < 10 ? '0'+progress : progress);
+    if(progress >= songs[current].duration){ nextSong(); }
+  }, 1000);
+}
+
+function togglePlay(){
+  if(current===-1) return playSong(0);
+  isPlaying = !isPlaying;
+  document.getElementById('playBtn').innerText = isPlaying ? '⏸️' : '▶️';
+}
+
+function nextSong(){ playSong((current+1) % songs.length); }
+function prevSong(){ playSong((current-1 + songs.length) % songs.length); }
+function shuffle(){ playSong(Math.floor(Math.random()*songs.length)); }
+function repeat(){ progress = 0; document.getElementById('bar').style.width='0%'; }
+function seek(e){
+  let rect = e.currentTarget.getBoundingClientRect();
+  let pct = (e.clientX - rect.left) / rect.width;
+  progress = Math.floor(pct * songs[current].duration);
+  document.getElementById('bar').style.width = (pct*100) + '%';
+}
+
+function toggleLike(){
+  if(current===-1) return;
+  toggleLikeSong(current);
+  document.getElementById('likeBtn').innerText = liked.includes(current) ? '❤️' : '🤍';
+}
+
+function toggleLikeSong(idx){
+  if(liked.includes(idx)) liked = liked.filter(i=>i!==idx);
+  else liked.push(idx);
+  localStorage.setItem('neurix_liked_songs', JSON.stringify(liked));
+  renderSongs();
+}
+
+function useInReel(){
+  if(current===-1) return alert('Play a song first!');
+  let s = songs[current];
+  localStorage.setItem('neurix_selected_song', JSON.stringify(s));
+  alert('🎵 "' + s.title + '" added to your Reel! Going to Reels...');
+  location.href = 'reels.html';
+}
+
+renderSongs();
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

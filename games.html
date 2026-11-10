@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Games Hub - Play & Win</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:85px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.coin-bar{margin:10px 14px;background:linear-gradient(135deg,#f59e0b,#ff3040);border-radius:16px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+.coin-bar b{font-size:16px}
+.coin-bar button{background:#000;border:none;color:#fff;padding:8px 12px;border-radius:20px;font-weight:800;cursor:pointer}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
+.tabs button{background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.tabs button.active{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.leader{margin:0 14px 12px;background:#1a1a2e;border:1px solid #333;border-radius:16px;padding:12px}
+.leader-row{display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid #222}
+.leader-row:last-child{border:none}
+.leader-row .rank{width:28px;height:28px;border-radius:50%;background:#262626;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+.leader-row .rank.gold{background:#f59e0b;color:#000}
+.leader-row .rank.silver{background:#94a3b8;color:#000}
+.leader-row .rank.bronze{background:#b45309;color:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px}
+.game{background:#111;border-radius:18px;padding:16px;text-align:center;cursor:pointer;border:1px solid #1a1a1a;position:relative}
+.game span{font-size:42px;display:block}
+.game b{font-size:14px;display:block;margin-top:6px}
+.game small{color:#aaa;font-size:11px}
+.game .badge{position:absolute;top:8px;right:8px;background:#ff3040;color:#fff;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:800}
+.tournament{margin:12px 14px;background:linear-gradient(135deg,#a855f7,#3b82f6);border-radius:16px;padding:14px}
+.tournament b{font-size:15px}
+.tournament p{font-size:12px;opacity:.9;margin:6px 0}
+.tournament button{background:#fff;border:none;color:#000;padding:9px 14px;border-radius:20px;font-weight:800;cursor:pointer;width:100%}
+.friends{margin:0 14px}
+.friend-card{background:#111;border-radius:14px;padding:12px;margin-bottom:8px;display:flex;gap:12px;align-items:center}
+.friend-card div{flex:1}
+.friend-card b{font-size:14px;display:block}
+.friend-card small{color:#aaa;font-size:12px}
+.friend-card button{background:linear-gradient(135deg,#a855f7,#3b82f6);border:none;color:#fff;padding:8px 12px;border-radius:20px;font-weight:800;cursor:pointer}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">🎮 NEURIX Games</b>
+  <span onclick="location.href='wallet.html'" style="cursor:pointer">💰</span>
+</div>
+
+<div class="coin-bar">
+  <div><b>🪙 <span id="coins">1200</span> Coins</b><br><small>Win games to earn coins • 1000 coins = KES 100</small></div>
+  <button onclick="claimDaily()">🎁 Claim Daily +100</button>
+</div>
+
+<div class="tabs">
+  <button class="active" onclick="filterCat('All',this)">All Games</button>
+  <button onclick="filterCat('Board',this)">♟️ Board</button>
+  <button onclick="filterCat('Action',this)">🔥 Action</button>
+  <button onclick="filterCat('Friends',this)">👥 With Friends</button>
+</div>
+
+<div class="leader">
+  <b>🏆 Leaderboard - Eldoret This Week</b>
+  <p style="font-size:12px;color:#aaa;margin:4px 0">Top player wins KES 500 on Sunday!</p>
+  <div id="leaderList"></div>
+</div>
+
+<div id="gamesSection">
+  <h3 style="padding:0 14px;font-size:15px">🎮 Play Now</h3>
+  <div class="grid" id="gameGrid"></div>
+</div>
+
+<div class="tournament">
+  <b>🔥 Free Fire Cup - Eldoret Championship</b>
+  <p>Prize: KES 1,000 + 5000 coins • Starts Saturday 6pm • 32 players • Entry FREE</p>
+  <p>⏰ Ends in <b id="tourneyTimer">02:14:33</b> • <span id="joinedCount">18</span>/32 joined</p>
+  <button id="joinBtn" onclick="joinTournament()">Join Tournament →</button>
+</div>
+
+<div class="friends">
+  <h3 style="font-size:15px">👥 Challenge Friends</h3>
+  <div id="friendList"></div>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='chess.html'"><span>♟️</span>Chess</div>
+  <div onclick="location.href='match.html'"><span>💘</span>Match</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let games = [
+  {id:1, name:"Chess", emoji:"♟️", cat:"Board", desc:"Play vs AI • 2 Players", players:"12K playing", file:"chess.html", hot:true},
+  {id:2, name:"Ludo King", emoji:"🎲", cat:"Board", desc:"2-4 Players • Classic", players:"8.5K playing", file:"", hot:true},
+  {id:3, name:"Checkers", emoji:"🔴", cat:"Board", desc:"Classic • vs AI", players:"5.2K playing", file:"", hot:false},
+  {id:4, name:"Free Fire Cup", emoji:"🔥", cat:"Action", desc:"Battle Royale • Tournament", players:"20K playing", file:"", hot:true},
+  {id:5, name:"Snake Game", emoji:"🐍", cat:"Action", desc:"Classic Snake • High Score", players:"3.1K playing", file:"", hot:false},
+  {id:6, name:"Quiz - Eldoret", emoji:"🧠", cat:"Friends", desc:"Trivia • Win Coins", players:"6.7K playing", file:"", hot:false},
+  {id:7, name:"Football Penalty", emoji:"⚽", cat:"Action", desc:"Score Penalties • Gor Mahia", players:"9.8K playing", file:"", hot:true},
+  {id:8, name:"Carrom", emoji:"🎯", cat:"Board", desc:"Carrom Pool • 2 Players", players:"2.4K playing", file:"", hot:false},
+];
+let leaderboard = [
+  {name:"Kevin", pts:2340, emoji:"👨", you:false},
+  {name:"Sarah", pts:1980, emoji:"👩", you:false},
+  {name:"You", pts:1200, emoji:"🧠", you:true},
+  {name:"Mike", pts:980, emoji:"🧑", you:false},
+  {name:"Faith", pts:850, emoji:"👩", you:false},
+];
+let friends = [
+  {name:"Kevin", emoji:"👨", game:"Chess", status:"Online"},
+  {name:"Sarah", emoji:"👩", game:"Ludo", status:"Online"},
+  {name:"Mike", emoji:"🧑", game:"Free Fire", status:"In Game"},
+];
+let coins = parseInt(localStorage.getItem('neurix_coins') || '1200');
+let currentCat = 'All';
+let joined = false;
+
+function render(){
+  let filtered = games.filter(g => currentCat==='All' || g.cat===currentCat || (currentCat==='Friends' && g.cat!=='Action'));
+  if(currentCat==='Friends') filtered = games.filter(g=>g.cat==='Board' || g.name.includes('Quiz'));
+  document.getElementById('gameGrid').innerHTML = filtered.map(g => `
+    <div class="game" onclick="playGame(${g.id})">
+      ${g.hot?'<span class="badge">🔥 HOT</span>':''}
+      <span>${g.emoji}</span><b>${g.name}</b><small>${g.desc}</small><br><small style="color:#22c55e">🟢 ${g.players}</small>
+    </div>
+  `).join('');
+  document.getElementById('coins').innerText = coins.toLocaleString();
+  document.getElementById('leaderList').innerHTML = leaderboard.map((l,i) => `
+    <div class="leader-row"><div class="rank ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</div><div style="font-size:22px">${l.emoji}</div><div style="flex:1"><b>${l.name} ${l.you?'(You)':''}</b><br><small>${l.pts} pts</small></div><b style="color:#f59e0b">${i===0?'👑':''}</b></div>
+  `).join('');
+  document.getElementById('friendList').innerHTML = friends.map(f => `
+    <div class="friend-card"><div style="font-size:28px">${f.emoji}</div><div><b>${f.name}</b><small>Playing ${f.game} • ${f.status}</small></div><button onclick="challenge('${f.name}','${f.game}')">⚔️ Challenge</button></div>
+  `).join('');
+  localStorage.setItem('neurix_coins', coins.toString());
+}
+render();
+
+function filterCat(cat, btn){
+  currentCat = cat;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  render();
+}
+
+function playGame(id){
+  let g = games.find(x=>x.id===id);
+  if(g.file){
+    location.href = g.file;
+    return;
+  }
+  if(g.name==="Ludo King"){
+    // Mini Ludo dice game
+    let roll = Math.floor(Math.random()*6)+1;
+    let win = roll===6;
+    if(win){ coins += 50; render(); }
+    alert('🎲 Ludo: You rolled ' + roll + '!\n' + (win ? '🎉 6! You win +50 coins! Play again!' : 'Roll again! Need 6 to win coins.'));
+    return;
+  }
+  if(g.name==="Snake Game"){
+    let score = Math.floor(Math.random()*80)+20;
+    coins += score;
+    render();
+    alert('🐍 Snake: Score ' + score + '!\nYou earned +' + score + ' coins! 🪙 Total: ' + coins);
+    return;
+  }
+  if(g.name==="Quiz - Eldoret"){
+    let q = prompt('🧠 Quiz: What is the capital of Kenya?\nA) Eldoret  B) Nairobi  C) Kisumu');
+    if(q && q.toLowerCase().includes('b') || q && q.toLowerCase().includes('nairobi')){
+      coins += 100; render();
+      alert('✅ Correct! +100 coins! You are smart!');
+    } else {
+      alert('❌ Wrong! Answer is Nairobi. Try again!');
+    }
+    return;
+  }
+  if(g.name==="Football Penalty"){
+    let goal = Math.random()>0.4;
+    if(goal){ coins += 80; render(); alert('⚽ GOAL! You scored! +80 coins!'); }
+    else alert('😭 Missed! Keeper saved it. Try again!');
+    return;
+  }
+  // Generic
+  let won = Math.random()>0.5;
+  if(won){ coins += 30; render(); alert('🎉 You won ' + g.name + '! +30 coins!'); }
+  else alert('😔 You lost ' + g.name + '. Try again!');
+}
+
+function claimDaily(){
+  coins += 100;
+  render();
+  alert('🎁 Daily Reward: +100 coins!\nTotal: ' + coins + ' coins. Come back tomorrow!');
+}
+
+function joinTournament(){
+  if(joined) return alert('You already joined! See you Saturday 6pm 🔥');
+  joined = true;
+  document.getElementById('joinedCount').innerText = 19;
+  document.getElementById('joinBtn').innerText = '✅ Joined! See You Saturday';
+  alert('🔥 Joined Free Fire Cup!\n32 players • Prize KES 1,000\nWe will notify you Saturday 6pm. Good luck!');
+}
+
+function challenge(name, game){
+  if(confirm('Challenge ' + name + ' to ' + game + '?\nWinner gets 100 coins!')){
+    let won = Math.random()>0.5;
+    if(won){ coins += 100; render(); alert('🎉 You BEAT ' + name + ' in ' + game + '! +100 coins!'); }
+    else alert('😔 ' + name + ' beat you in ' + game + '. Rematch?');
+  }
+}
+
+// Tournament timer
+let t = 2*3600+14*60+33;
+setInterval(()=>{
+  t--; if(t<0) t=2*3600;
+  let h=Math.floor(t/3600), m=Math.floor((t%3600)/60), s=t%60;
+  document.getElementById('tourneyTimer').innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+},1000);
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

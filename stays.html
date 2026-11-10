@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Stays - Book in Eldoret</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:85px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.search{margin:10px 14px;background:#262626;border-radius:20px;padding:11px 14px;display:flex;gap:8px;align-items:center}
+.search input{flex:1;background:none;border:none;color:#fff;outline:none;font-size:14px}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
+.filters button{background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.filters button.active{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.banner{margin:0 14px 12px;background:linear-gradient(135deg,#f59e0b,#ff3040);border-radius:16px;padding:14px;display:flex;gap:12px;align-items:center}
+.banner div{flex:1}
+.banner b{font-size:15px}
+.banner p{font-size:12px;opacity:.9;margin:4px 0 0}
+.stay-card{background:#111;border-radius:18px;margin:0 14px 12px;overflow:hidden;cursor:pointer;border:1px solid #1a1a1a}
+.stay-card img{width:100%;height:200px;object-fit:cover}
+.stay-card .body{padding:12px}
+.stay-card b{font-size:15px;display:block;line-height:1.3}
+.stay-card small{color:#aaa;font-size:12px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{background:#262626;padding:5px 10px;border-radius:20px;font-size:11px}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.price{color:#22c55e;font-weight:800;font-size:16px}
+.book-btn{background:linear-gradient(135deg,#a855f7,#3b82f6);border:none;color:#fff;padding:9px 16px;border-radius:20px;font-weight:800;cursor:pointer}
+/* Detail Modal */
+.modal{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:50;overflow-y:auto;padding-bottom:80px}
+.modal img{width:100%;height:260px;object-fit:cover}
+.modal-body{padding:14px}
+.modal-body input, .modal-body select{width:100%;padding:12px;margin:6px 0;border:none;border-radius:12px;background:#262626;color:#fff;outline:none}
+.book-now{width:100%;padding:14px;border:none;border-radius:14px;background:#22c55e;color:#fff;font-weight:800;font-size:16px;cursor:pointer;margin-top:10px}
+.review{margin-top:10px;background:#111;padding:10px;border-radius:12px;font-size:13px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">🏠 NEURIX Stays</b>
+  <span onclick="location.href='wallet.html'" style="cursor:pointer">💰</span>
+</div>
+
+<div class="search">🔍 <input id="searchInput" placeholder="Search Eldoret, Zion Mall, Elgon View..." oninput="filterStays()"></div>
+
+<div class="filters">
+  <button class="active" onclick="filterCat('All',this)">All</button>
+  <button onclick="filterCat('Bedsitter',this)">🛏️ Bedsitter</button>
+  <button onclick="filterCat('Apartment',this)">🏢 Apartment</button>
+  <button onclick="filterCat('Villa',this)">🏡 Villa</button>
+  <button onclick="filterCat('Guest House',this)">🏨 Guest House</button>
+</div>
+
+<div class="banner">
+  <div><b>🎉 20% OFF This Weekend!</b><p>Book any stay in Eldoret, pay via M-Pesa</p></div>
+  <span style="font-size:28px">🏠</span>
+</div>
+
+<div style="padding:0 14px;display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0;font-size:15px">📍 Stays in Eldoret (<span id="count">0</span>)</h3><button onclick="listStay()" style="background:#262626;border:none;color:#fff;padding:8px 12px;border-radius:20px;cursor:pointer">+ List Your Place</button></div>
+
+<div id="stayList" style="margin-top:10px"></div>
+
+<div style="margin:0 14px;background:#1a1a2e;border:1px solid #333;border-radius:14px;padding:12px">
+  <b>📅 My Bookings (<span id="bookCount">0</span>)</b>
+  <div id="myBookings" style="margin-top:8px;font-size:13px;color:#aaa">No bookings yet. Book a stay!</div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal" id="detailModal">
+  <div style="position:relative">
+    <img id="dImg">
+    <button onclick="closeModal()" style="position:absolute;top:10px;left:10px;background:#000;border:none;color:#fff;font-size:22px;border-radius:50%;width:36px;height:36px;cursor:pointer">←</button>
+    <button onclick="toggleFav()" id="favBtn" style="position:absolute;top:10px;right:10px;background:#000;border:none;color:#fff;font-size:22px;border-radius:50%;width:36px;height:36px;cursor:pointer">🤍</button>
+  </div>
+  <div class="modal-body">
+    <h2 id="dName" style="margin:0"></h2>
+    <p id="dMeta" style="color:#aaa;font-size:13px"></p>
+    <p id="dDesc" style="font-size:14px;line-height:1.5"></p>
+    <div id="dAmenities"></div>
+    <h3 style="font-size:15px">📅 Book Dates</h3>
+    <label style="font-size:12px;color:#aaa">Check-in</label><input type="date" id="checkIn" value="2026-11-14">
+    <label style="font-size:12px;color:#aaa">Check-out</label><input type="date" id="checkOut" value="2026-11-15">
+    <label style="font-size:12px;color:#aaa">Guests</label><select id="guests"><option>1 Guest</option><option selected>2 Guests</option><option>3 Guests</option><option>4+ Guests</option></select>
+    <div style="display:flex;justify-content:space-between;background:#111;padding:12px;border-radius:12px;margin-top:10px"><span id="dCalc">1 night • 2 guests</span><b id="dTotal" style="color:#22c55e">KES 1,500</b></div>
+    <button class="book-now" onclick="confirmBook()">Book Now - Pay via M-Pesa →</button>
+    <h3 style="font-size:15px">⭐ Reviews</h3>
+    <div id="dReviews"></div>
+    <div style="display:flex;gap:8px;margin-top:10px"><input id="reviewInput" placeholder="Write a review..." style="flex:1"><button onclick="addReview()" style="padding:10px 14px;border:none;border-radius:12px;background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;font-weight:800;cursor:pointer">Post</button></div>
+  </div>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='shop.html'"><span>🛍️</span>Shop</div>
+  <div onclick="location.href='ride.html'"><span>🛵</span>Ride</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let stays = JSON.parse(localStorage.getItem('neurix_stays') || 'null') || [
+  {id:1, name:"Cozy Bedsitter - Eldoret Town", type:"Bedsitter", price:1500, img:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800", location:"Eldoret Town, Near Zion Mall", rating:4.8, reviewsCount:124, host:"Kevin", desc:"Clean bedsitter in Eldoret Town. WiFi, water 24/7, security. 5 mins walk to town. Perfect for students & visitors.", amenities:["📶 WiFi","💧 Water 24/7","🔒 Security","🛏️ Double Bed","🍳 Kitchen"], reviews:["Clean and safe! Loved it ⭐ - Sarah","Great location, near town - Mike"]},
+  {id:2, name:"2 Bedroom Apartment - Zion Mall", type:"Apartment", price:3500, img:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800", location:"Zion Mall Area", rating:4.9, reviewsCount:89, host:"Faith", desc:"Spacious 2 bedroom with balcony overlooking Eldoret. Full kitchen, TV, WiFi. Family friendly.", amenities:["📶 WiFi","📺 Smart TV","🍳 Full Kitchen","🚗 Parking","🌇 Balcony"], reviews:["Best apartment in Eldoret! - John","Family loved it ❤️ - Mary"]},
+  {id:3, name:"Luxury Villa - Elgon View", type:"Villa", price:8000, img:"https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800", location:"Elgon View, Eldoret", rating:5.0, reviewsCount:45, host:"NEURIX Stays", desc:"Luxury villa with pool, garden, 3 bedrooms. For groups & celebrations. Chef available.", amenities:["🏊 Pool","🌳 Garden","👨‍🍳 Chef","📶 WiFi","🚗 Parking"], reviews:["Amazing villa! Pool was 🔥 - Kevin"]},
+  {id:4, name:"Guest House - Moi University Road", type:"Guest House", price:2200, img:"https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800", location:"Moi University Road", rating:4.7, reviewsCount:67, host:"Mama Njoroge", desc:"Quiet guest house near Moi University. Breakfast included. Perfect for parents visiting students.", amenities:["🍳 Breakfast","📶 WiFi","🛏️ Clean Beds","🔒 Security"], reviews:["Breakfast was great! - Peter"]},
+  {id:5, name:"Studio - West Indies", type:"Bedsitter", price:1200, img:"https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800", location:"West Indies, Eldoret", rating:4.6, reviewsCount:34, host:"David", desc:"Modern studio, self-contained. Near West Indies shopping centre.", amenities:["📶 WiFi","🍳 Kitchen","🔒 Security"], reviews:["Good value for money - Grace"]},
+];
+let bookings = JSON.parse(localStorage.getItem('neurix_bookings') || '[]');
+let favorites = JSON.parse(localStorage.getItem('neurix_stay_favs') || '[]');
+let currentCat = 'All';
+let currentSearch = '';
+let currentStay = null;
+
+function render(){
+  let filtered = stays.filter(s => (currentCat==='All' || s.type===currentCat) && (s.name.toLowerCase().includes(currentSearch) || s.location.toLowerCase().includes(currentSearch)));
+  document.getElementById('count').innerText = filtered.length;
+  document.getElementById('stayList').innerHTML = filtered.map(s => `
+    <div class="stay-card" onclick="openStay(${s.id})">
+      <img src="${s.img}">
+      <div class="body"><b>${s.name} ${favorites.includes(s.id)?'❤️':''}</b><small>⭐ ${s.rating} (${s.reviewsCount} reviews) • 📍 ${s.location} • Host: ${s.host}</small><div class="tags">${s.amenities.slice(0,3).map(a=>`<span class="tag">${a}</span>`).join('')}</div><div class="foot"><span class="price">KES ${s.price.toLocaleString()} <small style="color:#aaa;font-weight:400">/ night</small></span><button class="book-btn" onclick="event.stopPropagation(); openStay(${s.id})">View →</button></div></div>
+    </div>
+  `).join('');
+  document.getElementById('bookCount').innerText = bookings.length;
+  document.getElementById('myBookings').innerHTML = bookings.length ? bookings.map(b=>`• <b>${b.name}</b> - ${b.checkIn} to ${b.checkOut} • ${b.guests} • <b style="color:#22c55e">KES ${b.total}</b> <button onclick="cancelBooking(${b.id})" style="background:none;border:none;color:#ff3040;cursor:pointer">Cancel</button>`).join('<br>') : 'No bookings yet. Book a stay!';
+  localStorage.setItem('neurix_stays', JSON.stringify(stays));
+}
+render();
+
+function filterCat(cat, btn){
+  currentCat = cat;
+  document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  render();
+}
+function filterStays(){ currentSearch = document.getElementById('searchInput').value.toLowerCase(); render(); }
+
+function openStay(id){
+  currentStay = stays.find(s=>s.id===id);
+  document.getElementById('dImg').src = currentStay.img;
+  document.getElementById('dName').innerText = currentStay.name;
+  document.getElementById('dMeta').innerText = `⭐ ${currentStay.rating} (${currentStay.reviewsCount} reviews) • 📍 ${currentStay.location} • Host: ${currentStay.host} • Type: ${currentStay.type}`;
+  document.getElementById('dDesc').innerText = currentStay.desc;
+  document.getElementById('dAmenities').innerHTML = currentStay.amenities.map(a=>`<span class="tag">${a}</span>`).join(' ');
+  document.getElementById('favBtn').innerText = favorites.includes(currentStay.id) ? '❤️' : '🤍';
+  document.getElementById('dReviews').innerHTML = currentStay.reviews.map(r=>`<div class="review">${r}</div>`).join('');
+  document.getElementById('detailModal').style.display = 'flex';
+  document.querySelector('.nav').style.display = 'none';
+  updateCalc();
+  document.getElementById('checkIn').onchange = updateCalc;
+  document.getElementById('checkOut').onchange = updateCalc;
+  document.getElementById('guests').onchange = updateCalc;
+}
+function closeModal(){ document.getElementById('detailModal').style.display='none'; document.querySelector('.nav').style.display='flex'; render(); }
+function toggleFav(){
+  if(!currentStay) return;
+  if(favorites.includes(currentStay.id)) favorites = favorites.filter(x=>x!==currentStay.id);
+  else favorites.push(currentStay.id);
+  localStorage.setItem('neurix_stay_favs', JSON.stringify(favorites));
+  document.getElementById('favBtn').innerText = favorites.includes(currentStay.id) ? '❤️' : '🤍';
+}
+function updateCalc(){
+  if(!currentStay) return;
+  let ci = new Date(document.getElementById('checkIn').value);
+  let co = new Date(document.getElementById('checkOut').value);
+  let nights = Math.max(1, Math.round((co-ci)/(1000*60*60*24)));
+  let total = nights * currentStay.price;
+  document.getElementById('dCalc').innerText = `${nights} night${nights>1?'s':''} • ${document.getElementById('guests').value}`;
+  document.getElementById('dTotal').innerText = 'KES ' + total.toLocaleString();
+  return {nights, total};
+}
+function confirmBook(){
+  let {nights, total} = updateCalc();
+  let ci = document.getElementById('checkIn').value;
+  let co = document.getElementById('checkOut').value;
+  let guests = document.getElementById('guests').value;
+  let phone = prompt('M-Pesa number to pay KES ' + total.toLocaleString() + ' for ' + nights + ' nights?') || '0712345678';
+  if(!confirm('Book ' + currentStay.name + '\n' + ci + ' to ' + co + ' • ' + guests + '\nTotal: KES ' + total.toLocaleString() + ' via M-Pesa ' + phone + '?')) return;
+  bookings.unshift({id: Date.now(), name: currentStay.name, checkIn: ci, checkOut: co, guests, total: total.toLocaleString()});
+  localStorage.setItem('neurix_bookings', JSON.stringify(bookings));
+  alert('✅ Booked! ' + currentStay.name + '\nHost ' + currentStay.host + ' will contact you on ' + phone + '.\nEnjoy your stay in Eldoret! 🏠');
+  closeModal();
+}
+function cancelBooking(id){
+  bookings = bookings.filter(b=>b.id!==id);
+  localStorage.setItem('neurix_bookings', JSON.stringify(bookings));
+  render();
+}
+function addReview(){
+  let inp = document.getElementById('reviewInput');
+  let v = inp.value.trim(); if(!v) return;
+  currentStay.reviews.unshift(v + ' - You');
+  inp.value=''; document.getElementById('dReviews').innerHTML = currentStay.reviews.map(r=>`<div class="review">${r}</div>`).join('');
+  alert('Review posted! ⭐');
+}
+function listStay(){
+  let name = prompt('Place name? (e.g. My Bedsitter in Eldoret)');
+  if(!name) return;
+  let price = prompt('Price per night KES?') || 1500;
+  let loc = prompt('Location?') || 'Eldoret';
+  let type = prompt('Type? Bedsitter / Apartment / Villa / Guest House', 'Bedsitter') || 'Bedsitter';
+  stays.unshift({id: Date.now(), name:name, type:type, price:parseInt(price), img:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800", location:loc, rating:5.0, reviewsCount:0, host:"You", desc:"New place listed by you on NEURIX Stays 🔥", amenities:["📶 WiFi","🔒 Security"], reviews:[]});
+  render();
+  alert('Your place is LIVE! 🏠 People can now book it.');
+}
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

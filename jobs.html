@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Jobs - Hustle in Eldoret</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:85px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.search{margin:10px 14px;background:#262626;border-radius:20px;padding:11px 14px;display:flex;gap:8px;align-items:center}
+.search input{flex:1;background:none;border:none;color:#fff;outline:none;font-size:14px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
+.tabs button{background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.tabs button.active{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.banner{margin:0 14px 14px;background:linear-gradient(135deg,#22c55e,#06b6d4);border-radius:18px;padding:16px;display:flex;gap:12px;align-items:center}
+.banner div{flex:1}
+.banner b{font-size:16px}
+.banner p{font-size:12px;opacity:.9;margin:4px 0 0}
+.job-card{background:#111;border-radius:18px;margin:0 14px 12px;padding:14px;cursor:pointer;border:1px solid #1a1a1a}
+.job-card:hover{border-color:#333}
+.job-head{display:flex;gap:12px}
+.job-head .logo{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.job-head div{flex:1}
+.job-head b{font-size:15px;line-height:1.3;display:block}
+.job-head small{color:#aaa;font-size:12px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tag{background:#262626;padding:5px 10px;border-radius:20px;font-size:11px}
+.tag.green{background:#052e16;color:#22c55e}
+.tag.gold{background:#3a2a00;color:#f59e0b}
+.job-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.pay{color:#22c55e;font-weight:800;font-size:15px}
+.apply-btn{background:linear-gradient(135deg,#a855f7,#3b82f6);border:none;color:#fff;padding:9px 16px;border-radius:20px;font-weight:800;cursor:pointer}
+.apply-btn.applied{background:#262626;color:#22c55e}
+.post-btn{position:fixed;bottom:90px;right:14px;background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;border:none;padding:12px 16px;border-radius:30px;font-weight:800;z-index:40;cursor:pointer;box-shadow:0 4px 20px rgba(168,85,247,.5)}
+.my-jobs{margin:0 14px 12px;background:#1a1a2e;border:1px solid #333;border-radius:14px;padding:12px;display:none}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">💼 NEURIX Jobs</b>
+  <span onclick="location.href='profile.html'" style="cursor:pointer">👤</span>
+</div>
+
+<div class="search">🔍 <input id="searchInput" placeholder="Search jobs, boda, waiter, designer..." oninput="filterJobs()"></div>
+
+<div class="tabs" id="catTabs">
+  <button class="active" onclick="filterCat('All',this)">All</button>
+  <button onclick="filterCat('Full-time',this)">💼 Full-time</button>
+  <button onclick="filterCat('Part-time',this)">⏰ Part-time</button>
+  <button onclick="filterCat('Gig',this)">⚡ Gig / Daily</button>
+  <button onclick="filterCat('Remote',this)">🏠 Remote</button>
+</div>
+
+<div class="banner">
+  <div><b>🔥 12 New Jobs in Eldoret Today!</b><p>Apply in 1 tap. Get paid via M-Pesa.</p></div>
+  <span style="font-size:28px">💰</span>
+</div>
+
+<div class="my-jobs" id="myJobsBox">
+  <b>📋 My Applications (<span id="appliedCount">0</span>)</b>
+  <div id="myJobsList" style="margin-top:8px;font-size:13px;color:#aaa"></div>
+</div>
+
+<div id="jobList"></div>
+
+<button class="post-btn" onclick="postJob()">+ Post Job</button>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='explore.html'"><span>🔍</span>Explore</div>
+  <div onclick="location.href='upload.html'"><span>➕</span>Post</div>
+  <div onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let jobs = JSON.parse(localStorage.getItem('neurix_jobs') || 'null') || [
+  {id:1, title:"Delivery Rider - Eldoret Town", company:"NEURIX Delivery", emoji:"🛵", location:"Eldoret Town", type:"Gig", pay:"KES 800 / day", desc:"Deliver food & parcels in Eldoret. Own bike + phone. Paid daily via M-Pesa.", tags:["Daily Pay","No CV Needed"], hot:true},
+  {id:2, title:"Waiter / Waitress - Cafe", company:"Mama Njoroge Cafe", emoji:"☕", location:"Eldoret, Zion Mall", type:"Part-time", pay:"KES 12,000 / month", desc:"Serve customers, clean tables. Experience not needed. Friendly + fast learner.", tags:["Meals Included"], hot:false},
+  {id:3, title:"Video Editor - TikTok / Reels", company:"NEURIX Creators", emoji:"🎬", location:"Remote", type:"Remote", pay:"KES 500 / video", desc:"Edit Reels for creators. CapCut / NEURIX Editor. Portfolio = your TikTok.", tags:["Remote","Creative"], hot:true},
+  {id:4, title:"Shop Attendant - Phone Shop", company:"Eldoret Phones", emoji:"📱", location:"Eldoret, Oginga Odinga St", type:"Full-time", pay:"KES 18,000 / month", desc:"Sell phones, help customers, manage stock. Know phones = big advantage.", tags:["Full-time"], hot:false},
+  {id:5, title:"Graphic Designer - Posters", company:"Glow KE", emoji:"🎨", location:"Remote", type:"Remote", pay:"KES 1,000 / design", desc:"Design posters for shops in Eldoret. Canva / Photoshop. Send 3 samples.", tags:["Remote","Flexible"], hot:false},
+  {id:6, title:"Boda Boda Rider - Weekend", company:"Eldoret Riders", emoji:"🏍️", location:"Eldoret", type:"Gig", pay:"KES 1,200 / day", desc:"Weekend rider. Licence + bike needed. Fuel provided. Start this Saturday.", tags:["Weekend","Daily Pay"], hot:true},
+  {id:7, title:"AI Content Creator", company:"NEURIX AI", emoji:"🧠", location:"Remote", type:"Part-time", pay:"KES 15,000 / month", desc:"Use NEURIX AI to make content for brands. No experience, we train you.", tags:["AI","Training"], hot:true},
+  {id:8, title:"Sales Agent - M-Pesa / Airtime", company:"Safaricom Agent", emoji:"💚", location:"Eldoret Town", type:"Full-time", pay:"KES 20,000 + Commission", desc:"Sell lines, register M-Pesa. Commission on every sale. Target = bonus.", tags:["Commission"], hot:false},
+];
+
+let applied = JSON.parse(localStorage.getItem('neurix_applied_jobs') || '[]');
+let currentCat = 'All';
+let currentSearch = '';
+
+function render(){
+  let filtered = jobs.filter(j => (currentCat==='All' || j.type===currentCat) && (j.title.toLowerCase().includes(currentSearch) || j.company.toLowerCase().includes(currentSearch) || j.location.toLowerCase().includes(currentSearch)));
+  document.getElementById('jobList').innerHTML = filtered.map(j => {
+    let isApplied = applied.includes(j.id);
+    return `
+    <div class="job-card" onclick="viewJob(${j.id})">
+      <div class="job-head">
+        <div class="logo">${j.emoji}</div>
+        <div><b>${j.title} ${j.hot ? '🔥' : ''}</b><small>${j.company} • 📍 ${j.location}</small></div>
+      </div>
+      <p style="font-size:13px;color:#aaa;line-height:1.4;margin:10px 0 0">${j.desc}</p>
+      <div class="tags"><span class="tag">${j.type}</span>${j.tags.map(t=>`<span class="tag ${t.includes('Pay') ? 'green' : ''}">${t}</span>`).join('')}</div>
+      <div class="job-foot">
+        <span class="pay">${j.pay}</span>
+        <button class="apply-btn ${isApplied?'applied':''}" onclick="event.stopPropagation(); applyJob(${j.id})">${isApplied?'✓ Applied':'Apply Now'}</button>
+      </div>
+    </div>
+    `;
+  }).join('');
+  // My applications
+  let my = jobs.filter(j=>applied.includes(j.id));
+  if(my.length>0){
+    document.getElementById('myJobsBox').style.display='block';
+    document.getElementById('appliedCount').innerText = my.length;
+    document.getElementById('myJobsList').innerHTML = my.map(j=>`• ${j.title} - <b style="color:#22c55e">Pending Review</b> <button onclick="withdraw(${j.id})" style="background:none;border:none;color:#ff3040;cursor:pointer">Withdraw</button>`).join('<br>');
+  } else {
+    document.getElementById('myJobsBox').style.display='none';
+  }
+  localStorage.setItem('neurix_jobs', JSON.stringify(jobs));
+}
+render();
+
+function filterCat(c, btn){
+  currentCat = c;
+  document.querySelectorAll('#catTabs button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  render();
+}
+function filterJobs(){ currentSearch = document.getElementById('searchInput').value.toLowerCase(); render(); }
+
+function viewJob(id){
+  let j = jobs.find(x=>x.id===id);
+  if(confirm(j.title + '\n\n' + j.company + ' • ' + j.location + '\nPay: ' + j.pay + '\n\n' + j.desc + '\n\nApply for this job?')) applyJob(id);
+}
+
+function applyJob(id){
+  if(applied.includes(id)) return alert('Already applied bro! Check My Applications above.');
+  let name = prompt('Your name?') || 'Bro';
+  let phone = prompt('M-Pesa / WhatsApp number? (e.g. 0712345678)') || '';
+  let exp = prompt('Any experience? (type No if none)') || 'No';
+  applied.push(id);
+  localStorage.setItem('neurix_applied_jobs', JSON.stringify(applied));
+  render();
+  alert('✅ Applied! ' + name + '\n\n' + jobs.find(j=>j.id===id).company + ' will contact you on ' + phone + ' soon.\nGood luck bro! 💪');
+}
+
+function withdraw(id){
+  applied = applied.filter(x=>x!==id);
+  localStorage.setItem('neurix_applied_jobs', JSON.stringify(applied));
+  render();
+}
+
+function postJob(){
+  let title = prompt('Job title? (e.g. Need Cleaner)');
+  if(!title) return;
+  let pay = prompt('Pay? (e.g. KES 500 / day)') || 'KES 500 / day';
+  let loc = prompt('Location?') || 'Eldoret';
+  let type = prompt('Type? Full-time / Part-time / Gig / Remote', 'Gig') || 'Gig';
+  let desc = prompt('Describe the job?') || 'New hustle in Eldoret 🔥';
+  let newJ = {id: Date.now(), title:title, company:"You", emoji:"💼", location:loc, type:type, pay:pay, desc:desc, tags:["Your Post"], hot:true};
+  jobs.unshift(newJ);
+  localStorage.setItem('neurix_jobs', JSON.stringify(jobs));
+  render();
+  alert('Your job is LIVE! 🔥 People in Eldoret can now apply.');
+}
+</script>
+</body>
+</html>
+```
+
+</body>
+
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Podcasts - Listen in Eldoret</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:155px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.search{margin:10px 14px;background:#262626;border-radius:20px;padding:11px 14px;display:flex;gap:8px;align-items:center}
+.search input{flex:1;background:none;border:none;color:#fff;outline:none;font-size:14px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
+.tabs button{background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.tabs button.active{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.featured{margin:0 14px 12px;background:linear-gradient(135deg,#a855f7,#ff3040);border-radius:18px;padding:16px;display:flex;gap:12px;align-items:center;cursor:pointer}
+.featured div{flex:1}
+.featured b{font-size:17px}
+.featured small{opacity:.9}
+.ep-card{background:#111;border-radius:16px;margin:0 14px 10px;padding:12px;display:flex;gap:12px;align-items:center;cursor:pointer}
+.ep-card.active{border:1px solid #a855f7;background:#1a1a2e}
+.ep-card .cover{width:62px;height:62px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.ep-card div{flex:1}
+.ep-card b{font-size:14px;display:block;line-height:1.3}
+.ep-card small{color:#aaa;font-size:12px}
+.play-btn{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#3b82f6);border:none;color:#fff;font-size:18px;cursor:pointer;flex-shrink:0}
+.fav-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;flex-shrink:0}
+.radio-row{display:flex;gap:10px;overflow-x:auto;padding:0 14px 12px;scrollbar-width:none}
+.radio-card{width:110px;background:#111;border-radius:14px;padding:12px;text-align:center;flex-shrink:0;cursor:pointer}
+.radio-card span{font-size:30px;display:block}
+.radio-card b{font-size:13px}
+.radio-card small{color:#aaa;font-size:11px}
+/* Player */
+.player{position:fixed;bottom:70px;left:10px;right:10px;background:#1a1a2e;border:1px solid #333;border-radius:18px;padding:12px;z-index:40}
+.player-top{display:flex;gap:10px;align-items:center}
+.player-top .cover{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:24px}
+.player-top div{flex:1}
+.player-top b{font-size:14px;display:block}
+.player-top small{color:#aaa;font-size:12px}
+.progress{height:5px;background:#262626;border-radius:10px;margin:10px 0 4px;overflow:hidden;cursor:pointer}
+.progress div{height:100%;background:linear-gradient(90deg,#a855f7,#ff3040);width:0%;transition:width .5s}
+.time-row{display:flex;justify-content:space-between;font-size:11px;color:#aaa}
+.controls{display:flex;justify-content:center;gap:14px;align-items:center;margin-top:6px}
+.controls button{background:#262626;border:none;color:#fff;width:42px;height:42px;border-radius:50%;font-size:18px;cursor:pointer}
+.controls button.main{width:54px;height:54px;background:linear-gradient(135deg,#a855f7,#ff3040);font-size:22px}
+.create-btn{position:fixed;bottom:220px;right:14px;background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;border:none;padding:10px 14px;border-radius:30px;font-weight:800;z-index:41;cursor:pointer}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">🎙️ NEURIX Podcasts</b>
+  <span onclick="location.href='music.html'" style="cursor:pointer">🎵</span>
+</div>
+
+<div class="search">🔍 <input id="searchInput" placeholder="Search podcast, host, topic..." oninput="filterEps()"></div>
+
+<div class="tabs">
+  <button class="active" onclick="filterCat('All',this)">All</button>
+  <button onclick="filterCat('Hustle',this)">💼 Hustle</button>
+  <button onclick="filterCat('Music',this)">🎵 Music</button>
+  <button onclick="filterCat('Sports',this)">⚽ Sports</button>
+  <button onclick="filterCat('Favourites',this)">❤️ Favourites</button>
+</div>
+
+<div class="featured" onclick="playEp(0)">
+  <div><small>🔥 FEATURED TODAY</small><br><b>Hustle in Eldoret - How Kevin Makes 5K/Day</b><br><small>▶️ Play now • 24 mins • 12K listens</small></div>
+  <span style="font-size:38px">💼</span>
+</div>
+
+<div style="padding:0 14px"><h3 style="margin:4px 0;font-size:15px">📻 Live Radio - Eldoret</h3></div>
+<div class="radio-row" id="radioRow"></div>
+
+<div style="padding:0 14px;display:flex;justify-content:space-between;align-items:center"><h3 style="margin:6px 0;font-size:15px">🎙️ All Episodes (<span id="count">0</span>)</h3><button onclick="createPodcast()" style="background:#262626;border:none;color:#fff;padding:7px 12px;border-radius:20px;cursor:pointer">+ Create</button></div>
+
+<div id="epList"></div>
+
+<button class="create-btn" onclick="createPodcast()">+ Record Podcast</button>
+
+<!-- PLAYER -->
+<div class="player">
+  <div class="player-top">
+    <div class="cover" id="playerCover">🎙️</div>
+    <div><b id="nowTitle">Pick a podcast to play</b><small id="nowSub">NEURIX Podcasts • Eldoret</small></div>
+    <button onclick="toggleFavCurrent()" id="favCurrent" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer">🤍</button>
+    <button onclick="downloadCurrent()" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer">⬇️</button>
+  </div>
+  <div class="progress" onclick="seek(event)"><div id="progressBar"></div></div>
+  <div class="time-row"><span id="curTime">00:00</span><span id="totalTime">24:00</span></div>
+  <div class="controls">
+    <button onclick="skip(-10)">⏪ 10s</button>
+    <button onclick="prevEp()">⏮️</button>
+    <button class="main" id="playBtn" onclick="togglePlay()">▶️</button>
+    <button onclick="nextEp()">⏭️</button>
+    <button onclick="toggleSpeed()" id="speedBtn">1x</button>
+  </div>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='music.html'"><span>🎵</span>Music</div>
+  <div onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let eps = JSON.parse(localStorage.getItem('neurix_podcasts') || 'null') || [
+  {id:1, title:"Hustle in Eldoret - How Kevin Makes 5K/Day", host:"Kevin • Hustle Show", cat:"Hustle", emoji:"💼", duration:1440, listens:"12K", desc:"Kevin shares how he makes 5K per day in Eldoret with boda + shop + NEURIX. Real tips, no fake motivation.", color:"linear-gradient(135deg,#f59e0b,#ff3040)"},
+  {id:2, title:"Gengetone Talk - New Artists To Watch", host:"Ethic • Music Talk", cat:"Music", emoji:"🎵", duration:1800, listens:"8.5K", desc:"Who is next in Gengetone? We rank top 5 new artists from Eldoret & Nairobi.", color:"linear-gradient(135deg,#a855f7,#3b82f6)"},
+  {id:3, title:"NEURIX Story - How We Built NEURIX", host:"Bro • NEURIX Official", cat:"Hustle", emoji:"🧠", duration:2100, listens:"25K", desc:"How one bro in Eldoret built NEURIX super app from zero. Code, hustle, vision.", color:"linear-gradient(135deg,#22c55e,#06b6d4)"},
+  {id:4, title:"Gor Mahia vs AFC - Big Match Preview", host:"Sports Zone", cat:"Sports", emoji:"⚽", duration:1200, listens:"6.2K", desc:"Preview of biggest match in Kenya. Who will win? Predictions & lineups.", color:"linear-gradient(135deg,#22c55e,#84cc16)"},
+  {id:5, title:"Mama Njoroge - Cooking Secrets", host:"Mama Njoroge • Food", cat:"Hustle", emoji:"🍔", duration:1500, listens:"9.1K", desc:"Secret recipe for pilau & smokie that made Mama Njoroge famous in Eldoret.", color:"linear-gradient(135deg,#f59e0b,#ff3040)"},
+  {id:6, title:"Love in Eldoret - Dating Stories", host:"Sarah • Love Talk", cat:"Music", emoji:"💘", duration:1680, listens:"15K", desc:"Funny & real dating stories from Eldoret. Match, crush, heartbreak.", color:"linear-gradient(135deg,#ff3040,#a855f7)"},
+];
+let radios = [
+  {name:"Chamgei FM", freq:"101.2", emoji:"📻", listeners:"45K"},
+  {name:"Kass FM", freq:"89.3", emoji:"🎙️", listeners:"67K"},
+  {name:"NEURIX Radio", freq:"LIVE", emoji:"🧠", listeners:"12K"},
+];
+let favorites = JSON.parse(localStorage.getItem('neurix_pod_favs') || '[]');
+let downloaded = JSON.parse(localStorage.getItem('neurix_pod_downloads') || '[]');
+let currentCat = 'All';
+let currentSearch = '';
+let currentIdx = -1;
+let playing = false;
+let progressSec = 0;
+let playTimer = null;
+let speed = 1;
+
+function render(){
+  let filtered = eps.filter(e => (currentCat==='All' || e.cat===currentCat || (currentCat==='Favourites' && favorites.includes(e.id))) && (e.title.toLowerCase().includes(currentSearch) || e.host.toLowerCase().includes(currentSearch)));
+  if(currentCat==='Favourites' && favorites.length===0) filtered = [];
+  document.getElementById('count').innerText = filtered.length;
+  document.getElementById('epList').innerHTML = filtered.map((e) => {
+    let idx = eps.indexOf(e);
+    let mins = Math.floor(e.duration/60);
+    return `
+    <div class="ep-card ${idx===currentIdx?'active':''}" onclick="playEp(${idx})">
+      <div class="cover" style="background:${e.color}">${e.emoji}</div>
+      <div><b>${e.title} ${favorites.includes(e.id)?'❤️':''}</b><small>${e.host} • ${mins} mins • ${e.listens} listens • ${e.cat}</small><br><small style="color:#888">${e.desc.slice(0,60)}...</small></div>
+      <button class="play-btn" onclick="event.stopPropagation(); playEp(${idx})">${idx===currentIdx && playing?'⏸️':'▶️'}</button>
+      <button class="fav-btn" onclick="event.stopPropagation(); toggleFav(${e.id})">${favorites.includes(e.id)?'❤️':'🤍'}</button>
+    </div>`;
+  }).join('') || '<p style="padding:0 14px;color:#888">No episodes. Tap + Create to make one!</p>';
+  document.getElementById('radioRow').innerHTML = radios.map(r => `<div class="radio-card" onclick="playRadio('${r.name}')"><span>${r.emoji}</span><b>${r.name}</b><br><small>${r.freq} FM • ${r.listeners} listening</small></div>`).join('');
+  localStorage.setItem('neurix_podcasts', JSON.stringify(eps));
+}
+render();
+
+function filterCat(cat, btn){
+  currentCat = cat;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  render();
+}
+function filterEps(){ currentSearch = document.getElementById('searchInput').value.toLowerCase(); render(); }
+
+function formatTime(s){
+  let m = Math.floor(s/60), sec = Math.floor(s%60);
+  return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+}
+
+function playEp(idx){
+  currentIdx = idx;
+  let e = eps[idx];
+  progressSec = 0;
+  playing = true;
+  document.getElementById('nowTitle').innerText = e.title;
+  document.getElementById('nowSub').innerText = e.host + ' • ' + e.listens + ' listens';
+  document.getElementById('playerCover').innerText = e.emoji;
+  document.getElementById('totalTime').innerText = formatTime(e.duration);
+  document.getElementById('playBtn').innerText = '⏸️';
+  document.getElementById('favCurrent').innerText = favorites.includes(e.id) ? '❤️' : '🤍';
+  startTimer();
+  render();
+}
+function startTimer(){
+  if(playTimer) clearInterval(playTimer);
+  playTimer = setInterval(()=>{
+    if(!playing) return;
+    progressSec += speed;
+    let e = eps[currentIdx]; if(!e) return;
+    if(progressSec >= e.duration){
+      progressSec = 0;
+      nextEp();
+      return;
+    }
+    document.getElementById('curTime').innerText = formatTime(progressSec);
+    document.getElementById('progressBar').style.width = (progressSec / e.duration * 100) + '%';
+  }, 1000);
+}
+function togglePlay(){
+  if(currentIdx===-1) return playEp(0);
+  playing = !playing;
+  document.getElementById('playBtn').innerText = playing ? '⏸️' : '▶️';
+  if(playing) startTimer();
+  render();
+}
+function nextEp(){
+  if(currentIdx < eps.length-1) playEp(currentIdx+1);
+  else playEp(0);
+}
+function prevEp(){
+  if(currentIdx>0) playEp(currentIdx-1);
+  else playEp(eps.length-1);
+}
+function skip(sec){
+  if(currentIdx===-1) return;
+  progressSec = Math.max(0, progressSec + sec);
+  document.getElementById('curTime').innerText = formatTime(progressSec);
+  document.getElementById('progressBar').style.width = (progressSec / eps[currentIdx].duration * 100) + '%';
+}
+function seek(event){
+  if(currentIdx===-1) return;
+  let rect = event.currentTarget.getBoundingClientRect();
+  let pct = (event.clientX - rect.left) / rect.width;
+  progressSec = Math.floor(pct * eps[currentIdx].duration);
+  document.getElementById('progressBar').style.width = (pct*100) + '%';
+  document.getElementById('curTime').innerText = formatTime(progressSec);
+}
+function toggleSpeed(){
+  speed = speed===1 ? 1.5 : speed===1.5 ? 2 : 1;
+  document.getElementById('speedBtn').innerText = speed + 'x';
+  alert('Playback speed: ' + speed + 'x');
+}
+function toggleFav(id){
+  if(favorites.includes(id)) favorites = favorites.filter(x=>x!==id);
+  else favorites.push(id);
+  localStorage.setItem('neurix_pod_favs', JSON.stringify(favorites));
+  if(currentIdx!==-1 && eps[currentIdx].id===id) document.getElementById('favCurrent').innerText = favorites.includes(id) ? '❤️' : '🤍';
+  render();
+}
+function toggleFavCurrent(){
+  if(currentIdx===-1) return alert('Play an episode first!');
+  toggleFav(eps[currentIdx].id);
+}
+function downloadCurrent(){
+  if(currentIdx===-1) return alert('Play an episode first!');
+  let e = eps[currentIdx];
+  if(downloaded.includes(e.id)) return alert('Already downloaded! ✅ Listen offline.');
+  downloaded.push(e.id);
+  localStorage.setItem('neurix_pod_downloads', JSON.stringify(downloaded));
+  alert('Downloaded! ⬇️ ' + e.title + ' - Listen offline anywhere in Eldoret!');
+}
+function playRadio(name){
+  document.getElementById('nowTitle').innerText = '📻 LIVE: ' + name;
+  document.getElementById('nowSub').innerText = 'Live Radio • Eldoret';
+  document.getElementById('playerCover').innerText = '📻';
+  playing = true;
+  document.getElementById('playBtn').innerText = '⏸️';
+  alert('Playing ' + name + ' LIVE 📻 Enjoy Eldoret radio!');
+}
+function createPodcast(){
+  let title = prompt('Podcast title? (e.g. My Hustle Story)');
+  if(!title) return;
+  let cat = prompt('Category? Hustle / Music / Sports', 'Hustle') || 'Hustle';
+  eps.unshift({id: Date.now(), title:title, host:"You • NEURIX Creator", cat:cat, emoji:"🎙️", duration:1200, listens:"0", desc:"New podcast by you on NEURIX 🔥", color:"linear-gradient(135deg,#a855f7,#3b82f6)"});
+  render();
+  alert('Podcast created! 🎙️ Tap it to play. It is LIVE now!');
+  playEp(0);
+}
+</script>
+</body>
+</html>
+```
+
+</body>
+
+</html>

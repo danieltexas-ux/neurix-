@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chats - NEURIX</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:80px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.search{margin:10px 14px;background:#262626;border-radius:20px;padding:11px 14px;display:flex;gap:8px;align-items:center}
+.search input{flex:1;background:none;border:none;color:#fff;outline:none;font-size:14px}
+.chat-item{display:flex;gap:12px;align-items:center;padding:12px 14px;cursor:pointer;border-bottom:1px solid #111}
+.chat-item:active{background:#111}
+.avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;position:relative}
+.dot{position:absolute;bottom:2px;right:2px;width:12px;height:12px;background:#22c55e;border:2px solid #000;border-radius:50%}
+.chat-info{flex:1;min-width:0}
+.chat-info b{font-size:15px}
+.chat-info p{font-size:13px;color:#aaa;margin:3px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-meta{text-align:right;font-size:11px;color:#aaa}
+.badge{background:#a855f7;color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;margin-left:auto;margin-top:4px}
+
+/* Chat View */
+.chat-view{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:50}
+.chat-header{padding:10px 12px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #222;background:#111}
+.chat-header button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.bubble{padding:10px 14px;border-radius:18px;max-width:80%;line-height:1.4;font-size:15px;white-space:pre-wrap;word-break:break-word}
+.me{background:linear-gradient(135deg,#a855f7,#3b82f6);align-self:flex-end;border-bottom-right-radius:4px}
+.them{background:#262626;align-self:flex-start;border-bottom-left-radius:4px}
+.time{font-size:10px;color:rgba(255,255,255,.6);display:block;margin-top:4px;text-align:right}
+.input{position:sticky;bottom:0;display:flex;gap:8px;padding:10px;background:#111;border-top:1px solid #222;align-items:center}
+.input button{width:40px;height:40px;border-radius:50%;border:none;background:#262626;color:#fff;font-size:18px;cursor:pointer;flex-shrink:0}
+.input input{flex:1;padding:12px;border-radius:20px;border:none;background:#262626;color:#fff;outline:none}
+.send{background:linear-gradient(135deg,#a855f7,#3b82f6)!important}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div id="listView">
+  <div class="top">
+    <button onclick="history.back()">←</button>
+    <b style="font-size:18px">Chats</b>
+    <span style="display:flex;gap:14px"><span onclick="location.href='ai.html'">✦</span><span onclick="location.href='notifications.html'">🔔</span></span>
+  </div>
+
+  <div class="search">🔍 <input id="searchInput" placeholder="Search chats..." oninput="filterChats()"></div>
+
+  <div style="padding:0 14px;display:flex;gap:8px;overflow-x:auto">
+    <button onclick="openAIChat()" style="background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;border:none;padding:8px 14px;border-radius:20px;font-weight:800;white-space:nowrap">✦ Neurix AI</button>
+    <button onclick="openChat('sarah')" style="background:#262626;color:#fff;border:none;padding:8px 14px;border-radius:20px;white-space:nowrap">👩 Sarah</button>
+    <button onclick="openChat('kevin')" style="background:#262626;color:#fff;border:none;padding:8px 14px;border-radius:20px;white-space:nowrap">👨 Kevin</button>
+    <button onclick="createGroup()" style="background:#262626;color:#fff;border:none;padding:8px 14px;border-radius:20px;white-space:nowrap">👥 New Group</button>
+  </div>
+
+  <div id="chatList"></div>
+</div>
+
+<!-- CHAT VIEW -->
+<div class="chat-view" id="chatView">
+  <div class="chat-header">
+    <button onclick="closeChat()">←</button>
+    <div class="avatar" id="chatAvatar" style="width:42px;height:42px;font-size:20px">👩</div>
+    <div style="flex:1"><b id="chatName">Sarah</b><br><small id="chatStatus" style="color:#22c55e">● Online - Active now</small></div>
+    <button onclick="callUser()">📞</button>
+    <button onclick="location.href='ai.html'">✦</button>
+  </div>
+  <div class="msgs" id="msgs"></div>
+  <div class="input">
+    <button onclick="sendEmoji()">😊</button>
+    <input id="inp" placeholder="Message...">
+    <button onclick="sendVoice()">🎤</button>
+    <button class="send" onclick="sendMsg()">➤</button>
+  </div>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='explore.html'"><span>🔍</span>Explore</div>
+  <div onclick="location.href='upload.html'"><span>➕</span>Post</div>
+  <div onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let contacts = [
+  {id:'ai', name:'✦ Neurix AI', avatar:'✦', msg:'Hey bro! Ask me anything 🧠✦', time:'Now', unread:1, online:true},
+  {id:'sarah', name:'Sarah', avatar:'👩', msg:'Yo bro! Saw your NEURIX app 🔥', time:'2m', unread:2, online:true},
+  {id:'kevin', name:'Kevin Kiprop', avatar:'👨', msg:'Bro you built this?? Send link!', time:'15m', unread:0, online:true},
+  {id:'group', name:'NEURIX Squad 🔥', avatar:'👥', msg:'Kevin: Lets post tonight!', time:'1h', unread:3, online:false},
+  {id:'mama', name:'Mama', avatar:'👩‍🦳', msg:'Umekula? 😊', time:'2h', unread:0, online:false},
+];
+
+let currentId = null;
+let chats = {};
+
+function renderList(filter=''){
+  let list = contacts.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()));
+  document.getElementById('chatList').innerHTML = list.map(c => `
+    <div class="chat-item" onclick="openChat('${c.id}')">
+      <div class="avatar">${c.avatar} ${c.online ? '<span class="dot"></span>' : ''}</div>
+      <div class="chat-info"><b>${c.name}</b><p>${c.msg}</p></div>
+      <div class="chat-meta">${c.time} ${c.unread ? `<div class="badge">${c.unread}</div>` : ''}</div>
+    </div>
+  `).join('');
+}
+renderList();
+
+function filterChats(){
+  renderList(document.getElementById('searchInput').value);
+}
+
+function openAIChat(){ location.href='ai.html'; }
+
+function createGroup(){
+  let name = prompt('Group name bro:') || 'NEURIX Squad';
+  contacts.unshift({id:'group'+Date.now(), name:'👥 '+name, avatar:'👥', msg:'Group created! 🔥', time:'Now', unread:0, online:true});
+  renderList();
+  alert('Group created! '+name);
+}
+
+function openChat(id){
+  currentId = id;
+  let c = contacts.find(x=>x.id===id) || contacts[1];
+  c.unread = 0;
+  renderList();
+  document.getElementById('chatName').innerText = c.name;
+  document.getElementById('chatAvatar').innerText = c.avatar;
+  document.getElementById('chatStatus').innerText = c.online ? '● Online - Active now' : '○ Last seen 2h ago';
+  document.getElementById('listView').style.display='none';
+  document.querySelector('.nav').style.display='none';
+  document.getElementById('chatView').style.display='flex';
+  // Load saved chat
+  let saved = JSON.parse(localStorage.getItem('neurix_chat_'+id) || 'null');
+  if(saved) chats[id] = saved;
+  else {
+    if(id==='sarah') chats[id] = [{t:'Yo bro! Saw your NEURIX app 🔥',me:false},{t:'Yess! One App. Everything 🧠✦',me:true}];
+    else if(id==='kevin') chats[id] = [{t:'Bro you built this??',me:false},{t:'Yes bro, in Spck! 🔥',me:true}];
+    else if(id==='group') chats[id] = [{t:'Kevin: Lets post tonight!',me:false},{t:'I am in! 🔥',me:true}];
+    else chats[id] = [{t:'Hey bro! What\'s up?',me:false}];
+  }
+  renderMsgs();
+}
+
+function renderMsgs(){
+  let msgs = chats[currentId] || [];
+  document.getElementById('msgs').innerHTML = msgs.map(m => `<div class="bubble ${m.me?'me':'them'}">${m.t}<span class="time">${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})} ✓✓</span></div>`).join('');
+  setTimeout(()=>{ let el=document.getElementById('msgs'); el.scrollTop = el.scrollHeight; },50);
+  localStorage.setItem('neurix_chat_'+currentId, JSON.stringify(msgs));
+  // Update last message in list
+  let c = contacts.find(x=>x.id===currentId);
+  if(c && msgs.length) c.msg = msgs[msgs.length-1].t;
+}
+
+function closeChat(){
+  document.getElementById('chatView').style.display='none';
+  document.getElementById('listView').style.display='block';
+  document.querySelector('.nav').style.display='flex';
+  renderList();
+}
+
+function sendMsg(){
+  let inp = document.getElementById('inp');
+  let v = inp.value.trim(); if(!v) return;
+  chats[currentId].push({t:v, me:true});
+  inp.value=''; renderMsgs();
+  // Auto reply like real person
+  setTimeout(()=>{
+    let replies = ["Waaa that's fire 🔥","Bro you built this??","Send me the link!","NEURIX to the world 🌍","Haha 😂 true","Lets post tonight!","Yo thats crazy bro!"];
+    let reply = replies[Math.floor(Math.random()*replies.length)];
+    // If chatting with AI, give AI style reply
+    if(currentId==='ai') reply = "Good question bro! Here's my take: Break it into 3 steps and start today. Want me to make a full plan? 🧠✦";
+    chats[currentId].push({t:reply, me:false});
+    renderMsgs();
+  },900);
+}
+
+function sendEmoji(){
+  let emojis = ["🔥","😂","❤️","🧠✦","👏","😭"];
+  let e = emojis[Math.floor(Math.random()*emojis.length)];
+  document.getElementById('inp').value += e + ' ';
+  document.getElementById('inp').focus();
+}
+
+function sendVoice(){
+  alert('🎤 Voice note recorded! (Demo) - Hold to record in real app');
+  chats[currentId].push({t:'🎤 Voice message (0:12)', me:true});
+  renderMsgs();
+}
+
+function callUser(){
+  alert('📞 Calling ' + document.getElementById('chatName').innerText + '... (Demo)');
+}
+
+document.getElementById('inp').addEventListener('keydown', e => { if(e.key==='Enter') sendMsg(); });
+
+// Auto open if URL has ?id=sarah
+let params = new URLSearchParams(location.search);
+let id = params.get('id');
+if(id) openChat(id);
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

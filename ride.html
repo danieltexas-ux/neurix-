@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Ride - Boda, Taxi, Delivery</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:85px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;scrollbar-width:none}
+.tabs button{background:#262626;color:#fff;border:none;padding:9px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.tabs button.active{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.map{margin:0 14px;height:230px;background:linear-gradient(135deg,#1a1a2e,#0a0a0a);border-radius:18px;position:relative;overflow:hidden;border:1px solid #222}
+.map-grid{position:absolute;inset:0;background-image:linear-gradient(#222 1px, transparent 1px),linear-gradient(90deg,#222 1px, transparent 1px);background-size:30px 30px;opacity:.4}
+.pin{position:absolute;font-size:28px;transition:all 1s}
+.route{position:absolute;left:20%;top:40%;width:60%;height:3px;background:#22c55e;transform:rotate(15deg);border-radius:10px}
+.route::after{content:'';position:absolute;right:-8px;top:-4px;width:10px;height:10px;border-radius:50%;background:#22c55e}
+.map-info{position:absolute;bottom:10px;left:10px;right:10px;background:rgba(0,0,0,.8);padding:10px;border-radius:12px;display:flex;justify-content:space-between;font-size:13px}
+.box{margin:12px 14px;background:#111;padding:14px;border-radius:18px}
+.box label{font-size:12px;color:#aaa}
+.box input{width:100%;padding:12px;margin:4px 0 10px;border:none;border-radius:12px;background:#262626;color:#fff;outline:none;font-size:14px}
+.suggest{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.suggest button{background:#262626;border:none;color:#fff;padding:6px 10px;border-radius:20px;font-size:12px;cursor:pointer}
+.ride-options{display:flex;gap:8px}
+.ride-opt{flex:1;background:#262626;border-radius:14px;padding:12px;text-align:center;cursor:pointer;border:2px solid transparent}
+.ride-opt.active{border-color:#a855f7;background:#1a1a2e}
+.ride-opt span{font-size:28px;display:block}
+.ride-opt b{font-size:13px}
+.ride-opt small{color:#22c55e;font-weight:800;display:block;margin-top:4px}
+.price-box{display:flex;justify-content:space-between;align-items:center;margin:12px 0;padding:10px;background:#0a0a0a;border-radius:12px}
+.price{color:#22c55e;font-size:20px;font-weight:800}
+.btn{width:100%;padding:14px;border:none;border-radius:14px;background:#22c55e;color:#fff;font-weight:800;font-size:16px;cursor:pointer}
+.btn.cancel{background:#ff3040}
+.btn:disabled{background:#333;color:#888}
+.driver-card{background:#1a1a2e;border:1px solid #333;border-radius:16px;padding:12px;display:none;margin-top:12px}
+.driver-head{display:flex;gap:12px;align-items:center}
+.driver-head .av{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:26px}
+.progress{height:8px;background:#262626;border-radius:10px;margin:12px 0;overflow:hidden}
+.progress div{height:100%;background:linear-gradient(90deg,#22c55e,#a855f7);width:10%;transition:width 1s}
+.history{margin:0 14px}
+.hist-card{background:#111;border-radius:14px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:center}
+.hist-card div{flex:1}
+.hist-card b{font-size:14px;display:block}
+.hist-card small{color:#aaa;font-size:12px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">🛵 NEURIX Ride</b>
+  <span onclick="location.href='wallet.html'" style="cursor:pointer">💰</span>
+</div>
+
+<div class="tabs">
+  <button class="active" onclick="setService('ride',this)">🛵 Ride</button>
+  <button onclick="setService('delivery',this)">🍔 Delivery</button>
+  <button onclick="setService('parcel',this)">📦 Parcel</button>
+</div>
+
+<div class="map">
+  <div class="map-grid"></div>
+  <div class="route"></div>
+  <div class="pin" id="driverPin" style="left:18%;top:35%">🏍️</div>
+  <div class="pin" style="left:70%;top:55%">📍</div>
+  <div class="pin" style="left:12%;top:70%">🛵</div>
+  <div class="pin" style="left:85%;top:20%">🚕</div>
+  <div class="map-info"><span id="mapText">📍 5 riders near you • Eldoret Town</span><span id="etaText" style="color:#22c55e;font-weight:800">ETA 3 min</span></div>
+</div>
+
+<div class="box">
+  <label>📍 FROM</label>
+  <input id="fromInput" value="Eldoret Town, Oginga Odinga St" oninput="calcPrice()">
+  <div class="suggest">
+    <button onclick="setPlace('from','Eldoret Town')">Eldoret Town</button>
+    <button onclick="setPlace('from','Zion Mall')">Zion Mall</button>
+    <button onclick="setPlace('from','Moi University')">Moi University</button>
+    <button onclick="setPlace('from','Elgon View')">Elgon View</button>
+  </div>
+  <label>🎯 TO</label>
+  <input id="toInput" placeholder="Where to? e.g. Zion Mall" oninput="calcPrice()">
+  <div class="suggest">
+    <button onclick="setPlace('to','Zion Mall')">Zion Mall</button>
+    <button onclick="setPlace('to','Moi University')">Moi University</button>
+    <button onclick="setPlace('to','Eldoret Airport')">Airport</button>
+    <button onclick="setPlace('to','West Indies')">West Indies</button>
+  </div>
+
+  <div class="ride-options">
+    <div class="ride-opt active" id="opt-boda" onclick="selectRide('boda')"><span>🛵</span><b>Boda</b><small id="price-boda">KES 150</small><small style="color:#aaa;font-weight:400">2 seats • 8 min</small></div>
+    <div class="ride-opt" id="opt-taxi" onclick="selectRide('taxi')"><span>🚕</span><b>Taxi</b><small id="price-taxi">KES 400</small><small style="color:#aaa;font-weight:400">4 seats • 10 min</small></div>
+    <div class="ride-opt" id="opt-van" onclick="selectRide('van')"><span>🚐</span><b>Van</b><small id="price-van">KES 800</small><small style="color:#aaa;font-weight:400">7 seats • 12 min</small></div>
+  </div>
+
+  <div class="price-box">
+    <div><small style="color:#aaa">Total • <span id="rideTypeLabel">Boda</span> • <span id="distanceLabel">3.2 km</span></small><br><span class="price" id="totalPrice">KES 150</span></div>
+    <div style="text-align:right"><small style="color:#aaa">Pay with</small><br><b>💚 M-Pesa</b><br><small onclick="togglePay()" style="color:#a855f7;cursor:pointer" id="payLabel">Change → Wallet</small></div>
+  </div>
+
+  <button class="btn" id="requestBtn" onclick="requestRide()">Request Ride →</button>
+
+  <div class="driver-card" id="driverCard">
+    <div class="driver-head">
+      <div class="av">👨</div>
+      <div style="flex:1"><b id="driverName">Kevin Kiprop • ⭐ 4.9</b><br><small id="driverInfo">Boda • KMD 123A • Black Jacket</small></div>
+      <button onclick="callDriver()" style="background:#22c55e;border:none;color:#fff;padding:8px 12px;border-radius:20px;cursor:pointer">📞 Call</button>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;margin-top:8px"><span id="statusText">🚀 Driver is coming to you...</span><span id="timeText" style="font-weight:800">3 min</span></div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn cancel" style="flex:1" onclick="cancelRide()">Cancel Ride</button>
+      <button class="btn" style="flex:1" onclick="completeRide()">✅ Arrived - Pay</button>
+    </div>
+    <div style="margin-top:10px;text-align:center"><small>Rate driver after ride:</small><br><span style="font-size:24px;cursor:pointer" id="stars">☆ ☆ ☆ ☆ ☆</span></div>
+  </div>
+</div>
+
+<div class="history">
+  <h3 style="font-size:15px">🕘 Recent Rides</h3>
+  <div id="historyList"></div>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='shop.html'"><span>🛍️</span>Shop</div>
+  <div onclick="location.href='wallet.html'"><span>💰</span>Wallet</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let service = 'ride';
+let rideType = 'boda';
+let payMethod = 'M-Pesa';
+let prices = {boda:150, taxi:400, van:800};
+let drivers = [
+  {name:"Kevin Kiprop", rating:"4.9", vehicle:"Boda • KMD 123A", emoji:"👨"},
+  {name:"Sarah Chebet", rating:"4.8", vehicle:"Taxi • KDL 456B", emoji:"👩"},
+  {name:"Mike Otieno", rating:"5.0", vehicle:"Boda • KMJ 789C", emoji:"🧑"},
+];
+let historyRides = JSON.parse(localStorage.getItem('neurix_rides') || '[{"from":"Eldoret Town","to":"Zion Mall","type":"Boda","price":150,"date":"Today, 10:30 AM"}]');
+let rideTimer = null;
+let progress = 10;
+
+function renderHistory(){
+  document.getElementById('historyList').innerHTML = historyRides.map(h=>`
+    <div class="hist-card"><span style="font-size:24px">${h.type==='Boda'?'🛵':h.type==='Taxi'?'🚕':'🚐'}</span><div><b>${h.from} → ${h.to}</b><small>${h.type} • ${h.date}</small></div><b style="color:#22c55e">KES ${h.price}</b></div>
+  `).join('');
+}
+renderHistory();
+
+function setService(s, btn){
+  service = s;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(s==='delivery'){
+    document.getElementById('fromInput').value = 'Mama Njoroge Cafe';
+    document.getElementById('toInput').value = 'Your Location';
+    alert('Delivery Mode: We pick food from restaurant & bring to you! 🍔');
+  } else if(s==='parcel'){
+    document.getElementById('fromInput').value = 'Eldoret Town';
+    document.getElementById('toInput').value = '';
+    alert('Parcel Mode: Send package to anyone in Eldoret 📦');
+  } else {
+    document.getElementById('fromInput').value = 'Eldoret Town, Oginga Odinga St';
+    document.getElementById('toInput').value = '';
+  }
+  calcPrice();
+}
+
+function setPlace(field, val){
+  document.getElementById(field==='from'?'fromInput':'toInput').value = val;
+  calcPrice();
+}
+
+function selectRide(type){
+  rideType = type;
+  document.querySelectorAll('.ride-opt').forEach(o=>o.classList.remove('active'));
+  document.getElementById('opt-'+type).classList.add('active');
+  document.getElementById('rideTypeLabel').innerText = type==='boda'?'Boda':type==='taxi'?'Taxi':'Van';
+  calcPrice();
+}
+
+function calcPrice(){
+  let to = document.getElementById('toInput').value.toLowerCase();
+  let dist = 3.2;
+  if(to.includes('moi') || to.includes('university')) dist = 7.5;
+  if(to.includes('airport')) dist = 9.2;
+  if(to.includes('west')) dist = 4.1;
+  if(to.includes('elgon')) dist = 5.0;
+  document.getElementById('distanceLabel').innerText = dist + ' km';
+  let base = {boda:50, taxi:120, van:200}[rideType];
+  let perKm = {boda:30, taxi:50, van:80}[rideType];
+  let total = Math.round(base + dist * perKm);
+  prices[rideType] = total;
+  document.getElementById('totalPrice').innerText = 'KES ' + total;
+  document.getElementById('price-boda').innerText = 'KES ' + Math.round(50 + dist*30);
+  document.getElementById('price-taxi').innerText = 'KES ' + Math.round(120 + dist*50);
+  document.getElementById('price-van').innerText = 'KES ' + Math.round(200 + dist*80);
+}
+
+function togglePay(){
+  payMethod = payMethod==='M-Pesa' ? 'Wallet' : 'M-Pesa';
+  document.getElementById('payLabel').innerText = 'Change → ' + (payMethod==='M-Pesa'?'Wallet':'M-Pesa');
+  // Update label in price box
+  let b = document.querySelector('.price-box b');
+  if(b) b.innerText = payMethod==='M-Pesa' ? '💚 M-Pesa' : '💰 Wallet';
+}
+
+function requestRide(){
+  let to = document.getElementById('toInput').value.trim();
+  let from = document.getElementById('fromInput').value.trim();
+  if(!to) return alert('Enter destination bro! Where to?');
+  let driver = drivers[Math.floor(Math.random()*drivers.length)];
+  document.getElementById('driverName').innerText = driver.name + ' • ⭐ ' + driver.rating;
+  document.getElementById('driverInfo').innerText = driver.vehicle + ' • ' + (rideType==='boda'?'Black Jacket':'White Shirt');
+  document.getElementById('driverCard').style.display = 'block';
+  document.getElementById('requestBtn').innerText = 'Ride Requested ✅';
+  document.getElementById('requestBtn').disabled = true;
+  document.getElementById('mapText').innerText = '📍 Driver on the way to ' + from;
+  document.getElementById('statusText').innerText = '🚀 ' + driver.name + ' is coming to you...';
+  progress = 10;
+  document.getElementById('progressBar').style.width = '10%';
+  // Animate driver pin
+  let pin = document.getElementById('driverPin');
+  let left = 18;
+  if(rideTimer) clearInterval(rideTimer);
+  rideTimer = setInterval(()=>{
+    progress += 12;
+    left += 6;
+    pin.style.left = left + '%';
+    document.getElementById('progressBar').style.width = Math.min(progress,100) + '%';
+    let mins = Math.max(0, 3 - Math.floor(progress/35));
+    document.getElementById('timeText').innerText = mins + ' min';
+    if(progress>=50) document.getElementById('statusText').innerText = '📍 Driver arrived at pickup!';
+    if(progress>=100){
+      clearInterval(rideTimer);
+      document.getElementById('statusText').innerText = '✅ You are on the way to ' + to + '!';
+      alert('Driver arrived! Enjoy your ride to ' + to + ' 🛵 Pay KES ' + prices[rideType] + ' via ' + payMethod);
+    }
+  }, 800);
+}
+
+function callDriver(){
+  alert('Calling driver... 📞\nKevin: "Hello bro, I am 2 mins away, I see you!"');
+}
+
+function cancelRide(){
+  if(rideTimer) clearInterval(rideTimer);
+  document.getElementById('driverCard').style.display = 'none';
+  document.getElementById('requestBtn').innerText = 'Request Ride →';
+  document.getElementById('requestBtn').disabled = false;
+  alert('Ride cancelled. No charge. 😔');
+}
+
+function completeRide(){
+  if(rideTimer) clearInterval(rideTimer);
+  let to = document.getElementById('toInput').value || 'Zion Mall';
+  let from = document.getElementById('fromInput').value || 'Eldoret Town';
+  let price = prices[rideType];
+  // Save history
+  historyRides.unshift({from: from.split(',')[0], to: to, type: rideType==='boda'?'Boda':rideType==='taxi'?'Taxi':'Van', price: price, date: 'Just now'});
+  localStorage.setItem('neurix_rides', JSON.stringify(historyRides));
+  renderHistory();
+  // Rate
+  let stars = prompt('Rate driver 1-5 stars? (e.g. 5)', '5') || '5';
+  alert('✅ Ride Complete! Paid KES ' + price + ' via ' + payMethod + '\n\nYou rated driver ' + stars + ' stars ⭐ Thank you for using NEURIX Ride!');
+  document.getElementById('stars').innerText = '⭐'.repeat(parseInt(stars)) + ' ☆'.repeat(5-parseInt(stars));
+  document.getElementById('driverCard').style.display = 'none';
+  document.getElementById('requestBtn').innerText = 'Request Ride →';
+  document.getElementById('requestBtn').disabled = false;
+}
+calcPrice();
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

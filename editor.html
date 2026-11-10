@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX AI Editor - Glow Up Your Photo</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:80px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.canvas-area{padding:14px;text-align:center;background:#0a0a0a}
+#preview{width:100%;max-width:400px;max-height:420px;object-fit:cover;border-radius:18px;display:none;transition:filter .3s}
+.empty{width:100%;max-width:400px;height:300px;border:2px dashed #333;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#888;margin:auto;cursor:pointer}
+.empty span{font-size:50px}
+.sliders{padding:14px;display:flex;flex-direction:column;gap:12px}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row label{width:90px;font-size:13px}
+.slider-row input{flex:1;accent-color:#a855f7}
+.slider-row span{width:34px;text-align:right;font-size:13px;color:#aaa}
+.section{padding:0 14px}
+.section h3{margin:10px 0 8px;font-size:15px}
+.filters{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:6px}
+.filter{width:72px;height:72px;border-radius:14px;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;cursor:pointer;border:2px solid transparent}
+.filter small{font-size:11px;margin-top:4px}
+.filter.active{border-color:#a855f7;background:#1a1a2e}
+.ai-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px}
+.ai-btn{background:#111;border:1px solid #333;color:#fff;padding:12px;border-radius:14px;cursor:pointer;font-weight:700;font-size:13px}
+.ai-btn:active{background:#262626}
+.ai-btn.ai{background:linear-gradient(135deg,#a855f7,#3b82f6);border:none}
+.actions{padding:14px;display:flex;gap:10px}
+.actions button{flex:1;padding:13px;border:none;border-radius:14px;font-weight:800;cursor:pointer}
+.reset{background:#262626;color:#fff}
+.save{background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff}
+.before-after{padding:0 14px;display:flex;gap:8px}
+.before-after button{background:#262626;color:#fff;border:none;padding:8px 14px;border-radius:20px;cursor:pointer;font-size:12px}
+.before-after button.active{background:#fff;color:#000}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">✨ NEURIX AI Editor</b>
+  <span onclick="location.href='ai.html'" style="cursor:pointer">✦</span>
+</div>
+
+<div class="canvas-area">
+  <div class="empty" id="emptyBox" onclick="document.getElementById('file').click()">
+    <span>🖼️</span>
+    <b>Tap to Pick Photo</b>
+    <small>From gallery or camera</small>
+  </div>
+  <img id="preview">
+  <input type="file" id="file" accept="image/*" hidden onchange="loadPhoto(event)">
+  <input type="file" id="cameraFile" accept="image/*" capture="environment" hidden onchange="loadPhoto(event)">
+  <div style="display:flex;gap:8px;justify-content:center;margin-top:10px">
+    <button onclick="document.getElementById('file').click()" style="background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;cursor:pointer">🖼️ Gallery</button>
+    <button onclick="document.getElementById('cameraFile').click()" style="background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;cursor:pointer">📷 Camera</button>
+    <button onclick="randomPhoto()" style="background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;cursor:pointer">🎲 Demo Photo</button>
+  </div>
+</div>
+
+<div class="before-after">
+  <button id="btnBefore" onclick="showBefore()">👀 Before</button>
+  <button id="btnAfter" class="active" onclick="showAfter()">✨ After</button>
+</div>
+
+<div class="section"><h3>🎨 AI Filters</h3></div>
+<div class="filters" id="filterRow">
+  <div class="filter active" onclick="applyFilter('none',this,'')"><span>🖼️</span><small>Original</small></div>
+  <div class="filter" onclick="applyFilter('glow',this,'brightness(1.15) saturate(1.4) contrast(1.1)')"><span>✨</span><small>Glow Up</small></div>
+  <div class="filter" onclick="applyFilter('golden',this,'sepia(.3) brightness(1.1) saturate(1.3)')"><span>🌅</span><small>Golden</small></div>
+  <div class="filter" onclick="applyFilter('bw',this,'grayscale(1) contrast(1.2)')"><span>⬛</span><small>B&W</small></div>
+  <div class="filter" onclick="applyFilter('vintage',this,'sepia(.6) contrast(.9) brightness(.95)')"><span>📷</span><small>Vintage</small></div>
+  <div class="filter" onclick="applyFilter('cool',this,'hue-rotate(180deg) saturate(1.2)')"><span>🧊</span><small>Cool</small></div>
+  <div class="filter" onclick="applyFilter('neon',this,'saturate(2) contrast(1.3) hue-rotate(20deg)')"><span>🌈</span><small>Neon</small></div>
+  <div class="filter" onclick="applyFilter('cartoon',this,'saturate(1.8) contrast(1.4) brightness(1.1)')"><span>🎨</span><small>Cartoon</small></div>
+</div>
+
+<div class="section"><h3>✦ AI Magic</h3></div>
+<div class="ai-row">
+  <button class="ai-btn ai" onclick="aiMagic('glow')">✦ AI Glow Up</button>
+  <button class="ai-btn" onclick="aiMagic('cartoon')">🎨 Cartoon Me</button>
+  <button class="ai-btn" onclick="aiMagic('bg')">🌆 Change Background</button>
+  <button class="ai-btn" onclick="aiMagic('enhance')">🔍 Enhance HD</button>
+</div>
+
+<div class="sliders">
+  <div class="slider-row"><label>Brightness</label><input type="range" id="brightness" min="50" max="150" value="100" oninput="updateSliders()"><span id="vBrightness">100</span></div>
+  <div class="slider-row"><label>Contrast</label><input type="range" id="contrast" min="50" max="150" value="100" oninput="updateSliders()"><span id="vContrast">100</span></div>
+  <div class="slider-row"><label>Saturation</label><input type="range" id="saturate" min="0" max="200" value="100" oninput="updateSliders()"><span id="vSaturate">100</span></div>
+  <div class="slider-row"><label>Blur</label><input type="range" id="blur" min="0" max="5" value="0" oninput="updateSliders()"><span id="vBlur">0</span></div>
+</div>
+
+<div class="section"><h3>🖼️ Add Sticker / Text</h3></div>
+<div class="filters">
+  <div class="filter" onclick="addSticker('🔥')"><span>🔥</span><small>Fire</small></div>
+  <div class="filter" onclick="addSticker('❤️')"><span>❤️</span><small>Love</small></div>
+  <div class="filter" onclick="addSticker('🧠✦')"><span>🧠</span><small>NEURIX</small></div>
+  <div class="filter" onclick="addSticker('👑')"><span>👑</span><small>Crown</small></div>
+  <div class="filter" onclick="addText()"><span>🔤</span><small>Text</small></div>
+</div>
+<div id="stickerLayer" style="text-align:center;font-size:40px;min-height:20px"></div>
+
+<div class="actions">
+  <button class="reset" onclick="resetAll()">Reset</button>
+  <button class="save" onclick="savePhoto()">💾 Save & Post →</button>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='explore.html'"><span>🔍</span>Explore</div>
+  <div onclick="location.href='upload.html'"><span>➕</span>Post</div>
+  <div onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let currentFilter = '';
+let originalSrc = '';
+let currentStickers = [];
+
+function loadPhoto(e){
+  let f = e.target.files[0]; if(!f) return;
+  let r = new FileReader();
+  r.onload = function(){
+    originalSrc = r.result;
+    showPhoto(r.result);
+  };
+  r.readAsDataURL(f);
+}
+
+function randomPhoto(){
+  let pics = [
+    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600",
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600",
+    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600"
+  ];
+  originalSrc = pics[Math.floor(Math.random()*pics.length)];
+  showPhoto(originalSrc);
+}
+
+function showPhoto(src){
+  let img = document.getElementById('preview');
+  img.src = src;
+  img.style.display = 'block';
+  document.getElementById('emptyBox').style.display = 'none';
+}
+
+function applyFilter(name, el, css){
+  currentFilter = css;
+  document.querySelectorAll('#filterRow .filter').forEach(f=>f.classList.remove('active'));
+  if(el) el.classList.add('active');
+  updateSliders();
+}
+
+function updateSliders(){
+  let b = document.getElementById('brightness').value;
+  let c = document.getElementById('contrast').value;
+  let s = document.getElementById('saturate').value;
+  let bl = document.getElementById('blur').value;
+  document.getElementById('vBrightness').innerText = b;
+  document.getElementById('vContrast').innerText = c;
+  document.getElementById('vSaturate').innerText = s;
+  document.getElementById('vBlur').innerText = bl;
+  let img = document.getElementById('preview');
+  // Combine filter + sliders
+  let base = currentFilter || '';
+  img.style.filter = `${base} brightness(${b}%) contrast(${c}%) saturate(${s}%) blur(${bl}px)`;
+}
+
+function showBefore(){
+  document.getElementById('preview').style.filter = 'none';
+  document.getElementById('btnBefore').classList.add('active');
+  document.getElementById('btnAfter').classList.remove('active');
+}
+function showAfter(){
+  updateSliders();
+  document.getElementById('btnAfter').classList.add('active');
+  document.getElementById('btnBefore').classList.remove('active');
+}
+
+function aiMagic(type){
+  let img = document.getElementById('preview');
+  if(!img.src || img.style.display==='none') return alert('Pick a photo first bro! Tap Gallery.');
+  if(type==='glow'){
+    applyFilter('glow', null, 'brightness(1.2) saturate(1.5) contrast(1.15)');
+    document.getElementById('brightness').value = 115;
+    document.getElementById('saturate').value = 140;
+    updateSliders();
+    alert('✨ AI Glow Up done! You look 🔥');
+  }
+  if(type==='cartoon'){
+    applyFilter('cartoon', null, 'saturate(1.9) contrast(1.5) brightness(1.1)');
+    updateSliders();
+    alert('🎨 Cartoon Me done! Looks like anime!');
+  }
+  if(type==='bg'){
+    let bgs = ['🌆 Sunset', '🏖️ Beach', '🌃 Eldoret Night', '🏔️ Mountain'];
+    let bg = prompt('Pick background:\n' + bgs.join('\n')) || 'Sunset';
+    alert('🌆 Background changed to ' + bg + '! (AI Demo) - In real app, background will change.');
+    img.style.border = '3px solid #a855f7';
+  }
+  if(type==='enhance'){
+    document.getElementById('contrast').value = 120;
+    document.getElementById('brightness').value = 110;
+    updateSliders();
+    alert('🔍 Enhanced to HD! Sharper + Clearer.');
+  }
+}
+
+function addSticker(emoji){
+  currentStickers.push(emoji);
+  document.getElementById('stickerLayer').innerText = currentStickers.join(' ');
+}
+
+function addText(){
+  let t = prompt('What text bro? (e.g. NEURIX 🔥)');
+  if(t) {
+    currentStickers.push(t);
+    document.getElementById('stickerLayer').innerText = currentStickers.join(' ');
+  }
+}
+
+function resetAll(){
+  currentFilter = '';
+  document.getElementById('brightness').value = 100;
+  document.getElementById('contrast').value = 100;
+  document.getElementById('saturate').value = 100;
+  document.getElementById('blur').value = 0;
+  currentStickers = [];
+  document.getElementById('stickerLayer').innerText = '';
+  updateSliders();
+  alert('Reset done!');
+}
+
+function savePhoto(){
+  let img = document.getElementById('preview');
+  if(!img.src || img.style.display==='none') return alert('Pick a photo first!');
+  let filter = img.style.filter || 'None';
+  let post = {
+    id: Date.now(),
+    user: 'You',
+    text: 'Edited with NEURIX AI Editor ✨ ' + currentStickers.join(' ') + ' Filter: ' + (filter || 'Original'),
+    img: originalSrc,
+    likes: 0,
+    time: 'Just now',
+    type: 'post'
+  };
+  let posts = JSON.parse(localStorage.getItem('neurix_posts') || '[]');
+  posts.unshift(post);
+  localStorage.setItem('neurix_posts', JSON.stringify(posts));
+  if(confirm('Saved! 🔥 Post it to Feed now?')) location.href = 'index.html';
+  else location.href = 'profile.html';
+}
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>

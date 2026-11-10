@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURIX Shop - Buy & Sell in Eldoret</title>
+<link rel="icon" href="icon.png">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,sans-serif;padding-bottom:140px}
+.top{position:sticky;top:0;background:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;z-index:10}
+.top button{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.cart-badge{background:#ff3040;color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:11px;position:absolute;top:-4px;right:-6px;font-weight:800}
+.search{margin:10px 14px;background:#262626;border-radius:20px;padding:11px 14px;display:flex;gap:8px;align-items:center}
+.search input{flex:1;background:none;border:none;color:#fff;outline:none;font-size:14px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
+.tabs button{background:#262626;color:#fff;border:none;padding:8px 16px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.tabs button.active{background:linear-gradient(135deg,#a855f7,#3b82f6)}
+.banner{background:linear-gradient(135deg,#a855f7,#3b82f6,#06b6d4);border-radius:18px;margin:0 14px 14px;padding:18px}
+.banner b{font-size:19px}
+.banner p{opacity:.9;font-size:13px;margin:6px 0 10px}
+.banner button{background:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:800;cursor:pointer}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px}
+.card{background:#111;border-radius:16px;overflow:hidden;cursor:pointer}
+.card img{width:100%;aspect-ratio:1;object-fit:cover}
+.card .info{padding:10px}
+.card .info b{font-size:14px;display:block;line-height:1.3}
+.card .info small{color:#aaa;font-size:12px}
+.price{color:#22c55e;font-weight:800;margin-top:6px}
+.old{color:#888;text-decoration:line-through;font-size:12px;margin-left:4px}
+.card button{width:100%;margin-top:8px;padding:9px;border:none;border-radius:10px;background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;font-weight:800;cursor:pointer}
+.sell-btn{position:fixed;bottom:140px;right:14px;background:linear-gradient(135deg,#a855f7,#3b82f6);color:#fff;border:none;padding:12px 16px;border-radius:30px;font-weight:800;z-index:40;cursor:pointer;box-shadow:0 4px 20px rgba(168,85,247,.5)}
+/* Cart Drawer */
+.cart{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;z-index:100;justify-content:flex-end}
+.cart-box{background:#111;width:100%;max-width:400px;height:100%;display:flex;flex-direction:column}
+.cart-head{padding:14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222}
+.cart-items{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.cart-item{display:flex;gap:10px;background:#1a1a1a;padding:10px;border-radius:12px;align-items:center}
+.cart-item img{width:60px;height:60px;border-radius:10px;object-fit:cover}
+.cart-item div{flex:1}
+.cart-item button{background:#262626;border:none;color:#fff;width:26px;height:26px;border-radius:50%;cursor:pointer}
+.cart-foot{padding:14px;border-top:1px solid #222}
+.cart-foot button{width:100%;padding:13px;border:none;border-radius:12px;background:#22c55e;color:#fff;font-weight:800;font-size:15px;cursor:pointer;margin-top:8px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#000;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #262626;z-index:30}
+.nav div{text-align:center;font-size:11px;color:#aaa;cursor:pointer}.nav div.active{color:#fff}.nav span{font-size:22px;display:block}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button onclick="history.back()">←</button>
+  <b style="font-size:18px">🛍️ NEURIX Shop</b>
+  <div style="position:relative;cursor:pointer" onclick="openCart()">🛒<span class="cart-badge" id="cartCount">0</span></div>
+</div>
+
+<div class="search">🔍 <input id="searchInput" placeholder="Search phones, shoes, food..." oninput="filterProducts()"></div>
+
+<div class="tabs" id="catTabs">
+  <button class="active" onclick="filterCat('All',this)">All</button>
+  <button onclick="filterCat('Phones',this)">📱 Phones</button>
+  <button onclick="filterCat('Fashion',this)">👟 Fashion</button>
+  <button onclick="filterCat('Food',this)">🍔 Food</button>
+  <button onclick="filterCat('Electronics',this)">💻 Electronics</button>
+  <button onclick="filterCat('Beauty',this)">💄 Beauty</button>
+</div>
+
+<div class="banner">
+  <b>🔥 Eldoret Flash Sale!</b>
+  <p>Up to 50% off today only. Free delivery in Eldoret town.</p>
+  <button onclick="filterCat('Phones',document.querySelectorAll('#catTabs button')[1])">Shop Now →</button>
+</div>
+
+<div id="productGrid" class="grid"></div>
+
+<button class="sell-btn" onclick="sellProduct()">+ Sell Product</button>
+
+<!-- CART -->
+<div class="cart" id="cartDrawer">
+  <div class="cart-box">
+    <div class="cart-head"><b>🛒 Your Cart</b><button onclick="closeCart()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer">✕</button></div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot">
+      <div style="display:flex;justify-content:space-between"><span>Total:</span><b id="cartTotal" style="color:#22c55e">KES 0</b></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#aaa;margin-top:4px"><span>Delivery (Eldoret):</span><span>FREE</span></div>
+      <button onclick="checkoutMpesa()">💚 Pay with M-Pesa</button>
+      <button onclick="checkoutChat()" style="background:#262626">💬 Chat Seller Instead</button>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <div onclick="location.href='index.html'"><span>🏠</span>Home</div>
+  <div onclick="location.href='explore.html'"><span>🔍</span>Explore</div>
+  <div onclick="location.href='upload.html'"><span>➕</span>Post</div>
+  <div onclick="location.href='reels.html'"><span>▶️</span>Reels</div>
+  <div onclick="location.href='profile.html'"><span>👤</span>You</div>
+</div>
+
+<script>
+let products = JSON.parse(localStorage.getItem('neurix_shop_products') || 'null') || [
+  {id:1, name:"iPhone 13 - Like New", price:58000, old:72000, cat:"Phones", seller:"Kevin Kiprop", img:"https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=500", emoji:"📱"},
+  {id:2, name:"Nike Air Force 1 - White", price:4500, old:6500, cat:"Fashion", seller:"Sarah", img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500", emoji:"👟"},
+  {id:3, name:"Samsung Galaxy A55", price:42000, old:49000, cat:"Phones", seller:"Eldoret Phones", img:"https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500", emoji:"📱"},
+  {id:4, name:"Smokie + Chips - Eldoret Best", price:250, old:350, cat:"Food", seller:"Mama Njoroge", img:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500", emoji:"🍔"},
+  {id:5, name:"HP Laptop ProBook", price:38500, old:45000, cat:"Electronics", seller:"Tech Hub Eldoret", img:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500", emoji:"💻"},
+  {id:6, name:"Glow Face Serum - Vitamin C", price:1200, old:1800, cat:"Beauty", seller:"Glow KE", img:"https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500", emoji:"💄"},
+];
+
+let cart = JSON.parse(localStorage.getItem('neurix_cart') || '[]');
+let currentCat = 'All';
+let currentSearch = '';
+
+function render(){
+  let filtered = products.filter(p => (currentCat==='All' || p.cat===currentCat) && (p.name.toLowerCase().includes(currentSearch) || p.seller.toLowerCase().includes(currentSearch)));
+  document.getElementById('productGrid').innerHTML = filtered.map(p => `
+    <div class="card" onclick="viewProduct(${p.id})">
+      <img src="${p.img}">
+      <div class="info">
+        <b>${p.emoji} ${p.name}</b>
+        <small>by ${p.seller} • ⭐ 4.8</small>
+        <div class="price">KES ${p.price.toLocaleString()} <span class="old">KES ${p.old.toLocaleString()}</span></div>
+        <button onclick="event.stopPropagation(); addToCart(${p.id})">Add to Cart 🛒</button>
+      </div>
+    </div>
+  `).join('');
+  updateCartUI();
+  localStorage.setItem('neurix_shop_products', JSON.stringify(products));
+}
+render();
+
+function filterCat(c, btn){
+  currentCat = c;
+  document.querySelectorAll('#catTabs button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  render();
+}
+function filterProducts(){ currentSearch = document.getElementById('searchInput').value.toLowerCase(); render(); }
+
+function viewProduct(id){
+  let p = products.find(x=>x.id===id);
+  if(confirm(p.name + '\n\nKES ' + p.price.toLocaleString() + '\nSeller: ' + p.seller + '\n\nAdd to cart?')) addToCart(id);
+}
+
+function addToCart(id){
+  let p = products.find(x=>x.id===id);
+  cart.push(p);
+  localStorage.setItem('neurix_cart', JSON.stringify(cart));
+  updateCartUI();
+  alert('Added to cart! ' + p.name + ' 🛒');
+}
+
+function updateCartUI(){
+  document.getElementById('cartCount').innerText = cart.length;
+  let total = cart.reduce((sum,p)=>sum+p.price,0);
+  document.getElementById('cartTotal').innerText = 'KES ' + total.toLocaleString();
+  document.getElementById('cartItems').innerHTML = cart.length===0 ? '<p style="text-align:center;color:#888">Cart is empty bro. Add something! 🛒</p>' : cart.map((p,i)=>`
+    <div class="cart-item">
+      <img src="${p.img}">
+      <div><b>${p.name}</b><br><small style="color:#22c55e">KES ${p.price.toLocaleString()}</small></div>
+      <button onclick="removeFromCart(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeFromCart(i){ cart.splice(i,1); localStorage.setItem('neurix_cart', JSON.stringify(cart)); updateCartUI(); }
+
+function openCart(){ document.getElementById('cartDrawer').style.display='flex'; updateCartUI(); }
+function closeCart(){ document.getElementById('cartDrawer').style.display='none'; }
+
+function sellProduct(){
+  let name = prompt('What are you selling bro? (e.g. iPhone 12)');
+  if(!name) return;
+  let price = prompt('Price in KES? (e.g. 30000)');
+  if(!price) return;
+  let cat = prompt('Category? Phones / Fashion / Food / Electronics / Beauty', 'Phones');
+  let newP = {id: Date.now(), name:name, price: parseInt(price)||0, old: (parseInt(price)||0)+5000, cat: cat||'Phones', seller:"You", img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500", emoji:"🛍️"};
+  products.unshift(newP);
+  localStorage.setItem('neurix_shop_products', JSON.stringify(products));
+  render();
+  alert('Your product is LIVE! 🔥 People can now buy it.');
+}
+
+function checkoutMpesa(){
+  if(cart.length===0) return alert('Cart is empty bro!');
+  let total = cart.reduce((s,p)=>s+p.price,0);
+  let phone = prompt('Enter M-Pesa number (e.g. 0712345678):');
+  if(!phone) return;
+  alert('💚 M-Pesa STK Push sent to ' + phone + '\nAmount: KES ' + total.toLocaleString() + '\n\nEnter PIN to complete (Demo). Order placed! 🎉');
+  cart = []; localStorage.setItem('neurix_cart', JSON.stringify(cart)); updateCartUI(); closeCart();
+}
+
+function checkoutChat(){
+  if(cart.length===0) return alert('Cart is empty!');
+  location.href = 'chat.html?id=sarah';
+}
+</script>
+</body>
+</html>
+```
+</body>
+
+</html>
